@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -7609,12 +7609,12 @@ You're not viewing the latest version.
 <h3 id="1">1. 记录日志<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
 <p>VisualDL的后端提供了Python SDK，可通过LogWriter定制一个日志记录器，接口如下：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">LogWriter</span><span class="p">(</span><span class="n">logdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>                <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>                <span class="n">comment</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>                <span class="n">max_queue</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>                <span class="n">flush_secs</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>                <span class="n">filename_suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>                <span class="n">filename_suffix</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>                <span class="n">write_to_disk</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>                <span class="n">display_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>                <span class="n">display_name</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span>
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </span></code></pre></div>
 <p><strong>接口参数</strong></p>
@@ -7668,11 +7668,11 @@ You're not viewing the latest version.
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">visualdl</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogWriter</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># 在`./log/scalar_test/train`路径下建立日志文件</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">with</span> <span class="n">LogWriter</span><span class="p">(</span><span class="n">logdir</span><span class="o">=</span><span class="s2">&quot;./log/scalar_test/train&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">with</span> <span class="n">LogWriter</span><span class="p">(</span><span class="n">logdir</span><span class="o">=</span><span class="s2">"./log/scalar_test/train"</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="c1"># 使用scalar组件记录一个标量数据</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">writer</span><span class="o">.</span><span class="n">add_scalar</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.5678</span><span class="p">)</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">writer</span><span class="o">.</span><span class="n">add_scalar</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.6878</span><span class="p">)</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">writer</span><span class="o">.</span><span class="n">add_scalar</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.9878</span><span class="p">)</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">writer</span><span class="o">.</span><span class="n">add_scalar</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">"acc"</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.5678</span><span class="p">)</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">writer</span><span class="o">.</span><span class="n">add_scalar</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">"acc"</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.6878</span><span class="p">)</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">writer</span><span class="o">.</span><span class="n">add_scalar</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">"acc"</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.9878</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="2-visualdl">2. 启动 VisualDL 面板<a class="headerlink" href="#2-visualdl" title="Permanent link">&para;</a></h3>
 <p>在上一个示例中，日志已记录三组标量数据。现在，您可以启动 VisualDL 面板来查看日志的可视化结果。启动方式有两种：命令行启动和 Python 脚本启动。</p>
@@ -7737,7 +7737,7 @@ You're not viewing the latest version.
 <h4 id="b-python">b. 在Python脚本中启动<a class="headerlink" href="#b-python" title="Permanent link">&para;</a></h4>
 <p>支持在Python脚本中启动VisualDL面板，接口如下：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">visualdl</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">logdir</span><span class="p">,</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>                        <span class="n">host</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>                        <span class="n">host</span><span class="o">=</span><span class="s2">"127.0.0.1"</span><span class="p">,</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>                        <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>                        <span class="n">cache_timeout</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
 </span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>                        <span class="n">language</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -7811,7 +7811,7 @@ You're not viewing the latest version.
 <p>针对上一步生成的日志，我们的启动脚本为：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">visualdl.server</span><span class="w"> </span><span class="kn">import</span> <span class="n">app</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">logdir</span><span class="o">=</span><span class="s2">&quot;./log&quot;</span><span class="p">)</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">logdir</span><span class="o">=</span><span class="s2">"./log"</span><span class="p">)</span>
 </span></code></pre></div>
 <p>在使用任意一种方式启动VisualDL面板后，打开浏览器访问VisualDL面板，即可查看日志的可视化结果，如图：</p>
 <p align="center">
@@ -7957,7 +7957,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年6月25日 04:38:57 UTC">2026年6月25日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年11月25日 08:26:22 UTC">2026年11月25日</span>
   </span>
 
     
@@ -7967,7 +7967,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年6月25日 04:38:57 UTC">2026年6月25日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年11月25日 08:26:22 UTC">2026年11月25日</span>
   </span>
 
     
@@ -7982,7 +7982,7 @@ You're not viewing the latest version.
     </span>
     <nav>
       
-        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
+        <a href="mailto:72123502+kafka-hatsune@users.noreply.github.com">Kafka-Hatsune</a>
     </nav>
   </span>
 
@@ -8095,10 +8095,10 @@ You're not viewing the latest version.
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="javascripts/katex.min.js"></script>
       

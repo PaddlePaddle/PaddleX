@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -8119,7 +8119,7 @@ You're not viewing the latest version.
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>paddlex<span class="w"> </span>--pipeline<span class="w"> </span>image_classification<span class="w"> </span>--input<span class="w"> </span>general_image_classification_001.jpg<span class="w"> </span>--device<span class="w"> </span>gpu:0<span class="w"> </span>--save_path<span class="w"> </span>./output/
 </span></code></pre></div>
 <p>The relevant parameter descriptions can be found in the parameter explanation section of <a href="#222-integration-via-python-script">2.2.2 Python Script Integration</a>. Supports specifying multiple devices simultaneously for parallel inference. For details, please refer to the documentation on pipeline parallel inference.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="o">{</span><span class="s1">&#39;res&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;input_path&#39;</span>:<span class="w"> </span><span class="s1">&#39;general_image_classification_001.jpg&#39;</span>,<span class="w"> </span><span class="s1">&#39;page_index&#39;</span>:<span class="w"> </span>None,<span class="w"> </span><span class="s1">&#39;class_ids&#39;</span>:<span class="w"> </span>array<span class="o">([</span><span class="m">296</span>,<span class="w"> </span><span class="m">170</span>,<span class="w"> </span><span class="m">356</span>,<span class="w"> </span><span class="m">258</span>,<span class="w"> </span><span class="m">248</span><span class="o">]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int32<span class="o">)</span>,<span class="w"> </span><span class="s1">&#39;scores&#39;</span>:<span class="w"> </span>array<span class="o">([</span><span class="m">0</span>.62736,<span class="w"> </span><span class="m">0</span>.03752,<span class="w"> </span><span class="m">0</span>.03256,<span class="w"> </span><span class="m">0</span>.0323<span class="w"> </span>,<span class="w"> </span><span class="m">0</span>.03194<span class="o">]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>float32<span class="o">)</span>,<span class="w"> </span><span class="s1">&#39;label_names&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus&#39;</span>,<span class="w"> </span><span class="s1">&#39;Irish wolfhound&#39;</span>,<span class="w"> </span><span class="s1">&#39;weasel&#39;</span>,<span class="w"> </span><span class="s1">&#39;Samoyed, Samoyede&#39;</span>,<span class="w"> </span><span class="s1">&#39;Eskimo dog, husky&#39;</span><span class="o">]}}</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="o">{</span><span class="s1">'res'</span>:<span class="w"> </span><span class="o">{</span><span class="s1">'input_path'</span>:<span class="w"> </span><span class="s1">'general_image_classification_001.jpg'</span>,<span class="w"> </span><span class="s1">'page_index'</span>:<span class="w"> </span>None,<span class="w"> </span><span class="s1">'class_ids'</span>:<span class="w"> </span>array<span class="o">([</span><span class="m">296</span>,<span class="w"> </span><span class="m">170</span>,<span class="w"> </span><span class="m">356</span>,<span class="w"> </span><span class="m">258</span>,<span class="w"> </span><span class="m">248</span><span class="o">]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int32<span class="o">)</span>,<span class="w"> </span><span class="s1">'scores'</span>:<span class="w"> </span>array<span class="o">([</span><span class="m">0</span>.62736,<span class="w"> </span><span class="m">0</span>.03752,<span class="w"> </span><span class="m">0</span>.03256,<span class="w"> </span><span class="m">0</span>.0323<span class="w"> </span>,<span class="w"> </span><span class="m">0</span>.03194<span class="o">]</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>float32<span class="o">)</span>,<span class="w"> </span><span class="s1">'label_names'</span>:<span class="w"> </span><span class="o">[</span><span class="s1">'ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus'</span>,<span class="w"> </span><span class="s1">'Irish wolfhound'</span>,<span class="w"> </span><span class="s1">'weasel'</span>,<span class="w"> </span><span class="s1">'Samoyed, Samoyede'</span>,<span class="w"> </span><span class="s1">'Eskimo dog, husky'</span><span class="o">]}}</span>
 </span></code></pre></div>
 <p>For the explanation of the running result parameters, you can refer to the result interpretation in <a href="#222-integration-via-python-script">Section 2.2.2 Integration via Python Script</a>.</p>
 <p>The visualization results are saved under <code>save_path</code>, and the visualization result for image classification is as follows:</p>
@@ -8131,13 +8131,13 @@ You're not viewing the latest version.
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;image_classification&quot;</span><span class="p">)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">"image_classification"</span><span class="p">)</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">&quot;general_image_classification_001.jpg&quot;</span><span class="p">)</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">"general_image_classification_001.jpg"</span><span class="p">)</span>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span> <span class="c1">## 打印预测的结构化输出</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span> <span class="c1">## 保存结果可视化图像</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span> <span class="c1">## 保存预测的结构化输出</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">"./output/"</span><span class="p">)</span> <span class="c1">## 保存结果可视化图像</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">"./output/"</span><span class="p">)</span> <span class="c1">## 保存预测的结构化输出</span>
 </span></code></pre></div>
 <p>In the above Python script, the following steps are executed:</p>
 <p>(1) The general image classification pipeline object is instantiated via <code>create_pipeline()</code>. The specific parameter descriptions are as follows:</p>
@@ -8296,13 +8296,13 @@ You're not viewing the latest version.
 </ul>
 <p><div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;image_classification&quot;</span><span class="p">)</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">"image_classification"</span><span class="p">)</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">&quot;general_image_classification_001.jpg&quot;</span><span class="p">)</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">"general_image_classification_001.jpg"</span><span class="p">)</span>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span> <span class="c1">## 打印预测的结构化输出</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span> <span class="c1">## 保存结果可视化图像</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span> <span class="c1">## 保存预测的结构化输出</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">"./output/"</span><span class="p">)</span> <span class="c1">## 保存结果可视化图像</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">"./output/"</span><span class="p">)</span> <span class="c1">## 保存预测的结构化输出</span>
 </span></code></pre></div>
 In the above Python script, the following steps are executed:</p>
 <p>(1) The general image classification pipeline object is instantiated via <code>create_pipeline()</code>. The specific parameter descriptions are as follows:</p>
@@ -8511,15 +8511,15 @@ In the above Python script, the following steps are executed:</p>
 If you have obtained the configuration file, you can customize the settings for the image classification pipeline by simply modifying the <code>pipeline</code> parameter value in the <code>create_pipeline</code> method to the path of the configuration file. The example is as follows:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;./my_path/image_classification.yaml&quot;</span><span class="p">)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">"./my_path/image_classification.yaml"</span><span class="p">)</span>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;./general_image_classification_001.jpg&quot;</span><span class="p">,</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">"./general_image_classification_001.jpg"</span><span class="p">,</span>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">)</span>
 </span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
 </span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
 </span></code></pre></div>
 <p><b>Note:</b> The parameters in the configuration file are pipeline initialization parameters. If you wish to change the initialization parameters for the general image classification pipeline, you can directly modify the parameters in the configuration file and load it for prediction. Additionally, CLI prediction also supports passing a configuration file, simply specify the path of the configuration file with <code>--pipeline</code>.</p>
 <h2 id="3-development-integrationdeployment">3. Development Integration/Deployment<a class="headerlink" href="#3-development-integrationdeployment" title="Permanent link">&para;</a></h2>
@@ -9131,7 +9131,7 @@ You can choose the appropriate deployment method according to your needs to inte
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 25, 2026 04:38:57 UTC">June 25, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 25, 2026 08:26:22 UTC">November 25, 2026</span>
   </span>
 
     
@@ -9141,7 +9141,7 @@ You can choose the appropriate deployment method according to your needs to inte
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 25, 2026 04:38:57 UTC">June 25, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 25, 2026 08:26:22 UTC">November 25, 2026</span>
   </span>
 
     
@@ -9156,7 +9156,7 @@ You can choose the appropriate deployment method according to your needs to inte
     </span>
     <nav>
       
-        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
+        <a href="mailto:72123502+kafka-hatsune@users.noreply.github.com">Kafka-Hatsune</a>
     </nav>
   </span>
 
@@ -9323,10 +9323,10 @@ You can choose the appropriate deployment method according to your needs to inte
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../../../javascripts/katex.min.js"></script>
       

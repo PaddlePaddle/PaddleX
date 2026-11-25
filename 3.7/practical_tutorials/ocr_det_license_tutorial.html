@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -7542,42 +7542,42 @@ You're not viewing the latest version.
 </span></code></pre></div>
 <p>执行上述命令后，PaddleX 会对数据集进行校验，并统计数据集的基本信息。命令运行成功后会在 log 中打印出 <code>Check dataset passed !</code> 信息，同时相关产出会保存在当前目录的 <code>./output/check_dataset</code> 目录下，产出目录中包括可视化的示例样本图片和样本分布直方图。校验结果文件保存在 <code>./output/check_dataset_result.json</code>，校验结果文件具体内容为
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;done_flag&quot;: true,
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;check_pass&quot;: true,
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  &quot;attributes&quot;: {
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    &quot;train_samples&quot;: 5769,
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    &quot;train_sample_paths&quot;: [
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      &quot;check_dataset\/demo_img\/0274305555556-90_266-204&amp;460_520&amp;548-516&amp;548_209&amp;547_204&amp;464_520&amp;460-0_0_3_25_24_24_24_26-63-89.jpg&quot;,
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>      &quot;check_dataset\/demo_img\/0126171875-90_267-294&amp;424_498&amp;486-498&amp;486_296&amp;485_294&amp;425_496&amp;424-0_0_3_24_33_32_30_31-157-29.jpg&quot;,
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>      &quot;check_dataset\/demo_img\/0371516927083-89_254-178&amp;423_517&amp;534-517&amp;534_204&amp;525_178&amp;431_496&amp;423-1_0_3_24_33_31_29_31-117-667.jpg&quot;,
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>      &quot;check_dataset\/demo_img\/03349609375-90_268-211&amp;469_526&amp;576-526&amp;567_214&amp;576_211&amp;473_520&amp;469-0_0_3_27_31_32_29_32-174-48.jpg&quot;,
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>      &quot;check_dataset\/demo_img\/0388454861111-90_269-138&amp;409_496&amp;518-496&amp;518_138&amp;517_139&amp;410_491&amp;409-0_0_3_24_27_26_26_30-174-148.jpg&quot;,
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>      &quot;check_dataset\/demo_img\/0198741319444-89_112-208&amp;517_449&amp;600-423&amp;593_208&amp;600_233&amp;517_449&amp;518-0_0_3_24_28_26_26_26-87-268.jpg&quot;,
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>      &quot;check_dataset\/demo_img\/3027782118055555555-91_92-186&amp;493_532&amp;574-529&amp;574_199&amp;565_186&amp;497_532&amp;493-0_0_3_27_26_30_33_32-73-336.jpg&quot;,
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>      &quot;check_dataset\/demo_img\/034375-90_258-168&amp;449_528&amp;546-528&amp;542_186&amp;546_168&amp;449_525&amp;449-0_0_3_26_30_30_26_33-94-221.jpg&quot;,
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>      &quot;check_dataset\/demo_img\/0286501736111-89_92-290&amp;486_577&amp;587-576&amp;577_290&amp;587_292&amp;491_577&amp;486-0_0_3_17_25_28_30_33-134-122.jpg&quot;,
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>      &quot;check_dataset\/demo_img\/02001953125-92_103-212&amp;486_458&amp;569-458&amp;569_224&amp;555_212&amp;486_446&amp;494-0_0_3_24_24_25_24_24-88-24.jpg&quot;
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  "done_flag": true,
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  "check_pass": true,
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  "attributes": {
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    "train_samples": 5769,
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    "train_sample_paths": [
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      "check_dataset\/demo_img\/0274305555556-90_266-204&amp;460_520&amp;548-516&amp;548_209&amp;547_204&amp;464_520&amp;460-0_0_3_25_24_24_24_26-63-89.jpg",
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>      "check_dataset\/demo_img\/0126171875-90_267-294&amp;424_498&amp;486-498&amp;486_296&amp;485_294&amp;425_496&amp;424-0_0_3_24_33_32_30_31-157-29.jpg",
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>      "check_dataset\/demo_img\/0371516927083-89_254-178&amp;423_517&amp;534-517&amp;534_204&amp;525_178&amp;431_496&amp;423-1_0_3_24_33_31_29_31-117-667.jpg",
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>      "check_dataset\/demo_img\/03349609375-90_268-211&amp;469_526&amp;576-526&amp;567_214&amp;576_211&amp;473_520&amp;469-0_0_3_27_31_32_29_32-174-48.jpg",
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>      "check_dataset\/demo_img\/0388454861111-90_269-138&amp;409_496&amp;518-496&amp;518_138&amp;517_139&amp;410_491&amp;409-0_0_3_24_27_26_26_30-174-148.jpg",
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>      "check_dataset\/demo_img\/0198741319444-89_112-208&amp;517_449&amp;600-423&amp;593_208&amp;600_233&amp;517_449&amp;518-0_0_3_24_28_26_26_26-87-268.jpg",
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>      "check_dataset\/demo_img\/3027782118055555555-91_92-186&amp;493_532&amp;574-529&amp;574_199&amp;565_186&amp;497_532&amp;493-0_0_3_27_26_30_33_32-73-336.jpg",
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>      "check_dataset\/demo_img\/034375-90_258-168&amp;449_528&amp;546-528&amp;542_186&amp;546_168&amp;449_525&amp;449-0_0_3_26_30_30_26_33-94-221.jpg",
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>      "check_dataset\/demo_img\/0286501736111-89_92-290&amp;486_577&amp;587-576&amp;577_290&amp;587_292&amp;491_577&amp;486-0_0_3_17_25_28_30_33-134-122.jpg",
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>      "check_dataset\/demo_img\/02001953125-92_103-212&amp;486_458&amp;569-458&amp;569_224&amp;555_212&amp;486_446&amp;494-0_0_3_24_24_25_24_24-88-24.jpg"
 </span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    ],
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    &quot;val_samples&quot;: 1001,
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    &quot;val_sample_paths&quot;: [
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>      &quot;check_dataset\/demo_img\/3056141493055555554-88_93-205&amp;455_603&amp;597-603&amp;575_207&amp;597_205&amp;468_595&amp;455-0_0_3_24_32_27_31_33-90-213.jpg&quot;,
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>      &quot;check_dataset\/demo_img\/0680295138889-88_94-120&amp;474_581&amp;623-577&amp;605_126&amp;623_120&amp;483_581&amp;474-0_0_5_24_31_24_24_24-116-518.jpg&quot;,
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>      &quot;check_dataset\/demo_img\/0482421875-87_265-154&amp;388_496&amp;530-490&amp;495_154&amp;530_156&amp;411_496&amp;388-0_0_5_25_33_33_33_33-84-104.jpg&quot;,
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>      &quot;check_dataset\/demo_img\/0347504340278-105_106-235&amp;443_474&amp;589-474&amp;589_240&amp;518_235&amp;443_473&amp;503-0_0_3_25_30_33_27_30-162-4.jpg&quot;,
-</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>      &quot;check_dataset\/demo_img\/0205338541667-93_262-182&amp;428_410&amp;519-410&amp;519_187&amp;499_182&amp;428_402&amp;442-0_0_3_24_26_29_32_24-83-63.jpg&quot;,
-</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>      &quot;check_dataset\/demo_img\/0380913628472-97_250-234&amp;403_529&amp;534-529&amp;534_250&amp;480_234&amp;403_528&amp;446-0_0_3_25_25_24_25_25-185-85.jpg&quot;,
-</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>      &quot;check_dataset\/demo_img\/020598958333333334-93_267-256&amp;471_482&amp;563-478&amp;563_256&amp;546_262&amp;471_482&amp;484-0_0_3_26_24_25_32_24-102-115.jpg&quot;,
-</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>      &quot;check_dataset\/demo_img\/3030323350694444445-86_131-170&amp;495_484&amp;593-434&amp;569_170&amp;593_226&amp;511_484&amp;495-11_0_5_30_30_31_33_24-118-59.jpg&quot;,
-</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>      &quot;check_dataset\/demo_img\/3016158854166666667-86_97-243&amp;471_462&amp;546-462&amp;527_245&amp;546_243&amp;479_453&amp;471-0_0_3_24_30_27_24_29-98-40.jpg&quot;,
-</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>      &quot;check_dataset\/demo_img\/0340831163194-89_264-177&amp;412_488&amp;523-477&amp;506_177&amp;523_185&amp;420_488&amp;412-0_0_3_24_30_29_31_31-109-46.jpg&quot;
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    "val_samples": 1001,
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    "val_sample_paths": [
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>      "check_dataset\/demo_img\/3056141493055555554-88_93-205&amp;455_603&amp;597-603&amp;575_207&amp;597_205&amp;468_595&amp;455-0_0_3_24_32_27_31_33-90-213.jpg",
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>      "check_dataset\/demo_img\/0680295138889-88_94-120&amp;474_581&amp;623-577&amp;605_126&amp;623_120&amp;483_581&amp;474-0_0_5_24_31_24_24_24-116-518.jpg",
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>      "check_dataset\/demo_img\/0482421875-87_265-154&amp;388_496&amp;530-490&amp;495_154&amp;530_156&amp;411_496&amp;388-0_0_5_25_33_33_33_33-84-104.jpg",
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>      "check_dataset\/demo_img\/0347504340278-105_106-235&amp;443_474&amp;589-474&amp;589_240&amp;518_235&amp;443_473&amp;503-0_0_3_25_30_33_27_30-162-4.jpg",
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>      "check_dataset\/demo_img\/0205338541667-93_262-182&amp;428_410&amp;519-410&amp;519_187&amp;499_182&amp;428_402&amp;442-0_0_3_24_26_29_32_24-83-63.jpg",
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>      "check_dataset\/demo_img\/0380913628472-97_250-234&amp;403_529&amp;534-529&amp;534_250&amp;480_234&amp;403_528&amp;446-0_0_3_25_25_24_25_25-185-85.jpg",
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>      "check_dataset\/demo_img\/020598958333333334-93_267-256&amp;471_482&amp;563-478&amp;563_256&amp;546_262&amp;471_482&amp;484-0_0_3_26_24_25_32_24-102-115.jpg",
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>      "check_dataset\/demo_img\/3030323350694444445-86_131-170&amp;495_484&amp;593-434&amp;569_170&amp;593_226&amp;511_484&amp;495-11_0_5_30_30_31_33_24-118-59.jpg",
+</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>      "check_dataset\/demo_img\/3016158854166666667-86_97-243&amp;471_462&amp;546-462&amp;527_245&amp;546_243&amp;479_453&amp;471-0_0_3_24_30_27_24_29-98-40.jpg",
+</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>      "check_dataset\/demo_img\/0340831163194-89_264-177&amp;412_488&amp;523-477&amp;506_177&amp;523_185&amp;420_488&amp;412-0_0_3_24_30_29_31_31-109-46.jpg"
 </span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>    ]
 </span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>  },
-</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>  &quot;analysis&quot;: {
-</span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>    &quot;histogram&quot;: &quot;check_dataset\/histogram.png&quot;
+</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>  "analysis": {
+</span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>    "histogram": "check_dataset\/histogram.png"
 </span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>  },
-</span><span id="__span-3-35"><a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>  &quot;dataset_path&quot;: &quot;ccpd_text_det&quot;,
-</span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>  &quot;show_type&quot;: &quot;image&quot;,
-</span><span id="__span-3-37"><a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>  &quot;dataset_type&quot;: &quot;TextDetDataset&quot;
+</span><span id="__span-3-35"><a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>  "dataset_path": "ccpd_text_det",
+</span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>  "show_type": "image",
+</span><span id="__span-3-37"><a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>  "dataset_type": "TextDetDataset"
 </span><span id="__span-3-38"><a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>}
 </span></code></pre></div>
 上述校验结果中，check_pass 为 True 表示数据集格式符合要求，其他部分指标的说明如下：</p>
@@ -7738,18 +7738,18 @@ You're not viewing the latest version.
 <p>随后，基于Python脚本方式，加载修改后的产线配置文件即可:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;my_path/OCR.yaml&quot;</span><span class="p">)</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">"my_path/OCR.yaml"</span><span class="p">)</span>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
 </span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR/case1.jpg&quot;</span><span class="p">,</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">"https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR/case1.jpg"</span><span class="p">,</span>
 </span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">use_doc_orientation_classify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">use_doc_unwarping</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="n">use_textline_orientation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="p">)</span>
 </span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
 </span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">"./output/"</span><span class="p">)</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">"./output/"</span><span class="p">)</span>
 </span></code></pre></div>
 <p>通过上述可在<code>./output</code>下生成预测结果，其中<code>case1.jpg</code>的预测结果如下：</p>
 <center>
@@ -7763,18 +7763,18 @@ You're not viewing the latest version.
 1. 直接将训练好的模型应用在您的 Python 项目中，可以参考如下示例代码:</p>
 <p><div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;paddlex/configs/pipelines/OCR.yaml&quot;</span><span class="p">)</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">"paddlex/configs/pipelines/OCR.yaml"</span><span class="p">)</span>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR/case1.jpg&quot;</span><span class="p">,</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">"https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/OCR/case1.jpg"</span><span class="p">,</span>
 </span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="n">use_doc_orientation_classify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="n">use_doc_unwarping</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="n">use_textline_orientation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="p">)</span>
 </span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
 </span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
-</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
-</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">"./output/"</span><span class="p">)</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s2">"./output/"</span><span class="p">)</span>
 </span></code></pre></div>
 更多参数请参考 <a href="../pipeline_usage/tutorials/ocr_pipelines/OCR.html">OCR 产线使用教程</a>。</p>
 <ol>
@@ -7810,7 +7810,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年6月25日 04:38:57 UTC">2026年6月25日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年11月25日 08:26:22 UTC">2026年11月25日</span>
   </span>
 
     
@@ -7820,7 +7820,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年6月25日 04:38:57 UTC">2026年6月25日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年11月25日 08:26:22 UTC">2026年11月25日</span>
   </span>
 
     
@@ -7835,7 +7835,7 @@ You're not viewing the latest version.
     </span>
     <nav>
       
-        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
+        <a href="mailto:72123502+kafka-hatsune@users.noreply.github.com">Kafka-Hatsune</a>
     </nav>
   </span>
 
@@ -8002,10 +8002,10 @@ You're not viewing the latest version.
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../javascripts/katex.min.js"></script>
       

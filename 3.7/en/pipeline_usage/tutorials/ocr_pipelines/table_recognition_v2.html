@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -8423,7 +8423,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 <p><b>Note: </b>The official models would be download from HuggingFace by first. PaddleX also support to specify the preferred source by setting the environment variable <code>PADDLE_PDX_MODEL_SOURCE</code>. The supported values are <code>huggingface</code>, <code>aistudio</code>, <code>bos</code>, and <code>modelscope</code>. For example, to prioritize using <code>bos</code>, set: <code>PADDLE_PDX_MODEL_SOURCE="bos"</code>.</p>
 <details><summary>👉 <b>After running, the result obtained is: (Click to expand)</b></summary>
 
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{&#39;res&#39;: {&#39;input_path&#39;: &#39;table_recognition_v2.jpg&#39;, &#39;page_index&#39;: None, &#39;model_settings&#39;: {&#39;use_doc_preprocessor&#39;: False, &#39;use_layout_detection&#39;: True, &#39;use_ocr_model&#39;: True}, &#39;layout_det_res&#39;: {&#39;input_path&#39;: None, &#39;page_index&#39;: None, &#39;boxes&#39;: [{&#39;cls_id&#39;: 8, &#39;label&#39;: &#39;table&#39;, &#39;score&#39;: 0.86655592918396, &#39;coordinate&#39;: [0.0125130415, 0.41920784, 1281.3737, 585.3884]}]}, &#39;overall_ocr_res&#39;: {&#39;input_path&#39;: None, &#39;page_index&#39;: None, &#39;model_settings&#39;: {&#39;use_doc_preprocessor&#39;: False, &#39;use_textline_orientation&#39;: False}, &#39;dt_polys&#39;: array([[[   9,   21],
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{'res': {'input_path': 'table_recognition_v2.jpg', 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_layout_detection': True, 'use_ocr_model': True}, 'layout_det_res': {'input_path': None, 'page_index': None, 'boxes': [{'cls_id': 8, 'label': 'table', 'score': 0.86655592918396, 'coordinate': [0.0125130415, 0.41920784, 1281.3737, 585.3884]}]}, 'overall_ocr_res': {'input_path': None, 'page_index': None, 'model_settings': {'use_doc_preprocessor': False, 'use_textline_orientation': False}, 'dt_polys': array([[[   9,   21],
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>        ...,
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        [   9,   59]],
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
@@ -8431,7 +8431,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>       [[1046,  536],
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        ...,
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        [1046,  573]]], dtype=int16), &#39;text_det_params&#39;: {&#39;limit_side_len&#39;: 960, &#39;limit_type&#39;: &#39;max&#39;, &#39;thresh&#39;: 0.3, &#39;box_thresh&#39;: 0.6, &#39;unclip_ratio&#39;: 2.0}, &#39;text_type&#39;: &#39;general&#39;, &#39;textline_orientation_angles&#39;: array([-1, ..., -1]), &#39;text_rec_score_thresh&#39;: 0, &#39;rec_texts&#39;: [&#39;部门&#39;, &#39;报销人&#39;, &#39;报销事由&#39;, &#39;批准人：&#39;, &#39;单据&#39;, &#39;张&#39;, &#39;合计金额&#39;, &#39;元&#39;, &#39;车费票&#39;, &#39;其&#39;, &#39;火车费票&#39;, &#39;飞机票&#39;, &#39;中&#39;, &#39;旅住宿费&#39;, &#39;其他&#39;, &#39;补贴&#39;], &#39;rec_scores&#39;: array([0.99958128, ..., 0.99317062]), &#39;rec_polys&#39;: array([[[   9,   21],
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        [1046,  573]]], dtype=int16), 'text_det_params': {'limit_side_len': 960, 'limit_type': 'max', 'thresh': 0.3, 'box_thresh': 0.6, 'unclip_ratio': 2.0}, 'text_type': 'general', 'textline_orientation_angles': array([-1, ..., -1]), 'text_rec_score_thresh': 0, 'rec_texts': ['部门', '报销人', '报销事由', '批准人：', '单据', '张', '合计金额', '元', '车费票', '其', '火车费票', '飞机票', '中', '旅住宿费', '其他', '补贴'], 'rec_scores': array([0.99958128, ..., 0.99317062]), 'rec_polys': array([[[   9,   21],
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        ...,
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        [   9,   59]],
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
@@ -8439,9 +8439,9 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
 </span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>       [[1046,  536],
 </span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        ...,
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        [1046,  573]]], dtype=int16), &#39;rec_boxes&#39;: array([[   9, ...,   59],
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        [1046,  573]]], dtype=int16), 'rec_boxes': array([[   9, ...,   59],
 </span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>       ...,
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>       [1046, ...,  573]], dtype=int16)}, &#39;table_res_list&#39;: [{&#39;cell_box_list&#39;: [array([ 0.13052222, ..., 73.08310249]), array([104.43082511, ...,  73.27777413]), array([319.39041221, ...,  73.30439308]), array([424.2436837 , ...,  73.44736794]), array([580.75836265, ...,  73.24003914]), array([723.04370201, ...,  73.22717598]), array([984.67315757, ...,  73.20420387]), array([1.25130415e-02, ..., 5.85419208e+02]), array([984.37072837, ..., 137.02281502]), array([984.26586998, ..., 201.22290352]), array([984.24017417, ..., 585.30775765]), array([1039.90606773, ...,  265.44664314]), array([1039.69549644, ...,  329.30540779]), array([1039.66546714, ...,  393.57319954]), array([1039.5122689 , ...,  457.74644783]), array([1039.55535972, ...,  521.73030403]), array([1039.58612144, ...,  585.09468392])], &#39;pred_html&#39;: &#39;&lt;html&gt;&lt;body&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;部门&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;报销人&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;报销事由&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td colspan=&quot;2&quot;&gt;批准人：&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan=&quot;6&quot; rowspan=&quot;8&quot;&gt;&lt;/td&gt;&lt;td colspan=&quot;2&quot;&gt;单据 张&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan=&quot;2&quot;&gt;合计金额 元&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td rowspan=&quot;6&quot;&gt;其 中&lt;/td&gt;&lt;td&gt;车费票&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;火车费票&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;飞机票&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;旅住宿费&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;其他&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;补贴&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;&#39;, &#39;table_ocr_pred&#39;: {&#39;rec_polys&#39;: array([[[   9,   21],
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>       [1046, ...,  573]], dtype=int16)}, 'table_res_list': [{'cell_box_list': [array([ 0.13052222, ..., 73.08310249]), array([104.43082511, ...,  73.27777413]), array([319.39041221, ...,  73.30439308]), array([424.2436837 , ...,  73.44736794]), array([580.75836265, ...,  73.24003914]), array([723.04370201, ...,  73.22717598]), array([984.67315757, ...,  73.20420387]), array([1.25130415e-02, ..., 5.85419208e+02]), array([984.37072837, ..., 137.02281502]), array([984.26586998, ..., 201.22290352]), array([984.24017417, ..., 585.30775765]), array([1039.90606773, ...,  265.44664314]), array([1039.69549644, ...,  329.30540779]), array([1039.66546714, ...,  393.57319954]), array([1039.5122689 , ...,  457.74644783]), array([1039.55535972, ...,  521.73030403]), array([1039.58612144, ...,  585.09468392])], 'pred_html': '&lt;html&gt;&lt;body&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;部门&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;报销人&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;报销事由&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;td colspan="2"&gt;批准人：&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="6" rowspan="8"&gt;&lt;/td&gt;&lt;td colspan="2"&gt;单据 张&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="2"&gt;合计金额 元&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td rowspan="6"&gt;其 中&lt;/td&gt;&lt;td&gt;车费票&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;火车费票&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;飞机票&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;旅住宿费&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;其他&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;补贴&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;', 'table_ocr_pred': {'rec_polys': array([[[   9,   21],
 </span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>        ...,
 </span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        [   9,   59]],
 </span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
@@ -8449,7 +8449,7 @@ The ultra-lightweight cyrillic alphabet recognition model trained based on the P
 </span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
 </span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>       [[1046,  536],
 </span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>        ...,
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>        [1046,  573]]], dtype=int16), &#39;rec_texts&#39;: [&#39;部门&#39;, &#39;报销人&#39;, &#39;报销事由&#39;, &#39;批准人：&#39;, &#39;单据&#39;, &#39;张&#39;, &#39;合计金额&#39;, &#39;元&#39;, &#39;车费票&#39;, &#39;其&#39;, &#39;火车费票&#39;, &#39;飞机票&#39;, &#39;中&#39;, &#39;旅住宿费&#39;, &#39;其他&#39;, &#39;补贴&#39;], &#39;rec_scores&#39;: array([0.99958128, ..., 0.99317062]), &#39;rec_boxes&#39;: array([[   9, ...,   59],
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>        [1046,  573]]], dtype=int16), 'rec_texts': ['部门', '报销人', '报销事由', '批准人：', '单据', '张', '合计金额', '元', '车费票', '其', '火车费票', '飞机票', '中', '旅住宿费', '其他', '补贴'], 'rec_scores': array([0.99958128, ..., 0.99317062]), 'rec_boxes': array([[   9, ...,   59],
 </span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>       ...,
 </span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>       [1046, ...,  573]], dtype=int16)}}]}}
 </span></code></pre></div>
@@ -8469,20 +8469,20 @@ The visualization results are saved under `save_path`, where the visualization r
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;table_recognition_v2&quot;</span><span class="p">)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">"table_recognition_v2"</span><span class="p">)</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;table_recognition_v2.jpg&quot;</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">"table_recognition_v2.jpg"</span><span class="p">,</span>
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">use_doc_orientation_classify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">use_doc_unwarping</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">)</span>
 </span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
 </span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
 </span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_xlsx</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_html</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_xlsx</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_html</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
 </span></code></pre></div>
 <p>In the above Python script, the following steps are executed:</p>
 <p>(1) The <code>create_pipeline()</code> function is used to instantiate a General Table Recognition v2 Pipeline object. The specific parameter descriptions are as follows:</p>
@@ -8943,20 +8943,20 @@ The visualization results are saved under `save_path`, where the visualization r
 <p>If you have obtained the configuration file, you can customize the settings for the General Table Recognition v2 Pipeline. Simply modify the <code>pipeline</code> parameter value in the <code>create_pipeline</code> method to the path of the pipeline configuration file. The example is as follows:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;./my_path/table_recognition_v2.yaml&quot;</span><span class="p">)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">"./my_path/table_recognition_v2.yaml"</span><span class="p">)</span>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;table_recognition_v2.jpg&quot;</span><span class="p">,</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">"table_recognition_v2.jpg"</span><span class="p">,</span>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">use_doc_orientation_classify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="n">use_doc_unwarping</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">)</span>
 </span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
 </span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
 </span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_xlsx</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_html</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_xlsx</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_html</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
 </span></code></pre></div>
 <p><b>Note:</b> The parameters in the configuration file are the initialization parameters for the pipeline. If you want to change the initialization parameters of the General Table Recognition v2 Pipeline, you can directly modify the parameters in the configuration file and load the configuration file for prediction. Additionally, CLI prediction also supports passing in the configuration file by specifying the path with <code>--pipeline</code>.</p>
 <h2 id="3-development-integration-deployment">3. Development Integration / Deployment<a class="headerlink" href="#3-development-integration-deployment" title="Permanent link">&para;</a></h2>
@@ -9858,7 +9858,7 @@ You can choose the appropriate deployment method according to your needs to inte
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 25, 2026 04:38:57 UTC">June 25, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 25, 2026 08:26:22 UTC">November 25, 2026</span>
   </span>
 
     
@@ -9868,7 +9868,7 @@ You can choose the appropriate deployment method according to your needs to inte
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 25, 2026 04:38:57 UTC">June 25, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 25, 2026 08:26:22 UTC">November 25, 2026</span>
   </span>
 
     
@@ -9883,7 +9883,7 @@ You can choose the appropriate deployment method according to your needs to inte
     </span>
     <nav>
       
-        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
+        <a href="mailto:72123502+kafka-hatsune@users.noreply.github.com">Kafka-Hatsune</a>
     </nav>
   </span>
 
@@ -10050,10 +10050,10 @@ You can choose the appropriate deployment method according to your needs to inte
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../../../javascripts/katex.min.js"></script>
       

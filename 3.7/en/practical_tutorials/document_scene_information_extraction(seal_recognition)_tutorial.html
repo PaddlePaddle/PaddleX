@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -7339,22 +7339,22 @@ You're not viewing the latest version.
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;PP-ChatOCRv3-doc&quot;</span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">llm_name</span><span class="o">=</span><span class="s2">&quot;ernie-3.5&quot;</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">llm_params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;api_type&quot;</span><span class="p">:</span> <span class="s2">&quot;qianfan&quot;</span><span class="p">,</span> <span class="s2">&quot;ak&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;sk&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span> <span class="c1"># To use the Qianfan API, please fill in your Access Key (ak) and Secret Key (sk), as you will not be able to invoke large models without them.</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="c1"># llm_params={&quot;api_type&quot;: &quot;aistudio&quot;, &quot;access_token&quot;: &quot;&quot;} # Or, to use the AIStudio API, please fill in your access_token, as you will not be able to invoke large models without it.</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">pipeline</span><span class="o">=</span><span class="s2">"PP-ChatOCRv3-doc"</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">llm_name</span><span class="o">=</span><span class="s2">"ernie-3.5"</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">llm_params</span><span class="o">=</span><span class="p">{</span><span class="s2">"api_type"</span><span class="p">:</span> <span class="s2">"qianfan"</span><span class="p">,</span> <span class="s2">"ak"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span> <span class="s2">"sk"</span><span class="p">:</span> <span class="s2">""</span><span class="p">}</span> <span class="c1"># To use the Qianfan API, please fill in your Access Key (ak) and Secret Key (sk), as you will not be able to invoke large models without them.</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="c1"># llm_params={"api_type": "aistudio", "access_token": ""} # Or, to use the AIStudio API, please fill in your access_token, as you will not be able to invoke large models without it.</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="p">)</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">visual_result</span><span class="p">,</span> <span class="n">visual_info</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">visual_predict</span><span class="p">(</span><span class="s2">&quot;https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/test.png&quot;</span><span class="p">)</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">visual_result</span><span class="p">,</span> <span class="n">visual_info</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">visual_predict</span><span class="p">(</span><span class="s2">"https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/test.png"</span><span class="p">)</span>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">visual_result</span><span class="p">:</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">&quot;./output&quot;</span><span class="p">)</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_html</span><span class="p">(</span><span class="s1">&#39;./output&#39;</span><span class="p">)</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_xlsx</span><span class="p">(</span><span class="s1">&#39;./output&#39;</span><span class="p">)</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">"./output"</span><span class="p">)</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_html</span><span class="p">(</span><span class="s1">'./output'</span><span class="p">)</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_xlsx</span><span class="p">(</span><span class="s1">'./output'</span><span class="p">)</span>
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
 </span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">vector</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">build_vector</span><span class="p">(</span><span class="n">visual_info</span><span class="o">=</span><span class="n">visual_info</span><span class="p">)</span>
 </span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="n">chat_result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">chat</span><span class="p">(</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">key_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;印章名称&quot;</span><span class="p">],</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">key_list</span><span class="o">=</span><span class="p">[</span><span class="s2">"印章名称"</span><span class="p">],</span>
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">visual_info</span><span class="o">=</span><span class="n">visual_info</span><span class="p">,</span>
 </span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">vector</span><span class="o">=</span><span class="n">vector</span><span class="p">,</span>
 </span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="p">)</span>
@@ -7367,7 +7367,7 @@ You're not viewing the latest version.
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>The result has been saved in output/tmpx5tmgsem_ocr.jpg.
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>The retrieved vectorstore is not for PaddleX and will return vectorstore directly
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>{&#39;chat_res&#39;: {&#39;印章名称&#39;: &#39;未知&#39;}, &#39;prompt&#39;: &#39;&#39;}
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>{'chat_res': {'印章名称': '未知'}, 'prompt': ''}
 </span></code></pre></div>
 <p>In the <code>output</code> directory, the visualization results of seal_recognition and OCR (if table exits, table recognition, as well as the table results in HTML and XLSX formats), are saved.</p>
 <p>Among them, the visualization of the seal_recognition results is as follows:</p>
@@ -7425,42 +7425,42 @@ You're not viewing the latest version.
 </span></code></pre></div>
 <p>After executing the above command, PaddleX will verify the dataset and count the basic information of the dataset. If the command runs successfully, it will print <code>Check dataset passed !</code> in the log, and the relevant outputs will be saved in the current directory's <code>./output/check_dataset</code> directory. The output directory includes visualized example images and a histogram of sample distribution. The verification result file is saved in <code>./output/check_dataset_result.json</code>, and the specific content of the verification result file is as follows:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>{
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  &quot;done_flag&quot;: true,
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  &quot;check_pass&quot;: true,
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  &quot;attributes&quot;: {
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    &quot;train_samples&quot;: 793,
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    &quot;train_sample_paths&quot;: [
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>      &quot;..\/dataset\/practical_seal\/images\/PMC4055390_00006_seal_0_crop.png&quot;,
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>      &quot;..\/dataset\/practical_seal\/images\/PMC3712248_00008_seal_0_crop.png&quot;,
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>      &quot;..\/dataset\/practical_seal\/images\/PMC4227328_00001_seal_0_crop.png&quot;,
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>      &quot;..\/dataset\/practical_seal\/images\/PMC3745965_00007_seal_0_crop.png&quot;,
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>      &quot;..\/dataset\/practical_seal\/images\/PMC3980931_00001_seal_0_crop.png&quot;,
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>      &quot;..\/dataset\/practical_seal\/images\/PMC5896212_00003_seal_0_crop.png&quot;,
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>      &quot;..\/dataset\/practical_seal\/images\/PMC3838814_00003_seal_0_crop.png&quot;,
-</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>      &quot;..\/dataset\/practical_seal\/images\/PMC4677212_00002_seal_0_crop.png&quot;,
-</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>      &quot;..\/dataset\/practical_seal\/images\/PMC4058803_00001_seal_0_crop.png&quot;,
-</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>      &quot;..\/dataset\/practical_seal\/images\/PMC4925966_00001_seal_0_crop.png&quot;
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  "done_flag": true,
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  "check_pass": true,
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  "attributes": {
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    "train_samples": 793,
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    "train_sample_paths": [
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>      "..\/dataset\/practical_seal\/images\/PMC4055390_00006_seal_0_crop.png",
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>      "..\/dataset\/practical_seal\/images\/PMC3712248_00008_seal_0_crop.png",
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>      "..\/dataset\/practical_seal\/images\/PMC4227328_00001_seal_0_crop.png",
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>      "..\/dataset\/practical_seal\/images\/PMC3745965_00007_seal_0_crop.png",
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>      "..\/dataset\/practical_seal\/images\/PMC3980931_00001_seal_0_crop.png",
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>      "..\/dataset\/practical_seal\/images\/PMC5896212_00003_seal_0_crop.png",
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>      "..\/dataset\/practical_seal\/images\/PMC3838814_00003_seal_0_crop.png",
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>      "..\/dataset\/practical_seal\/images\/PMC4677212_00002_seal_0_crop.png",
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>      "..\/dataset\/practical_seal\/images\/PMC4058803_00001_seal_0_crop.png",
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>      "..\/dataset\/practical_seal\/images\/PMC4925966_00001_seal_0_crop.png"
 </span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    ],
-</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    &quot;val_samples&quot;: 277,
-</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    &quot;val_sample_paths&quot;: [
-</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>      &quot;..\/dataset\/practical_seal\/images\/15.jpg&quot;,
-</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>      &quot;..\/dataset\/practical_seal\/images\/16.jpg&quot;,
-</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>      &quot;..\/dataset\/practical_seal\/images\/17.jpg&quot;,
-</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>      &quot;..\/dataset\/practical_seal\/images\/18.jpg&quot;,
-</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>      &quot;..\/dataset\/practical_seal\/images\/19.jpg&quot;,
-</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>      &quot;..\/dataset\/practical_seal\/images\/20.jpg&quot;,
-</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>      &quot;..\/dataset\/practical_seal\/images\/21.jpg&quot;,
-</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>      &quot;..\/dataset\/practical_seal\/images\/22.jpg&quot;,
-</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>      &quot;..\/dataset\/practical_seal\/images\/23.jpg&quot;,
-</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>      &quot;..\/dataset\/practical_seal\/images\/24.jpg&quot;
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    "val_samples": 277,
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    "val_sample_paths": [
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>      "..\/dataset\/practical_seal\/images\/15.jpg",
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>      "..\/dataset\/practical_seal\/images\/16.jpg",
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>      "..\/dataset\/practical_seal\/images\/17.jpg",
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>      "..\/dataset\/practical_seal\/images\/18.jpg",
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>      "..\/dataset\/practical_seal\/images\/19.jpg",
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>      "..\/dataset\/practical_seal\/images\/20.jpg",
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>      "..\/dataset\/practical_seal\/images\/21.jpg",
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>      "..\/dataset\/practical_seal\/images\/22.jpg",
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>      "..\/dataset\/practical_seal\/images\/23.jpg",
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>      "..\/dataset\/practical_seal\/images\/24.jpg"
 </span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>    ]
 </span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>  },
-</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>  &quot;analysis&quot;: {
-</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>    &quot;histogram&quot;: &quot;check_dataset\/histogram.png&quot;
+</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>  "analysis": {
+</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>    "histogram": "check_dataset\/histogram.png"
 </span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>  },
-</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>  &quot;dataset_path&quot;: &quot;.\/dataset\/practical_seal\/&quot;,
-</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>  &quot;show_type&quot;: &quot;image&quot;,
-</span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>  &quot;dataset_type&quot;: &quot;TextDetDataset&quot;
+</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>  "dataset_path": ".\/dataset\/practical_seal\/",
+</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>  "show_type": "image",
+</span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>  "dataset_type": "TextDetDataset"
 </span><span id="__span-4-38"><a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>}
 </span></code></pre></div>
 <p>In the above verification results, <code>check_pass</code> being <code>True</code> indicates that the dataset format meets the requirements. Explanations for other indicators are as follows:</p>
@@ -7628,7 +7628,7 @@ You're not viewing the latest version.
 </span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="nt">seal_text_det_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./output/best_accuracy/inference</span>
 </span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="nt">doc_image_ori_cls_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
 </span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span><span class="nt">doc_image_unwarp_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="nt">llm_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ernie-3.5&quot;</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="nt">llm_name</span><span class="p">:</span><span class="w"> </span><span class="s">"ernie-3.5"</span>
 </span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span><span class="nt">llm_params</span><span class="p">:</span>
 </span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">    </span><span class="nt">api_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qianfan</span>
 </span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">    </span><span class="nt">ak</span><span class="p">:</span>
@@ -7638,29 +7638,29 @@ You're not viewing the latest version.
 <div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
 </span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;./my_path/PP-ChatOCRv3-doc.yaml&quot;</span><span class="p">,</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">llm_name</span><span class="o">=</span><span class="s2">&quot;ernie-3.5&quot;</span><span class="p">,</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="n">llm_params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;api_type&quot;</span><span class="p">:</span> <span class="s2">&quot;qianfan&quot;</span><span class="p">,</span> <span class="s2">&quot;ak&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;sk&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span> <span class="c1"># 请填入您的ak与sk，否则无法调用大模型</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="c1"># llm_params={&quot;api_type&quot;: &quot;aistudio&quot;, &quot;access_token&quot;: &quot;&quot;} # 或者使用AIStudio接口，请填入您的access_token，否则无法调用大模型</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">pipeline</span><span class="o">=</span><span class="s2">"./my_path/PP-ChatOCRv3-doc.yaml"</span><span class="p">,</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">llm_name</span><span class="o">=</span><span class="s2">"ernie-3.5"</span><span class="p">,</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="n">llm_params</span><span class="o">=</span><span class="p">{</span><span class="s2">"api_type"</span><span class="p">:</span> <span class="s2">"qianfan"</span><span class="p">,</span> <span class="s2">"ak"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span> <span class="s2">"sk"</span><span class="p">:</span> <span class="s2">""</span><span class="p">}</span> <span class="c1"># 请填入您的ak与sk，否则无法调用大模型</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="c1"># llm_params={"api_type": "aistudio", "access_token": ""} # 或者使用AIStudio接口，请填入您的access_token，否则无法调用大模型</span>
 </span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="p">)</span>
 </span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="n">visual_result</span><span class="p">,</span> <span class="n">visual_info</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">visual_predict</span><span class="p">(</span><span class="s2">&quot;https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/test.png&quot;</span><span class="p">)</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="n">visual_result</span><span class="p">,</span> <span class="n">visual_info</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">visual_predict</span><span class="p">(</span><span class="s2">"https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/test.png"</span><span class="p">)</span>
 </span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
 </span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">visual_result</span><span class="p">:</span>
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">&quot;./output_ft&quot;</span><span class="p">)</span>
-</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_html</span><span class="p">(</span><span class="s1">&#39;./output_ft&#39;</span><span class="p">)</span>
-</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_xlsx</span><span class="p">(</span><span class="s1">&#39;./output_ft&#39;</span><span class="p">)</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">"./output_ft"</span><span class="p">)</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_html</span><span class="p">(</span><span class="s1">'./output_ft'</span><span class="p">)</span>
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_xlsx</span><span class="p">(</span><span class="s1">'./output_ft'</span><span class="p">)</span>
 </span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
 </span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="n">vector</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">build_vector</span><span class="p">(</span><span class="n">visual_info</span><span class="o">=</span><span class="n">visual_info</span><span class="p">)</span>
 </span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="n">chat_result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">chat</span><span class="p">(</span>
-</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>    <span class="n">key_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;印章名称&quot;</span><span class="p">],</span>
+</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>    <span class="n">key_list</span><span class="o">=</span><span class="p">[</span><span class="s2">"印章名称"</span><span class="p">],</span>
 </span><span id="__span-10-20"><a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>    <span class="n">visual_info</span><span class="o">=</span><span class="n">visual_info</span><span class="p">,</span>
 </span><span id="__span-10-21"><a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>    <span class="n">vector</span><span class="o">=</span><span class="n">vector</span><span class="p">,</span>
 </span><span id="__span-10-22"><a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>    <span class="p">)</span>
 </span><span id="__span-10-23"><a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="n">chat_result</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
 </span></code></pre></div>
 <p>By following the above steps, prediction results can be generated under <code>./output_ft</code>, and the printed key information extraction results are as follows:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>{&#39;chat_res&#39;: {&#39;印章名称&#39;: &#39;广关市国士资源局&#39;}, &#39;prompt&#39;: &#39;&#39;}
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>{'chat_res': {'印章名称': '广关市国士资源局'}, 'prompt': ''}
 </span></code></pre></div>
 <p>It can be observed that after fine-tuning the model, the key information has been correctly extracted.</p>
 <p>The visualization result of the seal is as follows, with the correctly added ability to extract the seal text information:</p>
@@ -7673,22 +7673,22 @@ You're not viewing the latest version.
 <div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;./my_path/PP-ChatOCRv3-doc.yaml&quot;</span><span class="p">,</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">llm_name</span><span class="o">=</span><span class="s2">&quot;ernie-3.5&quot;</span><span class="p">,</span>
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="n">llm_params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;api_type&quot;</span><span class="p">:</span> <span class="s2">&quot;qianfan&quot;</span><span class="p">,</span> <span class="s2">&quot;ak&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;sk&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span> <span class="c1"># To use the Qianfan API, please fill in your Access Key (ak) and Secret Key (sk), as you will not be able to invoke large models without them.</span>
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="c1"># llm_params={&quot;api_type&quot;: &quot;aistudio&quot;, &quot;access_token&quot;: &quot;&quot;} # Or, to use the AIStudio API, please fill in your access_token, as you will not be able to invoke large models without it.</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">pipeline</span><span class="o">=</span><span class="s2">"./my_path/PP-ChatOCRv3-doc.yaml"</span><span class="p">,</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">llm_name</span><span class="o">=</span><span class="s2">"ernie-3.5"</span><span class="p">,</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="n">llm_params</span><span class="o">=</span><span class="p">{</span><span class="s2">"api_type"</span><span class="p">:</span> <span class="s2">"qianfan"</span><span class="p">,</span> <span class="s2">"ak"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span> <span class="s2">"sk"</span><span class="p">:</span> <span class="s2">""</span><span class="p">}</span> <span class="c1"># To use the Qianfan API, please fill in your Access Key (ak) and Secret Key (sk), as you will not be able to invoke large models without them.</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="c1"># llm_params={"api_type": "aistudio", "access_token": ""} # Or, to use the AIStudio API, please fill in your access_token, as you will not be able to invoke large models without it.</span>
 </span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="p">)</span>
 </span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="n">visual_result</span><span class="p">,</span> <span class="n">visual_info</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">visual_predict</span><span class="p">(</span><span class="s2">&quot;https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/test.png&quot;</span><span class="p">)</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="n">visual_result</span><span class="p">,</span> <span class="n">visual_info</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">visual_predict</span><span class="p">(</span><span class="s2">"https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/PP-ChatOCRv3_doc_seal/test.png"</span><span class="p">)</span>
 </span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
 </span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">visual_result</span><span class="p">:</span>
-</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">&quot;./output&quot;</span><span class="p">)</span>
-</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_html</span><span class="p">(</span><span class="s1">&#39;./output&#39;</span><span class="p">)</span>
-</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_xlsx</span><span class="p">(</span><span class="s1">&#39;./output&#39;</span><span class="p">)</span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">"./output"</span><span class="p">)</span>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_html</span><span class="p">(</span><span class="s1">'./output'</span><span class="p">)</span>
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_xlsx</span><span class="p">(</span><span class="s1">'./output'</span><span class="p">)</span>
 </span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
 </span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="n">vector</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">build_vector</span><span class="p">(</span><span class="n">visual_info</span><span class="o">=</span><span class="n">visual_info</span><span class="p">)</span>
 </span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="n">chat_result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">chat</span><span class="p">(</span>
-</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>    <span class="n">key_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;seal&quot;</span><span class="p">],</span>
+</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>    <span class="n">key_list</span><span class="o">=</span><span class="p">[</span><span class="s2">"seal"</span><span class="p">],</span>
 </span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>    <span class="n">visual_info</span><span class="o">=</span><span class="n">visual_info</span><span class="p">,</span>
 </span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>    <span class="n">vector</span><span class="o">=</span><span class="n">vector</span><span class="p">,</span>
 </span><span id="__span-12-22"><a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>    <span class="p">)</span>
@@ -7728,7 +7728,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 25, 2026 04:38:57 UTC">June 25, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 25, 2026 08:26:22 UTC">November 25, 2026</span>
   </span>
 
     
@@ -7738,7 +7738,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 25, 2026 04:38:57 UTC">June 25, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 25, 2026 08:26:22 UTC">November 25, 2026</span>
   </span>
 
     
@@ -7753,7 +7753,7 @@ You're not viewing the latest version.
     </span>
     <nav>
       
-        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
+        <a href="mailto:72123502+kafka-hatsune@users.noreply.github.com">Kafka-Hatsune</a>
     </nav>
   </span>
 
@@ -7920,10 +7920,10 @@ You're not viewing the latest version.
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/katex.min.js"></script>
       

@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -7432,15 +7432,15 @@ You're not viewing the latest version.
 </blockquote>
 <p>After installing the wheel package, you can complete the inference of the table classification module with just a few lines of code. You can switch between models under this module at will, and you can also integrate the model inference of the table classification module into your project. Before running the following code, please download the <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">example image</a> to your local machine.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_model</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;PP-LCNet_x1_0_table_cls&quot;</span><span class="p">)</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">&quot;table_recognition.jpg&quot;</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">"PP-LCNet_x1_0_table_cls"</span><span class="p">)</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">"table_recognition.jpg"</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">json_format</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">&quot;./output/res.json&quot;</span><span class="p">)</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">"./output/res.json"</span><span class="p">)</span>
 </span></code></pre></div>
 <p><b>Note: </b>The official models would be download from HuggingFace by first. PaddleX also support to specify the preferred source by setting the environment variable <code>PADDLE_PDX_MODEL_SOURCE="BOS"</code>. The supported values are <code>huggingface</code>, <code>aistudio</code>, <code>bos</code>, and <code>modelscope</code>. For example, to prioritize using <code>bos</code>, set: <code>PADDLE_PDX_MODEL_SOURCE="bos"</code>.</p>
 <p>After running the code, the result obtained is:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{&#39;res&#39;: {&#39;input_path&#39;: &#39;table_recognition.jpg&#39;, &quot;page_index&quot;: None, &#39;class_ids&#39;: array([0, 1], dtype=int32), &#39;scores&#39;: array([0.84421, 0.15579], dtype=float32), &#39;label_names&#39;: [&#39;wired_table&#39;, &#39;wireless_table&#39;]}}
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>{'res': {'input_path': 'table_recognition.jpg', "page_index": None, 'class_ids': array([0, 1], dtype=int32), 'scores': array([0.84421, 0.15579], dtype=float32), 'label_names': ['wired_table', 'wireless_table']}}
 </span></code></pre></div>
 <p><img src="https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/table_classification/01.jpg"></p>
 <p>The meanings of the parameters in the running results are as follows:
@@ -7660,44 +7660,44 @@ You're not viewing the latest version.
 <p>After executing the above command, PaddleX will verify the dataset and collect basic information about it. If the command runs successfully, it will print the message <code>Check dataset passed !</code> in the log. The verification result file is saved at <code>./output/check_dataset_result.json</code>, and related outputs will be stored in the <code>./output/check_dataset</code> directory under the current directory. This output directory includes visualized example sample images and sample distribution histograms.</p>
 <details><summary>👉 <b>Verification Result Details (Click to Expand)</b></summary>
 
-<div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="w">  </span><span class="nt">&quot;done_flag&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;check_pass&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">&quot;attributes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">&quot;label_file&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;..\/..\/..\/docs_for_rc\/test_for_doc\/table_cls_examples\/label.txt&quot;</span><span class="p">,</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nt">&quot;num_classes&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">&quot;train_samples&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">410</span><span class="p">,</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nt">&quot;train_sample_paths&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_14707_0.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_14346_1.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_14707_3.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_12881_4.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_1676_4.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_14909_3.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_3530_4.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_5471_4.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_8396_4.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_13019_2.png&quot;</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="w">  </span><span class="nt">"done_flag"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">"check_pass"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">"label_file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..\/..\/..\/docs_for_rc\/test_for_doc\/table_cls_examples\/label.txt"</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nt">"num_classes"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">"train_samples"</span><span class="p">:</span><span class="w"> </span><span class="mi">410</span><span class="p">,</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nt">"train_sample_paths"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_14707_0.png"</span><span class="p">,</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_14346_1.png"</span><span class="p">,</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_14707_3.png"</span><span class="p">,</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_12881_4.png"</span><span class="p">,</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_1676_4.png"</span><span class="p">,</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_14909_3.png"</span><span class="p">,</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_3530_4.png"</span><span class="p">,</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_5471_4.png"</span><span class="p">,</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_8396_4.png"</span><span class="p">,</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_13019_2.png"</span>
 </span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span><span class="p">],</span>
-</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">    </span><span class="nt">&quot;val_samples&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">102</span><span class="p">,</span>
-</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">    </span><span class="nt">&quot;val_sample_paths&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_4345_3.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_15063_0.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_747_3.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_5535_2.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_15250_2.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_4791_4.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_2562_2.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_15248_2.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_4178_3.png&quot;</span><span class="p">,</span>
-</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">      </span><span class="s2">&quot;check_dataset\/demo_img\/img_11090_0.png&quot;</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">    </span><span class="nt">"val_samples"</span><span class="p">:</span><span class="w"> </span><span class="mi">102</span><span class="p">,</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">    </span><span class="nt">"val_sample_paths"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_4345_3.png"</span><span class="p">,</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_15063_0.png"</span><span class="p">,</span>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_747_3.png"</span><span class="p">,</span>
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_5535_2.png"</span><span class="p">,</span>
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_15250_2.png"</span><span class="p">,</span>
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_4791_4.png"</span><span class="p">,</span>
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_2562_2.png"</span><span class="p">,</span>
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_15248_2.png"</span><span class="p">,</span>
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_4178_3.png"</span><span class="p">,</span>
+</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">      </span><span class="s2">"check_dataset\/demo_img\/img_11090_0.png"</span>
 </span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="w">    </span><span class="p">]</span>
 </span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">  </span><span class="nt">&quot;analysis&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="w">    </span><span class="nt">&quot;histogram&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;check_dataset\/histogram.png&quot;</span>
+</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">  </span><span class="nt">"analysis"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="w">    </span><span class="nt">"histogram"</span><span class="p">:</span><span class="w"> </span><span class="s2">"check_dataset\/histogram.png"</span>
 </span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="w">  </span><span class="nt">&quot;dataset_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;table_cls_examples&quot;</span><span class="p">,</span>
-</span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">  </span><span class="nt">&quot;show_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;image&quot;</span><span class="p">,</span>
-</span><span id="__span-4-38"><a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="w">  </span><span class="nt">&quot;dataset_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ClsDataset&quot;</span>
+</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="w">  </span><span class="nt">"dataset_path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"table_cls_examples"</span><span class="p">,</span>
+</span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">  </span><span class="nt">"show_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image"</span><span class="p">,</span>
+</span><span id="__span-4-38"><a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="w">  </span><span class="nt">"dataset_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ClsDataset"</span>
 </span></code></pre></div>
 
 <p>In the above verification results, <code>check_pass</code> being <code>True</code> indicates that the dataset format meets the requirements. The explanations for the other metrics are as follows:</p>
@@ -7804,8 +7804,8 @@ Other related parameters can be set by modifying the fields under <code>Global</
 <p>Inference prediction can be performed via the command line with just one command. Before running the following code, please download the <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/table_recognition.jpg">example image</a> to your local machine. Note that due to network issues, the link may not be accessible. If you encounter any problems, please check the validity of the link and try again.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/table_classification/PP-LCNet_x1_0_table_cls.yaml<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>predict<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>-o<span class="w"> </span>Predict.model_dir<span class="o">=</span><span class="s2">&quot;./output/best_model/inference&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>-o<span class="w"> </span>Predict.input<span class="o">=</span><span class="s2">&quot;table_recognition.jpg&quot;</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>-o<span class="w"> </span>Predict.model_dir<span class="o">=</span><span class="s2">"./output/best_model/inference"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>-o<span class="w"> </span>Predict.input<span class="o">=</span><span class="s2">"table_recognition.jpg"</span>
 </span></code></pre></div>
 <p>Similar to model training and evaluation, the following steps are required:</p>
 <ul>
@@ -7864,7 +7864,7 @@ Other related parameters can be set by modifying the fields under <code>Global</
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 25, 2026 04:38:57 UTC">June 25, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 25, 2026 08:26:22 UTC">November 25, 2026</span>
   </span>
 
     
@@ -7874,7 +7874,7 @@ Other related parameters can be set by modifying the fields under <code>Global</
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 25, 2026 04:38:57 UTC">June 25, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 25, 2026 08:26:22 UTC">November 25, 2026</span>
   </span>
 
     
@@ -7889,7 +7889,7 @@ Other related parameters can be set by modifying the fields under <code>Global</
     </span>
     <nav>
       
-        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
+        <a href="mailto:72123502+kafka-hatsune@users.noreply.github.com">Kafka-Hatsune</a>
     </nav>
   </span>
 
@@ -8056,10 +8056,10 @@ Other related parameters can be set by modifying the fields under <code>Global</
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../../../javascripts/katex.min.js"></script>
       

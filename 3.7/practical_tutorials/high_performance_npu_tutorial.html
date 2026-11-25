@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -29,10 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -6948,14 +6948,14 @@ You're not viewing the latest version.
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>-v<span class="w"> </span>/usr/local/Ascend/driver:/usr/local/Ascend/driver<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>-v<span class="w"> </span>/usr/local/bin/npu-smi:/usr/local/bin/npu-smi<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>-v<span class="w"> </span>/usr/local/dcmi:/usr/local/dcmi<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>-e<span class="w"> </span><span class="nv">ASCEND_RT_VISIBLE_DEVICES</span><span class="o">=</span><span class="s2">&quot;0,1,2,3,4,5,6,7&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>-e<span class="w"> </span><span class="nv">ASCEND_RT_VISIBLE_DEVICES</span><span class="o">=</span><span class="s2">"0,1,2,3,4,5,6,7"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>ccr-2vdh3abv-pub.cnc.bj.baidubce.com/device/paddle-npu:cann80T113-ubuntu20-npu-910b-base-x86_64-gcc84<span class="w"> </span>/bin/bash
 </span></code></pre></div>
 <h2 id="2paddlex">2、安装PaddleX及高性能推理插件<a class="headerlink" href="#2paddlex" title="Permanent link">&para;</a></h2>
 <h3 id="21-paddlex">2.1 安装PaddleX<a class="headerlink" href="#21-paddlex" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/PaddlePaddle/PaddleX.git
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">cd</span><span class="w"> </span>PaddleX
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[base]&quot;</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[base]"</span>
 </span></code></pre></div>
 <h3 id="22">2.2 安装高性能推理插件<a class="headerlink" href="#22" title="Permanent link">&para;</a></h3>
 <p>高性能推理插件的 whl 包已经上传至 PaddleX 官方源，可以直接下载安装，也可以手动编译安装。</p>
@@ -7149,37 +7149,37 @@ You're not viewing the latest version.
 </span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>from paddlex import create_model
 </span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
 </span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>hpi_config = {
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    &quot;auto_config&quot;: False,   # 关闭自动配置功能，手动配置后端
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    &quot;backend&quot;: &quot;om&quot;, # 选用om后端
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    "auto_config": False,   # 关闭自动配置功能，手动配置后端
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    "backend": "om", # 选用om后端
 </span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>}
 </span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a># model_name传入使用的模型名称，
 </span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a># model_dir传入模型及配置文件存放的路径
-</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a># device设置为&quot;npu:0&quot;或&quot;npu&quot;，不设置卡号则默认使用0号卡
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a># device设置为"npu:0"或"npu"，不设置卡号则默认使用0号卡
 </span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a># use_hpip设置为True，开启高性能推理插件
 </span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a># input_shape传入模型输入shape，以列表形式传入[c,w,h]，需要和atc转换时指定的输入shape保持一致，且目前只有OCR类的模型需要传入该参数
-</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>model = create_model(model_name=&quot;PP-OCRv4_mobile_rec&quot;, model_dir=&quot;PP-OCRv4_mobile_rec_infer_om_910b&quot;, device=&quot;npu:0&quot;, use_hpip=True, hpi_config=hpi_config, input_shape=[3, 48, 320])
-</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>output = model.predict(&quot;general_ocr_rec_001.png&quot;)
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>model = create_model(model_name="PP-OCRv4_mobile_rec", model_dir="PP-OCRv4_mobile_rec_infer_om_910b", device="npu:0", use_hpip=True, hpi_config=hpi_config, input_shape=[3, 48, 320])
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>output = model.predict("general_ocr_rec_001.png")
 </span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>for res in output:
 </span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>    res.print(json_format=False)
-</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>    res.save_to_img(&quot;./output/&quot;)
-</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>    res.save_to_json(&quot;./output/res.json&quot;)
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>    res.save_to_img("./output/")
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>    res.save_to_json("./output/res.json")
 </span></code></pre></div></p>
 <p>ResNet50：</p>
 <p>下载官方提供的<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_image_classification_001.jpg">图像分类示例图片</a>，运行下面 python 代码即可完成推理。</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_model</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">hpi_config</span> <span class="o">=</span> <span class="p">{</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="s2">&quot;auto_config&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>   <span class="c1"># 关闭自动配置功能，手动配置后端</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="s2">&quot;om&quot;</span><span class="p">,</span> <span class="c1"># 选用om后端</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="s2">"auto_config"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>   <span class="c1"># 关闭自动配置功能，手动配置后端</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="s2">"backend"</span><span class="p">:</span> <span class="s2">"om"</span><span class="p">,</span> <span class="c1"># 选用om后端</span>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="p">}</span>
 </span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
 </span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># 无需传参input_shape</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;ResNet50&quot;</span><span class="p">,</span> <span class="n">model_dir</span><span class="o">=</span><span class="s2">&quot;ResNet50_infer_om_910b&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;npu&quot;</span><span class="p">,</span> <span class="n">use_hpip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hpi_config</span><span class="o">=</span><span class="n">hpi_config</span><span class="p">)</span>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">&quot;general_image_classification_001.jpg&quot;</span><span class="p">)</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">"ResNet50"</span><span class="p">,</span> <span class="n">model_dir</span><span class="o">=</span><span class="s2">"ResNet50_infer_om_910b"</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">"npu"</span><span class="p">,</span> <span class="n">use_hpip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hpi_config</span><span class="o">=</span><span class="n">hpi_config</span><span class="p">)</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">"general_image_classification_001.jpg"</span><span class="p">)</span>
 </span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
 </span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">json_format</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">&quot;./output/res.json&quot;</span><span class="p">)</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">"./output/res.json"</span><span class="p">)</span>
 </span></code></pre></div>
 <p>如果遇到问题，可以先参考本文档第5小节：常见问题解决方法，如果仍未解决，可以给 PaddleX 官方提 issue，或者加入 PaddleX 官方交流群进行讨论。</p>
 <h3 id="32-ort">3.2 ORT后端推理<a class="headerlink" href="#32-ort" title="Permanent link">&para;</a></h3>
@@ -7198,18 +7198,18 @@ You're not viewing the latest version.
 <div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_model</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">hpi_config</span> <span class="o">=</span> <span class="p">{</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="s2">&quot;auto_config&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>   <span class="c1"># 关闭自动配置功能，手动配置后端</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="s2">&quot;onnxruntime&quot;</span><span class="p">,</span> <span class="c1"># 选用onnxruntime后端</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="s2">"auto_config"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>   <span class="c1"># 关闭自动配置功能，手动配置后端</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="s2">"backend"</span><span class="p">:</span> <span class="s2">"onnxruntime"</span><span class="p">,</span> <span class="c1"># 选用onnxruntime后端</span>
 </span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p">}</span>
 </span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># device设置为&quot;cpu&quot;</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># device设置为"cpu"</span>
 </span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># 无需设置input_shape</span>
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;PP-OCRv4_mobile_rec&quot;</span><span class="p">,</span> <span class="n">model_dir</span><span class="o">=</span><span class="s2">&quot;PP-OCRv4_mobile_rec_infer_onnx&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span> <span class="n">use_hpip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hpi_config</span><span class="o">=</span><span class="n">hpi_config</span><span class="p">)</span>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">&quot;general_ocr_rec_001.png&quot;</span><span class="p">)</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">"PP-OCRv4_mobile_rec"</span><span class="p">,</span> <span class="n">model_dir</span><span class="o">=</span><span class="s2">"PP-OCRv4_mobile_rec_infer_onnx"</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">"cpu"</span><span class="p">,</span> <span class="n">use_hpip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hpi_config</span><span class="o">=</span><span class="n">hpi_config</span><span class="p">)</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">"general_ocr_rec_001.png"</span><span class="p">)</span>
 </span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
 </span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">json_format</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
-</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">&quot;./output/res.json&quot;</span><span class="p">)</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">"./output/res.json"</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="4">4、产线推理<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
 <p>高性能推理支持 PaddleX 产线推理，以 OCR 产线推理为例进行说明，关于 OCR 产线的详细介绍可以参考<a href="../pipeline_usage/tutorials/ocr_pipelines/OCR.html">通用OCR产线使用教程</a>。</p>
@@ -7282,18 +7282,18 @@ You're not viewing the latest version.
 <p>下载官方提供的<a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/general_ocr_002.png">示例图片</a>，运行下面 python 代码即可完成产线推理。</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># pipeline设置为修改后的产线配置文件，use_hpip表示使用高性能推理</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;./my_path/OCR.yaml&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;npu&quot;</span><span class="p">,</span> <span class="n">use_hpip</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">"./my_path/OCR.yaml"</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">"npu"</span><span class="p">,</span> <span class="n">use_hpip</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
 </span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;./general_ocr_002.png&quot;</span><span class="p">,</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">"./general_ocr_002.png"</span><span class="p">,</span>
 </span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">use_doc_orientation_classify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="n">use_doc_unwarping</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    <span class="n">use_textline_orientation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="p">)</span>
 </span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
 </span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
-</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
 </span></code></pre></div>
 <p>值得一提的是，因为 OM 推理不支持动态 shape，在部分图片上推理精度可能会受影响，可以修改 OCR.yml 配置文件，将推理精度不对的模型推理后端设置为 onnxruntime，来规避这个问题。</p>
 <p>例如修改 PP-OCRv4_mobile_det 的推理后端，可修改 OCR.yml 如下：</p>
@@ -7356,18 +7356,18 @@ You're not viewing the latest version.
 <div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># 不指定设备</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;./my_path/OCR.yaml&quot;</span><span class="p">,</span> <span class="n">use_hpip</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">"./my_path/OCR.yaml"</span><span class="p">,</span> <span class="n">use_hpip</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
 </span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;./general_ocr_002.png&quot;</span><span class="p">,</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">"./general_ocr_002.png"</span><span class="p">,</span>
 </span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="n">use_doc_orientation_classify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="n">use_doc_unwarping</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="n">use_textline_orientation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="p">)</span>
 </span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
 </span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
-</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
-</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_img</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_json</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="5">5、常见问题解决方法<a class="headerlink" href="#5" title="Permanent link">&para;</a></h2>
 <h3 id="51-cannot-allocate-memory-in-static-tls-block">5.1 “cannot allocate memory in static TLS block”<a class="headerlink" href="#51-cannot-allocate-memory-in-static-tls-block" title="Permanent link">&para;</a></h3>
@@ -7404,7 +7404,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年6月25日 04:38:57 UTC">2026年6月25日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年11月25日 08:26:22 UTC">2026年11月25日</span>
   </span>
 
     
@@ -7414,7 +7414,7 @@ You're not viewing the latest version.
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年6月25日 04:38:57 UTC">2026年6月25日</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="2026年11月25日 08:26:22 UTC">2026年11月25日</span>
   </span>
 
     
@@ -7429,7 +7429,7 @@ You're not viewing the latest version.
     </span>
     <nav>
       
-        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
+        <a href="mailto:72123502+kafka-hatsune@users.noreply.github.com">Kafka-Hatsune</a>
     </nav>
   </span>
 
@@ -7558,10 +7558,10 @@ You're not viewing the latest version.
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../javascripts/katex.min.js"></script>
       

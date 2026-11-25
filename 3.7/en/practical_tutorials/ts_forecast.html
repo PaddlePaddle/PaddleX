@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -7259,11 +7259,11 @@ You're not viewing the latest version.
 <li>
 <p>Local Experience:
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_model</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="s2">&quot;DLinear&quot;</span><span class="p">)</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">&quot;https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv&quot;</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="s2">"DLinear"</span><span class="p">)</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">"https://paddle-model-ecology.bj.bcebos.com/paddlex/ts/demo_ts/ts_fc.csv"</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">json_format</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_csv</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_csv</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
 </span></code></pre></div></p>
 </li>
 <li>
@@ -7358,110 +7358,110 @@ Note: Due to the tight correlation between time series data and scenarios, the o
 </span></code></pre></div>
 <p>After executing the above command, PaddleX will validate the dataset, summarize its basic information, and print <code>Check dataset passed !</code> in the log if the command runs successfully. The validation result file is saved in <code>./output/check_dataset_result.json</code>, and related outputs are saved in the current directory's <code>./output/check_dataset</code> directory, including example time series data.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>{
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  &quot;done_flag&quot;: true,
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  &quot;check_pass&quot;: true,
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  &quot;attributes&quot;: {
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    &quot;train_samples&quot;: 22880,
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    &quot;train_table&quot;: [
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  "done_flag": true,
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  "check_pass": true,
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  "attributes": {
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    "train_samples": 22880,
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    "train_table": [
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      [
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        &quot;date&quot;,
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        &quot;OT&quot;
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        "date",
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        "OT"
 </span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>      ],
 </span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>      [
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        &quot;2012-01-01 00:00:00&quot;,
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        "2012-01-01 00:00:00",
 </span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        2162.0
 </span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>      ],
 </span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>      [
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>        &quot;2012-01-01 01:00:00&quot;,
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>        "2012-01-01 01:00:00",
 </span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>        2835.0
 </span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>      ],
 </span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>      [
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>        &quot;2012-01-01 02:00:00&quot;,
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>        "2012-01-01 02:00:00",
 </span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>        2764.0
 </span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>      ],
 </span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>      [
-</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>        &quot;2012-01-01 03:00:00&quot;,
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>        "2012-01-01 03:00:00",
 </span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>        2735.0
 </span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>      ],
 </span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>      [
-</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>        &quot;2012-01-01 04:00:00&quot;,
+</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>        "2012-01-01 04:00:00",
 </span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>        2721.0
 </span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>      ],
 </span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>      [
-</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>        &quot;2012-01-01 05:00:00&quot;,
+</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>        "2012-01-01 05:00:00",
 </span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>        2742.0
 </span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>      ],
 </span><span id="__span-3-35"><a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>      [
-</span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>        &quot;2012-01-01 06:00:00&quot;,
+</span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>        "2012-01-01 06:00:00",
 </span><span id="__span-3-37"><a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>        2716.0
 </span><span id="__span-3-38"><a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>      ],
 </span><span id="__span-3-39"><a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>      [
-</span><span id="__span-3-40"><a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>        &quot;2012-01-01 07:00:00&quot;,
+</span><span id="__span-3-40"><a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>        "2012-01-01 07:00:00",
 </span><span id="__span-3-41"><a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>        2716.0
 </span><span id="__span-3-42"><a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>      ],
 </span><span id="__span-3-43"><a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>      [
-</span><span id="__span-3-44"><a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>        &quot;2012-01-01 08:00:00&quot;,
+</span><span id="__span-3-44"><a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>        "2012-01-01 08:00:00",
 </span><span id="__span-3-45"><a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>        2680.0
 </span><span id="__span-3-46"><a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>      ],
 </span><span id="__span-3-47"><a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>      [
-</span><span id="__span-3-48"><a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>        &quot;2012-01-01 09:00:00&quot;,
+</span><span id="__span-3-48"><a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>        "2012-01-01 09:00:00",
 </span><span id="__span-3-49"><a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a>        2581.0
 </span><span id="__span-3-50"><a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a>      ]
 </span><span id="__span-3-51"><a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a>    ],
-</span><span id="__span-3-52"><a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a>    &quot;val_samples&quot;: 3424,
-</span><span id="__span-3-53"><a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a>    &quot;val_table&quot;: [
+</span><span id="__span-3-52"><a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a>    "val_samples": 3424,
+</span><span id="__span-3-53"><a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a>    "val_table": [
 </span><span id="__span-3-54"><a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a>      [
-</span><span id="__span-3-55"><a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a>        &quot;date&quot;,
-</span><span id="__span-3-56"><a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a>        &quot;OT&quot;
+</span><span id="__span-3-55"><a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a>        "date",
+</span><span id="__span-3-56"><a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a>        "OT"
 </span><span id="__span-3-57"><a id="__codelineno-3-57" name="__codelineno-3-57" href="#__codelineno-3-57"></a>      ],
 </span><span id="__span-3-58"><a id="__codelineno-3-58" name="__codelineno-3-58" href="#__codelineno-3-58"></a>      [
-</span><span id="__span-3-59"><a id="__codelineno-3-59" name="__codelineno-3-59" href="#__codelineno-3-59"></a>        &quot;2014-08-11 08:00:00&quot;,
+</span><span id="__span-3-59"><a id="__codelineno-3-59" name="__codelineno-3-59" href="#__codelineno-3-59"></a>        "2014-08-11 08:00:00",
 </span><span id="__span-3-60"><a id="__codelineno-3-60" name="__codelineno-3-60" href="#__codelineno-3-60"></a>        3528.0
 </span><span id="__span-3-61"><a id="__codelineno-3-61" name="__codelineno-3-61" href="#__codelineno-3-61"></a>      ],
 </span><span id="__span-3-62"><a id="__codelineno-3-62" name="__codelineno-3-62" href="#__codelineno-3-62"></a>      [
-</span><span id="__span-3-63"><a id="__codelineno-3-63" name="__codelineno-3-63" href="#__codelineno-3-63"></a>        &quot;2014-08-11 09:00:00&quot;,
+</span><span id="__span-3-63"><a id="__codelineno-3-63" name="__codelineno-3-63" href="#__codelineno-3-63"></a>        "2014-08-11 09:00:00",
 </span><span id="__span-3-64"><a id="__codelineno-3-64" name="__codelineno-3-64" href="#__codelineno-3-64"></a>        3800.0
 </span><span id="__span-3-65"><a id="__codelineno-3-65" name="__codelineno-3-65" href="#__codelineno-3-65"></a>      ],
 </span><span id="__span-3-66"><a id="__codelineno-3-66" name="__codelineno-3-66" href="#__codelineno-3-66"></a>      [
-</span><span id="__span-3-67"><a id="__codelineno-3-67" name="__codelineno-3-67" href="#__codelineno-3-67"></a>        &quot;2014-08-11 10:00:00&quot;,
+</span><span id="__span-3-67"><a id="__codelineno-3-67" name="__codelineno-3-67" href="#__codelineno-3-67"></a>        "2014-08-11 10:00:00",
 </span><span id="__span-3-68"><a id="__codelineno-3-68" name="__codelineno-3-68" href="#__codelineno-3-68"></a>        3889.0
 </span><span id="__span-3-69"><a id="__codelineno-3-69" name="__codelineno-3-69" href="#__codelineno-3-69"></a>      ],
 </span><span id="__span-3-70"><a id="__codelineno-3-70" name="__codelineno-3-70" href="#__codelineno-3-70"></a>      [
-</span><span id="__span-3-71"><a id="__codelineno-3-71" name="__codelineno-3-71" href="#__codelineno-3-71"></a>        &quot;2014-08-11 11:00:00&quot;,
+</span><span id="__span-3-71"><a id="__codelineno-3-71" name="__codelineno-3-71" href="#__codelineno-3-71"></a>        "2014-08-11 11:00:00",
 </span><span id="__span-3-72"><a id="__codelineno-3-72" name="__codelineno-3-72" href="#__codelineno-3-72"></a>        4340.0
 </span><span id="__span-3-73"><a id="__codelineno-3-73" name="__codelineno-3-73" href="#__codelineno-3-73"></a>      ],
 </span><span id="__span-3-74"><a id="__codelineno-3-74" name="__codelineno-3-74" href="#__codelineno-3-74"></a>      [
-</span><span id="__span-3-75"><a id="__codelineno-3-75" name="__codelineno-3-75" href="#__codelineno-3-75"></a>        &quot;2014-08-11 12:00:00&quot;,
+</span><span id="__span-3-75"><a id="__codelineno-3-75" name="__codelineno-3-75" href="#__codelineno-3-75"></a>        "2014-08-11 12:00:00",
 </span><span id="__span-3-76"><a id="__codelineno-3-76" name="__codelineno-3-76" href="#__codelineno-3-76"></a>        4321.0
 </span><span id="__span-3-77"><a id="__codelineno-3-77" name="__codelineno-3-77" href="#__codelineno-3-77"></a>      ],
 </span><span id="__span-3-78"><a id="__codelineno-3-78" name="__codelineno-3-78" href="#__codelineno-3-78"></a>      [
-</span><span id="__span-3-79"><a id="__codelineno-3-79" name="__codelineno-3-79" href="#__codelineno-3-79"></a>        &quot;2014-08-11 13:00:00&quot;,
+</span><span id="__span-3-79"><a id="__codelineno-3-79" name="__codelineno-3-79" href="#__codelineno-3-79"></a>        "2014-08-11 13:00:00",
 </span><span id="__span-3-80"><a id="__codelineno-3-80" name="__codelineno-3-80" href="#__codelineno-3-80"></a>        4293.0
 </span><span id="__span-3-81"><a id="__codelineno-3-81" name="__codelineno-3-81" href="#__codelineno-3-81"></a>      ],
 </span><span id="__span-3-82"><a id="__codelineno-3-82" name="__codelineno-3-82" href="#__codelineno-3-82"></a>      [
-</span><span id="__span-3-83"><a id="__codelineno-3-83" name="__codelineno-3-83" href="#__codelineno-3-83"></a>        &quot;2014-08-11 14:00:00&quot;,
+</span><span id="__span-3-83"><a id="__codelineno-3-83" name="__codelineno-3-83" href="#__codelineno-3-83"></a>        "2014-08-11 14:00:00",
 </span><span id="__span-3-84"><a id="__codelineno-3-84" name="__codelineno-3-84" href="#__codelineno-3-84"></a>        4393.0
 </span><span id="__span-3-85"><a id="__codelineno-3-85" name="__codelineno-3-85" href="#__codelineno-3-85"></a>      ],
 </span><span id="__span-3-86"><a id="__codelineno-3-86" name="__codelineno-3-86" href="#__codelineno-3-86"></a>      [
-</span><span id="__span-3-87"><a id="__codelineno-3-87" name="__codelineno-3-87" href="#__codelineno-3-87"></a>        &quot;2014-08-11 15:00:00&quot;,
+</span><span id="__span-3-87"><a id="__codelineno-3-87" name="__codelineno-3-87" href="#__codelineno-3-87"></a>        "2014-08-11 15:00:00",
 </span><span id="__span-3-88"><a id="__codelineno-3-88" name="__codelineno-3-88" href="#__codelineno-3-88"></a>        4384.0
 </span><span id="__span-3-89"><a id="__codelineno-3-89" name="__codelineno-3-89" href="#__codelineno-3-89"></a>      ],
 </span><span id="__span-3-90"><a id="__codelineno-3-90" name="__codelineno-3-90" href="#__codelineno-3-90"></a>      [
-</span><span id="__span-3-91"><a id="__codelineno-3-91" name="__codelineno-3-91" href="#__codelineno-3-91"></a>        &quot;2014-08-11 16:00:00&quot;,
+</span><span id="__span-3-91"><a id="__codelineno-3-91" name="__codelineno-3-91" href="#__codelineno-3-91"></a>        "2014-08-11 16:00:00",
 </span><span id="__span-3-92"><a id="__codelineno-3-92" name="__codelineno-3-92" href="#__codelineno-3-92"></a>        4495.0
 </span><span id="__span-3-93"><a id="__codelineno-3-93" name="__codelineno-3-93" href="#__codelineno-3-93"></a>      ],
 </span><span id="__span-3-94"><a id="__codelineno-3-94" name="__codelineno-3-94" href="#__codelineno-3-94"></a>      [
-</span><span id="__span-3-95"><a id="__codelineno-3-95" name="__codelineno-3-95" href="#__codelineno-3-95"></a>        &quot;2014-08-11 17:00:00&quot;,
+</span><span id="__span-3-95"><a id="__codelineno-3-95" name="__codelineno-3-95" href="#__codelineno-3-95"></a>        "2014-08-11 17:00:00",
 </span><span id="__span-3-96"><a id="__codelineno-3-96" name="__codelineno-3-96" href="#__codelineno-3-96"></a>        4374.0
 </span><span id="__span-3-97"><a id="__codelineno-3-97" name="__codelineno-3-97" href="#__codelineno-3-97"></a>      ]
 </span><span id="__span-3-98"><a id="__codelineno-3-98" name="__codelineno-3-98" href="#__codelineno-3-98"></a>    ]
 </span><span id="__span-3-99"><a id="__codelineno-3-99" name="__codelineno-3-99" href="#__codelineno-3-99"></a>  },
-</span><span id="__span-3-100"><a id="__codelineno-3-100" name="__codelineno-3-100" href="#__codelineno-3-100"></a>  &quot;analysis&quot;: {
-</span><span id="__span-3-101"><a id="__codelineno-3-101" name="__codelineno-3-101" href="#__codelineno-3-101"></a>    &quot;histogram&quot;: &quot;&quot;
+</span><span id="__span-3-100"><a id="__codelineno-3-100" name="__codelineno-3-100" href="#__codelineno-3-100"></a>  "analysis": {
+</span><span id="__span-3-101"><a id="__codelineno-3-101" name="__codelineno-3-101" href="#__codelineno-3-101"></a>    "histogram": ""
 </span><span id="__span-3-102"><a id="__codelineno-3-102" name="__codelineno-3-102" href="#__codelineno-3-102"></a>  },
-</span><span id="__span-3-103"><a id="__codelineno-3-103" name="__codelineno-3-103" href="#__codelineno-3-103"></a>  &quot;dataset_path&quot;: &quot;./dataset/electricity&quot;,
-</span><span id="__span-3-104"><a id="__codelineno-3-104" name="__codelineno-3-104" href="#__codelineno-3-104"></a>  &quot;show_type&quot;: &quot;csv&quot;,
-</span><span id="__span-3-105"><a id="__codelineno-3-105" name="__codelineno-3-105" href="#__codelineno-3-105"></a>  &quot;dataset_type&quot;: &quot;TSDataset&quot;
+</span><span id="__span-3-103"><a id="__codelineno-3-103" name="__codelineno-3-103" href="#__codelineno-3-103"></a>  "dataset_path": "./dataset/electricity",
+</span><span id="__span-3-104"><a id="__codelineno-3-104" name="__codelineno-3-104" href="#__codelineno-3-104"></a>  "show_type": "csv",
+</span><span id="__span-3-105"><a id="__codelineno-3-105" name="__codelineno-3-105" href="#__codelineno-3-105"></a>  "dataset_type": "TSDataset"
 </span><span id="__span-3-106"><a id="__codelineno-3-106" name="__codelineno-3-106" href="#__codelineno-3-106"></a>}
 </span></code></pre></div>
 <p>The above verification results have omitted some data parts. <code>check_pass</code> being True indicates that the dataset format meets the requirements. Explanations for other indicators are as follows:</p>
@@ -7679,7 +7679,7 @@ For more hyperparameter introductions, refer to <a href="../module_usage/instruc
 <p>Replace the model in the pipeline with the fine-tuned model and test using <a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_forecast/test.csv">this power test data</a> for prediction:</p>
 <p><div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>main.py<span class="w"> </span>-c<span class="w"> </span>paddlex/configs/modules/ts_forecast/DLinear.yaml<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span>-o<span class="w"> </span>Global.mode<span class="o">=</span>predict<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-o<span class="w"> </span>Predict.model_dir<span class="o">=</span><span class="s2">&quot;./output/inference&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-o<span class="w"> </span>Predict.model_dir<span class="o">=</span><span class="s2">"./output/inference"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>-o<span class="w"> </span>Predict.input<span class="o">=</span>https://paddle-model-ecology.bj.bcebos.com/paddlex/PaddleX3.0/doc_images/practical_tutorial/timeseries_forecast/test.csv
 </span></code></pre></div>
 This will generate prediction results under <code>./output</code>, with the predictions for <code>test.csv</code> saved in <code>result.csv</code>.</p>
@@ -7707,11 +7707,11 @@ Other related parameters can be set by modifying the <code>Global</code> and <co
 </span></code></pre></div>
 <p>Subsequently, in your Python code, you can use the pipeline as follows:</p>
 <p><div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">paddlex</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_pipeline</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">&quot;my_path/ts_forecast.yaml&quot;</span><span class="p">)</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">&quot;pre_ts.csv&quot;</span><span class="p">)</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s2">"my_path/ts_forecast.yaml"</span><span class="p">)</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">output</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">"pre_ts.csv"</span><span class="p">)</span>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">res</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_csv</span><span class="p">(</span><span class="s2">&quot;./output/&quot;</span><span class="p">)</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="n">res</span><span class="o">.</span><span class="n">save_to_csv</span><span class="p">(</span><span class="s2">"./output/"</span><span class="p">)</span>
 </span></code></pre></div>
 For more parameters, please refer to the <a href="../pipeline_usage/tutorials/time_series_pipelines/time_series_anomaly_detection.html">Time Series forecast Pipeline Usage Tutorial</a></p>
 <ol>
@@ -7741,7 +7741,7 @@ You can choose the appropriate method to deploy your model pipeline based on you
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 25, 2026 04:38:57 UTC">June 25, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 25, 2026 08:26:22 UTC">November 25, 2026</span>
   </span>
 
     
@@ -7751,7 +7751,7 @@ You can choose the appropriate method to deploy your model pipeline based on you
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 25, 2026 04:38:57 UTC">June 25, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 25, 2026 08:26:22 UTC">November 25, 2026</span>
   </span>
 
     
@@ -7766,7 +7766,7 @@ You can choose the appropriate method to deploy your model pipeline based on you
     </span>
     <nav>
       
-        <a href="mailto:bob1998425@hotmail.com">Lin Manhui</a>
+        <a href="mailto:72123502+kafka-hatsune@users.noreply.github.com">Kafka-Hatsune</a>
     </nav>
   </span>
 
@@ -7933,10 +7933,10 @@ You can choose the appropriate method to deploy your model pipeline based on you
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.expand", "navigation.path", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../javascripts/katex.min.js"></script>
       
