@@ -173,7 +173,11 @@ class BaseRecLabelDecode:
         for c_i, char in enumerate(text):
             if "\u4e00" <= char <= "\u9fff":
                 c_state = "cn"
-            elif bool(re.search("[a-zA-Z0-9]", char)):
+            # Use \w with the UNICODE flag so accented Latin letters
+            # (e.g. Köln, Flächennutzung) are grouped with the surrounding
+            # word instead of being treated as separators. "_" is excluded
+            # because \w matches it but it should split words.
+            elif bool(re.search(r"[\w]", char, re.UNICODE)) and char != "_":
                 c_state = "en&num"
             else:
                 c_state = "symbol"
