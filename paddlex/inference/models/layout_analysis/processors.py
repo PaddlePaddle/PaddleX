@@ -789,6 +789,72 @@ def filter_boxes(
     return out_boxes
 
 
+def _split_formula_boxes_with_overlap_guard(
+    image,
+    boxes: List[dict],
+    formula_candidates: Optional[List[dict]],
+    layout_shape_mode: Optional[str],
+    already_filtered: bool,
+) -> List[dict]:
+    """Split display formulas while preserving overlap priority when callers
+    defer ``filter_boxes`` until later (e.g. PaddleOCR-VL).
+    """
+    if already_filtered or not boxes:
+        return split_formula_boxes(image, boxes, formula_candidates)
+    if not any(box["label"] == "display_formula" for box in boxes):
+        return boxes
+
+    kept_ids = {id(b) for b in filter_boxes(boxes, layout_shape_mode)}
+    split_result = split_formula_boxes(image, boxes, formula_candidates)
+    result_ids = {id(b) for b in split_result}
+    split_parents = [
+        b
+        for b in boxes
+        if b["label"] == "display_formula"
+        and id(b) in kept_ids
+        and id(b) not in result_ids
+    ]
+    if not split_parents:
+        return split_result
+
+    preserved_labels = {
+        "reference",
+        "image",
+        "header_image",
+        "footer_image",
+        "table",
+        "chart",
+        "seal",
+    }
+
+    def _overlap_ratio_small(box, parent):
+        if (
+            "quad" in box
+            and "quad" in parent
+            and quad_area(np.asarray(box["quad"])) > 0
+            and quad_area(np.asarray(parent["quad"])) > 0
+        ):
+            return calculate_polygon_overlap_ratio(
+                box["quad"], parent["quad"], mode="small"
+            )
+        return calculate_overlap_ratio(
+            box["coordinate"], parent["coordinate"], mode="small"
+        )
+
+    shadowed_ids = set()
+    for b in boxes:
+        if id(b) in kept_ids or b["label"] in preserved_labels:
+            continue
+        thresh = 0.5 if b["label"] == "inline_formula" else 0.7
+        for parent in split_parents:
+            if _overlap_ratio_small(b, parent) > thresh:
+                shadowed_ids.add(id(b))
+                break
+    if not shadowed_ids:
+        return split_result
+    return [b for b in split_result if id(b) not in shadowed_ids]
+
+
 def update_order_index(boxes: List[Dict], skip_order_labels: List[str]):
     """
     Update the 'order_index' field of each box in the provided list of boxes.
@@ -959,23 +1025,34 @@ class LayoutAnalysisProcess:
             if not is_large.all():
                 boxes, keep = boxes[~is_large], keep[~is_large]
 
-        # Save V4 row candidates before a "large" policy suppresses them.
-        # Restrict this path to quad detectors; segmentation masks need their
-        # own geometry extraction and continue using the image-only splitter.
+        # Save row candidates before a "large" policy suppresses them.
+        # Restrict this path to non-mask detectors; segmentation masks need
+        # their own geometry extraction and continue using the image splitter.
         if (
             formula_candidates is not None
-            and quad is not None
+            and masks is None
+            and polygon_points is None
             and "display_formula" in self.labels
         ):
             formula_mask = boxes[:, 0] == self.labels.index("display_formula")
-            formula_candidates.extend(
-                restructured_boxes(
-                    boxes[formula_mask, :6],
-                    self.labels,
-                    img_size,
-                    quad=quad[keep[formula_mask]],
+            if np.any(formula_mask):
+                cand_boxes = boxes[formula_mask, :6]
+                if layout_unclip_ratio:
+                    cand_ratio = (
+                        (layout_unclip_ratio, layout_unclip_ratio)
+                        if isinstance(layout_unclip_ratio, float)
+                        else layout_unclip_ratio
+                    )
+                    if isinstance(cand_ratio, (tuple, list, dict)):
+                        cand_boxes = unclip_boxes(cand_boxes, cand_ratio)
+                formula_candidates.extend(
+                    restructured_boxes(
+                        cand_boxes,
+                        self.labels,
+                        img_size,
+                        quad=quad[keep[formula_mask]] if quad is not None else None,
+                    )
                 )
-            )
 
         if layout_merge_bboxes_mode:
             formula_index = (
@@ -1134,7 +1211,13 @@ class LayoutAnalysisProcess:
             if filter_overlap_boxes:
                 boxes = filter_boxes(boxes, current_layout_shape_mode)
             if layout_split_formula:
-                boxes = split_formula_boxes(data["ori_img"], boxes, formula_candidates)
+                boxes = _split_formula_boxes_with_overlap_guard(
+                    data["ori_img"],
+                    boxes,
+                    formula_candidates,
+                    current_layout_shape_mode,
+                    already_filtered=bool(filter_overlap_boxes),
+                )
             skip_order_labels = (
                 skip_order_labels
                 if skip_order_labels is not None

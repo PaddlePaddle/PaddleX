@@ -178,6 +178,12 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     )
                 ) is not None:
                     layout_kwargs["layout_merge_bboxes_mode"] = layout_merge_bboxes_mode
+                if (
+                    layout_split_formula := layout_det_config.get(
+                        "layout_split_formula", None
+                    )
+                ) is not None:
+                    layout_kwargs["layout_split_formula"] = layout_split_formula
                 self.layout_det_model = self.create_model(
                     layout_det_config, **layout_kwargs
                 )
@@ -206,6 +212,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
             # deformation (`warp_params`), and on an undeformed page the
             # correction only costs a resampling step.
             self.use_layout_deform = config.get("use_layout_deform", False)
+            self.layout_split_formula = config.get("layout_split_formula", None)
             self.layout_deform_conf_thresh = config.get(
                 "layout_deform_conf_thresh", DEFAULT_CONF_THRESH
             )
@@ -985,7 +992,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
         merge_layout_blocks: Optional[bool] = None,
         markdown_ignore_labels: Optional[List[str]] = None,
         vlm_extra_args: Optional[dict] = None,
-        layout_split_formula: bool = False,
+        layout_split_formula: Optional[bool] = None,
         **kwargs,
     ) -> PaddleOCRVLResult:
         """
@@ -1115,6 +1122,11 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     item["output_img"] for item in doc_preprocessor_results
                 ]
                 if model_settings["use_layout_detection"]:
+                    effective_split_formula = (
+                        self.layout_split_formula
+                        if layout_split_formula is None
+                        else layout_split_formula
+                    )
                     layout_det_results = list(
                         self.layout_det_model(
                             doc_preprocessor_images,
@@ -1125,8 +1137,8 @@ class _PaddleOCRVLPipeline(BasePipeline):
                             layout_shape_mode=layout_shape_mode,
                             filter_overlap_boxes=False,
                             **(
-                                {"layout_split_formula": True}
-                                if layout_split_formula
+                                {"layout_split_formula": effective_split_formula}
+                                if effective_split_formula is not None
                                 else {}
                             ),
                         )

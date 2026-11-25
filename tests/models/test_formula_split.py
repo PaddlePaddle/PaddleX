@@ -360,3 +360,678 @@ def test_detector_candidates_already_present_are_not_restored_twice():
     # With filtering disabled the caller may intentionally keep both levels.
     boxes = [parent, *rows]
     assert split_formula_boxes(image, boxes, boxes) == boxes
+
+
+# ------------------------------------------- row height & fraction guards ----
+
+
+def _ink_coverage(image, boxes, shape_key="quad"):
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) if image.ndim == 3 else image
+    original_ink = gray < 128
+    covered = np.zeros(image.shape[:2], np.uint8)
+    for box in boxes:
+        if shape_key and shape_key in box:
+            cv2.fillPoly(covered, [np.round(box[shape_key]).astype(np.int32)], 1)
+        else:
+            x1, y1, x2, y2 = box["coordinate"]
+            covered[y1 : y2 + 1, x1 : x2 + 1] = 1
+    total = int(np.count_nonzero(original_ink))
+    return float(np.count_nonzero(covered[original_ink])) / max(1, total)
+
+
+@pytest.mark.parametrize("text", ["A + B = C + D", "1 + 2 = 3 + 4", "x + z = w + v"])
+def test_uniform_height_rows_split_cleanly(text):
+    image = np.full((220, 360, 3), 255, np.uint8)
+    for baseline in [45, 105, 165]:
+        cv2.putText(
+            image, text, (35, baseline), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2
+        )
+    box = dict(
+        label="display_formula",
+        cls_id=0,
+        score=0.9,
+        coordinate=[20, 15, 310, 185],
+        quad=[[20, 15], [310, 15], [310, 185], [20, 185]],
+    )
+    rows = split_formula_boxes(image, [box])
+    assert len(rows) == 3
+    assert _ink_coverage(image, rows, "quad") == 1.0
+
+
+def test_mixed_row_heights_do_not_merge_plain_middle_row():
+    image = np.full((220, 360, 3), 255, np.uint8)
+    cv2.putText(
+        image, "x + y = 123", (35, 45), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2
+    )
+    cv2.putText(
+        image, "A + B = C + D", (35, 105), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2
+    )
+    cv2.putText(
+        image, "x + y = 456", (35, 165), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2
+    )
+    box = dict(
+        label="display_formula",
+        cls_id=0,
+        score=0.9,
+        coordinate=[20, 15, 310, 185],
+        quad=[[20, 15], [310, 15], [310, 185], [20, 185]],
+    )
+    rows = split_formula_boxes(image, [box])
+    assert len(rows) == 3
+    assert _ink_coverage(image, rows, "quad") == 1.0
+
+
+def test_touching_fraction_bar_stays_whole():
+    image = np.full((150, 320, 3), 255, np.uint8)
+    # Descender of 'y' touches the fraction bar at y=78.
+    cv2.putText(
+        image, "x + y + 123", (60, 72), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2
+    )
+    cv2.line(image, (55, 78), (225, 78), (0, 0, 0), 2)
+    cv2.putText(
+        image, "a + b = 456", (60, 112), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2
+    )
+    box = dict(
+        label="display_formula", coordinate=[20, 10, 280, 135], score=0.9, cls_id=0
+    )
+    assert split_formula_boxes(image, [box]) == [box]
+
+
+def test_single_char_numerator_fraction_stays_whole_and_splits_from_other_line():
+    image = np.full((220, 360, 3), 255, np.uint8)
+    cv2.putText(
+        image, "x + y = 123", (35, 45), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2
+    )
+    cv2.putText(image, "1", (115, 105), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2)
+    cv2.line(image, (35, 118), (225, 118), (0, 0, 0), 2)
+    cv2.putText(
+        image, "a + b = 456", (35, 155), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2
+    )
+    # Standalone fraction region stays intact.
+    frac_box = dict(
+        label="display_formula", coordinate=[20, 75, 260, 180], score=0.9, cls_id=0
+    )
+    assert split_formula_boxes(image, [frac_box]) == [frac_box]
+    # Two-line region splits into line 1 and the intact fraction (2 rows total).
+    full_box = dict(
+        label="display_formula", coordinate=[20, 15, 280, 185], score=0.9, cls_id=0
+    )
+    rows = split_formula_boxes(image, [full_box])
+    assert len(rows) == 2
+    assert rows[0]["coordinate"][3] < 80
+    assert rows[1]["coordinate"][1] <= 86 and rows[1]["coordinate"][3] >= 155
+
+
+# ----------------------------------------- tilted & curved formula cases ----
+
+
+def _warp_columns(image, delta):
+    h, w = image.shape[:2]
+    xs = np.arange(w, dtype=np.float32)
+    map_x = np.broadcast_to(xs[None, :], (h, w)).astype(np.float32)
+    map_y = (np.arange(h, dtype=np.float32)[:, None] - delta[None, :]).astype(
+        np.float32
+    )
+    return cv2.remap(
+        image,
+        map_x,
+        map_y,
+        cv2.INTER_LINEAR,
+        borderMode=cv2.BORDER_CONSTANT,
+        borderValue=(255, 255, 255),
+    )
+
+
+@pytest.mark.parametrize("angle", [-18, -12, -6, 6, 12, 18])
+@pytest.mark.parametrize("with_quad", [False, True])
+def test_tilted_rows_inside_axis_aligned_box(angle, with_quad):
+    image = np.full((300, 440, 3), 255, np.uint8)
+    for baseline in [85, 145, 205]:
+        cv2.putText(
+            image,
+            "x + y = 123 + a",
+            (75, baseline),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.75,
+            (0, 0, 0),
+            2,
+        )
+    matrix = cv2.getRotationMatrix2D((220, 150), angle, 1.0)
+    rotated = cv2.warpAffine(image, matrix, (440, 300), borderValue=(255, 255, 255))
+    ys, xs = np.nonzero(cv2.cvtColor(rotated, cv2.COLOR_BGR2GRAY) < 200)
+    x1, y1 = int(xs.min()) - 6, int(ys.min()) - 6
+    x2, y2 = int(xs.max()) + 6, int(ys.max()) + 6
+    box = dict(
+        label="display_formula",
+        cls_id=0,
+        score=0.9,
+        coordinate=[x1, y1, x2, y2],
+    )
+    if with_quad:
+        box["quad"] = [[x1, y1], [x2, y1], [x2, y2], [x1, y2]]
+    rows = split_formula_boxes(rotated, [box])
+    assert len(rows) == 3
+    assert _ink_coverage(rotated, rows, "quad" if with_quad else None) == 1.0
+    if with_quad:
+        # Child quads should follow the row tilt and not overlap each other.
+        masks = []
+        for row in rows:
+            m = np.zeros(rotated.shape[:2], np.uint8)
+            cv2.fillPoly(m, [np.round(row["quad"]).astype(np.int32)], 1)
+            masks.append(m > 0)
+        assert not np.any(masks[0] & masks[1])
+        assert not np.any(masks[1] & masks[2])
+
+
+def test_tilted_4point_polygon_points_without_quad():
+    image = np.full((300, 440, 3), 255, np.uint8)
+    for baseline in [85, 145, 205]:
+        cv2.putText(
+            image,
+            "x + y = 123 + a",
+            (75, baseline),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.75,
+            (0, 0, 0),
+            2,
+        )
+    matrix = np.eye(3, dtype=np.float32)
+    matrix[:2] = cv2.getRotationMatrix2D((220, 150), 14, 1.0)
+    rotated = cv2.warpPerspective(
+        image, matrix, (440, 300), borderValue=(255, 255, 255)
+    )
+    base_quad = np.float32([[60, 55], [330, 55], [330, 225], [60, 225]])
+    warped_poly = cv2.perspectiveTransform(base_quad[None], matrix)[0]
+    # Roll vertices arbitrarily to mimic segmentation polygon output without quad.
+    rolled = np.roll(warped_poly, 2, axis=0)
+    box = dict(
+        label="display_formula",
+        cls_id=0,
+        score=0.9,
+        coordinate=[*rolled.min(0).tolist(), *rolled.max(0).tolist()],
+        polygon_points=rolled.tolist(),
+    )
+    rows = split_formula_boxes(rotated, [box])
+    assert len(rows) == 3
+    assert _ink_coverage(rotated, rows, "polygon_points") == 1.0
+
+
+@pytest.mark.parametrize(
+    "curve_type",
+    [
+        "arch",
+        "bowl",
+        "s_wave",
+        "book_spine_curl",
+        "tilt_plus_arch_shaded",
+        "tilt_plus_wave",
+    ],
+)
+def test_curved_multiline_formulas(curve_type):
+    h, w = 280, 420
+    base = np.full((h, w, 3), 255, np.uint8)
+    for baseline in [75, 135, 195]:
+        cv2.putText(
+            base,
+            "x + y = 123 + a",
+            (45, baseline),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.75,
+            (0, 0, 0),
+            2,
+        )
+    xs = np.arange(w, dtype=np.float32)
+    u = (2.0 * xs - w) / w
+    if curve_type == "arch":
+        delta = 18.0 * (u**2 - 1.0 / 3.0)
+    elif curve_type == "bowl":
+        delta = -18.0 * (u**2 - 1.0 / 3.0)
+    elif curve_type == "s_wave":
+        delta = 24.0 * (u**3 - 0.6 * u)
+    elif curve_type == "book_spine_curl":
+        # Strong curl near the left book spine, flattening toward the right.
+        t = np.clip(1.0 - xs / 210.0, 0.0, 1.0)
+        delta = 24.0 * (t**2)
+        delta -= delta.mean()
+    elif curve_type == "tilt_plus_arch_shaded":
+        delta = 14.0 * u - 16.0 * (u**2 - 1.0 / 3.0)
+    else:
+        delta = -12.0 * u + 8.0 * (u**2 - 1.0 / 3.0) + 18.0 * (u**3 - 0.6 * u)
+
+    warped = _warp_columns(base, delta)
+    orig_ink = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY) < 128
+    if curve_type == "tilt_plus_arch_shaded":
+        shade = np.linspace(0.35, 1.0, w)[None, :, None]
+        warped = (warped.astype(float) * shade).astype(np.uint8)
+    ys_i, xs_i = np.nonzero(orig_ink)
+    x1, y1 = int(xs_i.min()) - 6, int(ys_i.min()) - 6
+    x2, y2 = int(xs_i.max()) + 6, int(ys_i.max()) + 6
+    box = dict(
+        label="display_formula",
+        cls_id=0,
+        score=0.9,
+        coordinate=[x1, y1, x2, y2],
+        quad=[[x1, y1], [x2, y1], [x2, y2], [x1, y2]],
+    )
+    rows = split_formula_boxes(warped, [box])
+    assert len(rows) == 3
+    covered = np.zeros(warped.shape[:2], np.uint8)
+    for row in rows:
+        cv2.fillPoly(covered, [np.round(row["quad"]).astype(np.int32)], 1)
+    assert np.all(covered[orig_ink])
+    centers_y = [np.mean([p[1] for p in r["quad"]]) for r in rows]
+    assert centers_y == sorted(centers_y)
+
+
+def test_curved_multipoint_polygon_emits_curved_child_polygons():
+    h, w = 280, 420
+    base = np.full((h, w, 3), 255, np.uint8)
+    row_masks = []
+    for baseline in [75, 135, 195]:
+        layer = np.full((h, w, 3), 255, np.uint8)
+        cv2.putText(
+            layer,
+            "x + y = 123 + a",
+            (45, baseline),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.75,
+            (0, 0, 0),
+            2,
+        )
+        base = np.minimum(base, layer)
+        row_masks.append(layer)
+    xs = np.arange(w, dtype=np.float32)
+    u = (2.0 * xs - w) / w
+    # Arch amplitude (32px peak-to-trough) exceeds inter-row spacing.
+    delta = 26.0 * (u**2 - 1.0 / 3.0)
+    warped = _warp_columns(base, delta)
+    warped_row_inks = [
+        cv2.cvtColor(_warp_columns(layer, delta), cv2.COLOR_BGR2GRAY) < 128
+        for layer in row_masks
+    ]
+    # Build a high-solidity 12-point curved formula polygon (no "quad" key).
+    sample_x = np.linspace(38, 315, 6)
+    sample_d = np.interp(sample_x, xs, delta)
+    poly = np.vstack(
+        [
+            np.column_stack([sample_x, 45.0 + sample_d]),
+            np.column_stack([sample_x[::-1], 215.0 + sample_d[::-1]]),
+        ]
+    ).astype(np.float32)
+    box = dict(
+        label="display_formula",
+        cls_id=0,
+        score=0.9,
+        coordinate=[*poly.min(0).tolist(), *poly.max(0).tolist()],
+        polygon_points=poly.tolist(),
+    )
+    rows = split_formula_boxes(warped, [box])
+    assert len(rows) == 3
+    for i, row in enumerate(rows):
+        assert len(row["polygon_points"]) > 4
+        mask = np.zeros((h, w), np.uint8)
+        cv2.fillPoly(mask, [np.round(row["polygon_points"]).astype(np.int32)], 1)
+        # Covers 100% of its own row's ink and 0% of neighboring rows' ink.
+        assert np.all(mask[warped_row_inks[i]] > 0)
+        for j, other_ink in enumerate(warped_row_inks):
+            if j != i:
+                assert not np.any(mask[other_ink] > 0)
+
+
+def test_concave_l_shaped_polygon_stays_intact():
+    image, box = _page()
+    # Concave L-shape with low solidity (< 0.85) should be left intact.
+    l_poly = [[20, 15], [300, 15], [300, 70], [110, 70], [110, 185], [20, 185]]
+    box.pop("quad", None)
+    box["polygon_points"] = l_poly
+    assert split_formula_boxes(image, [box]) == [box]
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        "tilted_single_line",
+        "curved_single_line",
+        "tilted_fraction",
+        "curved_fraction",
+        "curved_matrix_bracket",
+    ],
+)
+def test_tilted_and_curved_unsplittable_formulas_stay_intact(case):
+    h, w = 240, 400
+    base = np.full((h, w, 3), 255, np.uint8)
+    xs = np.arange(w, dtype=np.float32)
+    u = (2.0 * xs - w) / w
+    if case == "tilted_single_line":
+        cv2.putText(
+            base,
+            "x + y = 123 + 456",
+            (40, 120),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.75,
+            (0, 0, 0),
+            2,
+        )
+        delta = 18.0 * u
+    elif case == "curved_single_line":
+        cv2.putText(
+            base,
+            "x + y = 123 + 456",
+            (40, 120),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.75,
+            (0, 0, 0),
+            2,
+        )
+        delta = 18.0 * (u**2 - 1.0 / 3.0)
+    elif case in ("tilted_fraction", "curved_fraction"):
+        cv2.putText(
+            base, "x + 123", (80, 95), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2
+        )
+        cv2.line(base, (70, 106), (250, 106), (0, 0, 0), 2)
+        cv2.putText(
+            base, "y + 456", (80, 138), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2
+        )
+        delta = 15.0 * u if case == "tilted_fraction" else 16.0 * (u**2 - 1.0 / 3.0)
+    else:
+        for baseline in [65, 125, 185]:
+            cv2.putText(
+                base,
+                "x + y = 123",
+                (70, baseline),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.75,
+                (0, 0, 0),
+                2,
+            )
+        cv2.line(base, (55, 40), (55, 195), (0, 0, 0), 2)
+        cv2.line(base, (55, 40), (65, 40), (0, 0, 0), 2)
+        cv2.line(base, (55, 195), (65, 195), (0, 0, 0), 2)
+        delta = 18.0 * (u**2 - 1.0 / 3.0)
+
+    warped = _warp_columns(base, delta)
+    box = dict(
+        label="display_formula",
+        cls_id=0,
+        score=0.9,
+        coordinate=[20, 10, 380, 230],
+    )
+    assert split_formula_boxes(warped, [box]) == [box]
+
+
+@pytest.mark.parametrize("arch_px", [10.0, -10.0])
+def test_curved_real_scan_fraction_stays_whole(arch_px):
+    image = cv2.imread(str(Path(__file__).parent / "assets/formula_fraction_scan.png"))
+    h, w = image.shape[:2]
+    padded = np.full((h + 40, w + 40, 3), 255, np.uint8)
+    padded[20 : 20 + h, 20 : 20 + w] = image
+    pw = padded.shape[1]
+    u = (2.0 * np.arange(pw, dtype=np.float32) - pw) / pw
+    warped = _warp_columns(padded, arch_px * (u**2 - 1.0 / 3.0))
+    box = dict(
+        label="display_formula",
+        cls_id=0,
+        score=0.9,
+        coordinate=[0, 0, pw - 1, padded.shape[0] - 1],
+    )
+    assert split_formula_boxes(warped, [box]) == [box]
+
+
+def test_tilted_detector_candidates_restore_rows_inside_axis_aligned_parent():
+    image, parent, rows = _detected_rows()
+    h, w = image.shape[:2]
+    matrix = np.eye(3, dtype=np.float32)
+    matrix[:2] = cv2.getRotationMatrix2D((w / 2, h / 2), 10, 1.0)
+    matrix[:2, 2] += 40
+    warped = cv2.warpPerspective(
+        image, matrix, (w + 100, h + 100), borderValue=(255, 255, 255)
+    )
+    # Parent is an axis-aligned box (no quad, e.g. rect mode or loose box),
+    # while detector row candidates carry tilted quads matching the scan angle.
+    warped_parent_quad = cv2.perspectiveTransform(
+        np.float32([parent["quad"]]), matrix
+    )[0]
+    p_x1, p_y1 = np.floor(warped_parent_quad.min(0)).astype(int).tolist()
+    p_x2, p_y2 = np.ceil(warped_parent_quad.max(0)).astype(int).tolist()
+    aa_parent = dict(
+        cls_id=parent["cls_id"],
+        label=parent["label"],
+        score=parent["score"],
+        coordinate=[p_x1, p_y1, p_x2, p_y2],
+    )
+    tilted_rows = []
+    for row in rows:
+        tr = copy.deepcopy(row)
+        q = cv2.perspectiveTransform(np.float32([row["quad"]]), matrix)[0]
+        tr["quad"] = q.tolist()
+        tr["coordinate"] = [*q.min(0).tolist(), *q.max(0).tolist()]
+        tilted_rows.append(tr)
+    out = split_formula_boxes(warped, [aa_parent], tilted_rows)
+    assert len(out) == 4
+    assert [b["score"] for b in out] == pytest.approx([b["score"] for b in rows])
+
+
+# ----------------------- formula_number, rect mode, overlap, serving/CLI ----
+
+
+@pytest.mark.parametrize("skewed", [False, True])
+def test_formula_numbers_interleaved_after_split_and_markdown_pairing(skewed):
+    from paddlex.inference.common.result.converter import MarkdownConverter
+    from paddlex.inference.pipelines.paddleocr_vl.result import PaddleOCRVLBlock
+
+    image, parent = _page()
+    fn_boxes = [
+        dict(
+            label="formula_number",
+            cls_id=1,
+            score=0.95,
+            coordinate=[315, y1, 345, y2],
+            quad=[[315, y1], [345, y1], [345, y2], [315, y2]],
+        )
+        for y1, y2 in [(25, 50), (85, 110), (145, 170)]
+    ]
+    if skewed:
+        matrix = np.float32([[1, 0.12, 15], [0.06, 1, 10], [0, 0, 1]])
+        image = cv2.warpPerspective(
+            image, matrix, (460, 280), borderValue=(255, 255, 255)
+        )
+        for b in [parent, *fn_boxes]:
+            q = cv2.perspectiveTransform(np.float32([b["quad"]]), matrix)[0]
+            b["quad"] = q.tolist()
+            b["coordinate"] = [*q.min(0).tolist(), *q.max(0).tolist()]
+
+    # Original reading order has parent followed by all three formula numbers.
+    detections = [parent, *fn_boxes]
+    raw = dict(
+        boxes=np.array(
+            [[b["cls_id"], b["score"], *b["coordinate"]] for b in detections],
+            np.float32,
+        ),
+        quad=np.float32([b["quad"] for b in detections]).reshape(-1, 8),
+    )
+    post = LayoutAnalysisProcess(
+        labels=["display_formula", "formula_number"], scale_size=[800, 800]
+    )
+    h, w = image.shape[:2]
+    out = post(
+        [raw],
+        [dict(ori_img_size=(w, h), ori_img=image)],
+        threshold=0.3,
+        layout_nms=True,
+        layout_shape_mode="auto",
+        filter_overlap_boxes=True,
+        layout_split_formula=True,
+    )[0]
+    assert [b["label"] for b in out] == [
+        "display_formula",
+        "formula_number",
+        "display_formula",
+        "formula_number",
+        "display_formula",
+        "formula_number",
+    ]
+    assert [b["order"] for b in out] == [1, 2, 3, 4, 5, 6]
+    # Verify MarkdownConverter pairs each split row with its own formula number.
+    blocks = []
+    num_idx = 1
+    for b in out:
+        if b["label"] == "display_formula":
+            content = f"$$ x_{num_idx} = {num_idx} $$"
+        else:
+            content = f"({num_idx})"
+            num_idx += 1
+        blocks.append(PaddleOCRVLBlock(b["label"], b["coordinate"], content))
+    md = MarkdownConverter.convert(
+        blocks,
+        handle_funcs_dict={"display_formula": lambda b: b.content},
+        show_formula_number=True,
+    )["markdown_texts"]
+    assert "\\tag*{(1)}" in md and "\\tag*{(2)}" in md and "\\tag*{(3)}" in md
+
+
+def test_two_column_formula_number_not_stolen():
+    image, left_parent = _page()
+    # Expand canvas to a two-column page; place a text column and a right-column
+    # formula_number that must NOT be pulled into the left-column formula.
+    wide = np.full((220, 760, 3), 255, np.uint8)
+    wide[:, :360] = image
+    mid_text = dict(
+        label="text",
+        cls_id=2,
+        score=0.95,
+        coordinate=[380, 10, 620, 200],
+    )
+    right_fn = dict(
+        label="formula_number",
+        cls_id=1,
+        score=0.95,
+        coordinate=[660, 85, 700, 110],
+    )
+    out = split_formula_boxes(wide, [left_parent, mid_text, right_fn])
+    assert [b["label"] for b in out] == [
+        "display_formula",
+        "display_formula",
+        "display_formula",
+        "text",
+        "formula_number",
+    ]
+
+
+def test_detector_rows_survive_large_filter_in_rect_mode():
+    image, parent, rows = _detected_rows()
+    detections = [rows[2], parent, rows[0], rows[3], rows[1]]
+    raw = dict(
+        boxes=np.array(
+            [[0, b["score"], *b["coordinate"]] for b in detections], np.float32
+        ),
+        quad=np.float32([b["quad"] for b in detections]).reshape(-1, 8),
+    )
+    post = LayoutAnalysisProcess(labels=["display_formula"], scale_size=[800, 800])
+    h, w = image.shape[:2]
+    out = post(
+        [raw],
+        [dict(ori_img_size=(w, h), ori_img=image)],
+        threshold=0.3,
+        layout_nms=True,
+        layout_merge_bboxes_mode={0: "large"},
+        layout_shape_mode="rect",
+        filter_overlap_boxes=True,
+        layout_split_formula=True,
+    )[0]
+    assert len(out) == 4
+    assert [b["score"] for b in out] == pytest.approx([b["score"] for b in rows])
+
+
+def test_deferred_overlap_filter_does_not_drop_split_formula_rows():
+    from paddlex.inference.models.layout_analysis.processors import filter_boxes
+
+    image, parent = _page()
+    # A smaller overlapping text box covering lines 1-2 of the parent formula.
+    # Without overlap guarding, splitting the parent shrinks each child below
+    # the text box's area and downstream PaddleOCR-VL filter_boxes deletes them.
+    smaller_text = dict(
+        label="text",
+        cls_id=1,
+        score=0.8,
+        coordinate=[25, 20, 295, 130],
+        quad=[[25, 20], [295, 20], [295, 130], [25, 130]],
+    )
+    raw = dict(
+        boxes=np.array(
+            [
+                [0, parent["score"], *parent["coordinate"]],
+                [1, smaller_text["score"], *smaller_text["coordinate"]],
+            ],
+            np.float32,
+        ),
+        quad=np.float32([parent["quad"], smaller_text["quad"]]).reshape(-1, 8),
+    )
+    post = LayoutAnalysisProcess(
+        labels=["display_formula", "text"], scale_size=[800, 800]
+    )
+    h, w = image.shape[:2]
+    # Simulate PaddleOCR-VL: filter_overlap_boxes=False in layout model,
+    # followed by filter_boxes in pipeline page preparation.
+    det_out = post(
+        [raw],
+        [dict(ori_img_size=(w, h), ori_img=image)],
+        threshold=0.3,
+        layout_nms=True,
+        layout_shape_mode="auto",
+        filter_overlap_boxes=False,
+        layout_split_formula=True,
+    )[0]
+    after_pipeline_filter = filter_boxes(det_out, "auto")
+    assert len(after_pipeline_filter) == 3
+    assert all(b["label"] == "display_formula" for b in after_pipeline_filter)
+
+
+def test_serving_schema_cli_and_predictor_expose_layout_split_formula():
+    import ast
+    import inspect
+
+    from paddlex.inference.models.layout_analysis.predictor import (
+        LayoutAnalysisRunnerPredictor,
+        LayoutAnalysisTransformersPredictor,
+    )
+    from paddlex.utils.deps import is_serving_plugin_available
+    from paddlex.utils.pipeline_arguments import PIPELINE_ARGUMENTS
+
+    if is_serving_plugin_available():
+        from paddlex.inference.serving.schemas.paddleocr_vl import InferRequest
+
+        req = InferRequest(file="dummy.png", layoutSplitFormula=True)
+        assert req.layoutSplitFormula is True
+    else:
+        schema_src = (
+            Path(__file__).parents[2]
+            / "paddlex/inference/serving/schemas/paddleocr_vl.py"
+        ).read_text()
+        app_src = (
+            Path(__file__).parents[2]
+            / "paddlex/inference/serving/basic_serving/_pipeline_apps/paddleocr_vl.py"
+        ).read_text()
+        tree = ast.parse(schema_src)
+        infer_cls = next(
+            n
+            for n in tree.body
+            if isinstance(n, ast.ClassDef) and n.name == "InferRequest"
+        )
+        field_names = {
+            stmt.target.id
+            for stmt in infer_cls.body
+            if isinstance(stmt, ast.AnnAssign) and isinstance(stmt.target, ast.Name)
+        }
+        assert "layoutSplitFormula" in field_names
+        assert "layout_split_formula=request.layoutSplitFormula" in app_src
+
+    vl_args = {arg["name"] for arg in PIPELINE_ARGUMENTS["PaddleOCR-VL"]}
+    assert "--layout_split_formula" in vl_args
+    assert (
+        "layout_split_formula"
+        in inspect.signature(LayoutAnalysisRunnerPredictor.__init__).parameters
+    )
+    assert (
+        "layout_split_formula"
+        in inspect.signature(LayoutAnalysisTransformersPredictor.__init__).parameters
+    )

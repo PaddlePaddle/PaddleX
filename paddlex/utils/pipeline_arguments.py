@@ -662,6 +662,11 @@ PIPELINE_ARGUMENTS = {
             "help": "Determines merge mode for layout detection bboxes, 'union', 'large' or 'small'",
         },
         {
+            "name": "--layout_split_formula",
+            "type": bool,
+            "help": "Determines whether to split clearly separated display-formula rows before recognition",
+        },
+        {
             "name": "--use_queues",
             "type": bool,
             "help": "Determines whether to use queues",

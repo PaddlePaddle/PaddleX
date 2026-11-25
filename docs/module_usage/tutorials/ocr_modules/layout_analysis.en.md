@@ -57,6 +57,17 @@ for res in output:
     res.save_to_json(save_path="./output/res.json")
 ```
 
+For PP-DocLayoutV4, you can pass `layout_split_formula=True` to `create_model()` or `predict()` (also supported in pipeline YAML configs, CLI `--layout_split_formula`, and Serving `layoutSplitFormula`) to enable conservative, OpenCV-based formula line splitting:
+
+```python
+model = create_model(model_name="PP-DocLayoutV4")
+output = model.predict("document.png", layout_split_formula=True)
+```
+
+This option defaults to `False` and does not change existing output. When enabled, `display_formula` regions undergo quadrilateral perspective rectification, illumination normalization, and residual tilt/curvature baseline estimation, followed by connected-component noise filtering and isolated/touching fraction-bar protection to locate inter-row gaps. Child boxes are emitted in reading order with synchronized quads and bounding rectangles, and row-aligned `formula_number` boxes are interleaved right after their corresponding split rows. The `PaddleOCR-VL` pipeline (`predict()`, CLI, and Serving) also supports this option before formula recognition while preserving overlap-filtering priority. For non-mask detectors, the splitter first attempts to restore single-line detector candidates suppressed by containment filtering (requiring candidate score `>= 0.5`, at least `0.05` above the parent score, row-by-row structural agreement, and at least 98% binary ink coverage) before falling back to image-only splitting. Restored candidates retain their detector scores and image-derived children inherit the parent score; neither represents split confidence.
+
+This method does not depend on OCR or extra models and works best for multi-line derivations with clear inter-row whitespace (including tilted or moderately curved pages). Dense equations, extreme curvature, shared multi-row delimiters, and concave irregular polygons are conservatively kept intact. Always inspect split results on your target documents before evaluating end-to-end recognition.
+
 <b>Note: </b>The official models would be downloaded from HuggingFace by default. PaddleX also supports specifying the preferred source by setting the environment variable `PADDLE_PDX_MODEL_SOURCE`. The supported values are `huggingface`, `aistudio`, `bos`, and `modelscope`. For example, to prioritize using `bos`, set: `PADDLE_PDX_MODEL_SOURCE="bos"`.
 
 <details><summary>👉 <b>After running, the result is: (Click to expand)</b></summary>
@@ -205,6 +216,18 @@ Relevant methods, parameters, and explanations are as follows:
 </td>
 <td>None</td>
 </tr>
+<tr>
+<td><code>layout_split_formula</code></td>
+<td>Whether to enable conservative image-based splitting of <code>display_formula</code> regions; defaults to <code>False</code> when not specified</td>
+<td><code>bool/None</code></td>
+<td>
+<ul>
+<li><b>bool</b>, True/False, enables or disables display-formula line splitting</li>
+<li><b>None</b>, not specified, uses the model configuration default (<code>False</code>)</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
 </table>
 
 * Note that `model_name` must be specified. After specifying `model_name`, the default PaddleX built-in model parameters will be used. If `model_dir` is specified, the user-defined model will be used.
@@ -252,6 +275,18 @@ Relevant methods, parameters, and explanations are as follows:
 <li><b>float</b>, e.g., 0.5, means filtering out all bounding boxes with a confidence score less than 0.5</li>
 <li><b>Dictionary</b>, with keys as <b>int</b> representing <code>cls_id</code> and values as <b>float</b> thresholds</li>
 <li><b>None</b>, not specified, will use the <code>threshold</code> parameter specified in <code>create_model</code>. If not specified in <code>create_model</code>, the default PaddleX official model configuration will be used</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>layout_split_formula</code></td>
+<td>Whether to enable conservative <code>display_formula</code> line splitting</td>
+<td><code>bool/None</code></td>
+<td>
+<ul>
+<li><b>bool</b>, True/False, enables or disables display-formula line splitting</li>
+<li><b>None</b>, not specified, uses the <code>layout_split_formula</code> value from <code>create_model</code> (defaults to <code>False</code>)</li>
 </ul>
 </td>
 <td>None</td>
