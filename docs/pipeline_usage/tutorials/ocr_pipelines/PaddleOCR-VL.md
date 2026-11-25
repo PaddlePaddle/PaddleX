@@ -774,7 +774,11 @@ PaddleOCR-VL 1.8 的版面检测默认 `SubModules.LayoutDetection.batch_size: 4
 
 如果为 HPS 单独部署 vLLM 0.33.0，请参阅 [HPS 部署 README](https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/deploy/hps/README.md#paddleocr-vl-18-接入-vllm-0330)，了解可信内部客户端传入 `mm_processor_kwargs` 所需的配置，以及可选的 `prefill-schedule-interval` 调优。这两项不适用于默认的 vLLM 0.19.0 后端。
 
-使用未量化的 `PaddleOCR-VL-1.8-0.9B` 时，可在 `--backend_config` 中显式设置 `paddlex-vision-performance: true`，启用融合视觉 RoPE。支持单张 A100（SM80，BF16、视觉 FlashAttention，vLLM `0.19.0` 或 `0.33.0`）或单张 V100（SM70，FP16、视觉 Torch SDPA，vLLM `0.19.0`）。该选项默认关闭，不会更换已安装的 vLLM 版本，也不改变多图合批或文本解码路径。其他配置请保持关闭。
+使用未量化的 `PaddleOCR-VL-1.8-0.9B` 时，可在 `--backend_config` 中显式设置 `paddlex-vision-performance: true`，启用融合视觉 RoPE。该选项默认关闭，支持以下单卡配置。
+
+- A100（SM80），BF16、视觉 FlashAttention，vLLM `0.19.0` 或 `0.33.0`。
+- L20（SM89），BF16、视觉 FlashAttention，vLLM `0.33.0`。
+- V100（SM70），FP16、视觉 Torch SDPA，vLLM `0.19.0`。
 
 VLM 服务端依赖可能与本地产线客户端环境存在差异，因此建议为 VLM 推理服务单独创建虚拟环境。以下 vLLM 安装命令适用于使用 CUDA 12.9 的 NVIDIA 环境，需使用 Python 3.10–3.13。
 

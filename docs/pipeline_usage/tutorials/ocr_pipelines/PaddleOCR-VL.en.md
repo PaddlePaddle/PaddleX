@@ -792,7 +792,11 @@ The default layout detection setting for PaddleOCR-VL 1.8 is `SubModules.LayoutD
 
 If you deploy vLLM 0.33.0 separately for HPS, see the [HPS deployment README](https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/deploy/hps/README_en.md#using-vllm-0330-with-paddleocr-vl-18-hps) for the setting required when trusted internal clients send `mm_processor_kwargs`, and for optional `prefill-schedule-interval` tuning. Neither setting applies to the default vLLM 0.19.0 backend.
 
-For unquantized `PaddleOCR-VL-1.8-0.9B`, set `paddlex-vision-performance: true` in `--backend_config` to opt into fused vision RoPE. Supported configurations are a single A100 (SM80, BF16, vision FlashAttention, vLLM `0.19.0` or `0.33.0`) or a single V100 (SM70, FP16, vision Torch SDPA, vLLM `0.19.0`). This option is off by default. It does not change the installed vLLM version, image batching, or the text decoding path. Leave it off on other configurations.
+For unquantized `PaddleOCR-VL-1.8-0.9B`, set `paddlex-vision-performance: true` in `--backend_config` to opt into fused vision RoPE. The option is off by default and supports these single-GPU configurations.
+
+- A100 (SM80) with BF16, vision FlashAttention, and vLLM `0.19.0` or `0.33.0`.
+- L20 (SM89) with BF16, vision FlashAttention, and vLLM `0.33.0`.
+- V100 (SM70) with FP16, vision Torch SDPA, and vLLM `0.19.0`.
 
 VLM server dependencies may differ from those of the local pipeline client. Create a separate virtual environment for the VLM service. The following vLLM installation command uses CUDA 12.9 on NVIDIA and requires Python 3.10–3.13.
 

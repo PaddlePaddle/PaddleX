@@ -99,14 +99,22 @@ def _vision_support(vllm_config, encoder):
     sm = torch.cuda.get_device_capability()
     dtype = vllm_config.model_config.dtype
     backend = getattr(getattr(encoder, "attn_backend", None), "name", None)
+    version = vllm_version.split("+", 1)[0]
     if not (
-        (sm, dtype, backend) == ((8, 0), torch.bfloat16, "FLASH_ATTN")
+        (
+            (sm == (8, 0) or (sm == (8, 9) and version == "0.33.0"))
+            and (dtype, backend) == (torch.bfloat16, "FLASH_ATTN")
+        )
         or (
             (sm, dtype, backend) == ((7, 0), torch.float16, "TORCH_SDPA")
-            and vllm_version.split("+", 1)[0] == "0.19.0"
+            and version == "0.19.0"
         )
     ):
-        return "requires SM80/BF16/vision FlashAttention or SM70/FP16/vision Torch SDPA on vLLM 0.19.0"
+        return (
+            "requires SM80/BF16/vision FlashAttention, "
+            "SM89/BF16/vision FlashAttention on vLLM 0.33.0, "
+            "or SM70/FP16/vision Torch SDPA on vLLM 0.19.0"
+        )
     if not isinstance(encoder, SiglipEncoder) or not (
         _accepts_keywords(
             encoder.forward,
