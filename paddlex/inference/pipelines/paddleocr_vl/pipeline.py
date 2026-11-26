@@ -18,7 +18,6 @@ import re
 import threading
 import time
 from concurrent.futures import Future, ThreadPoolExecutor
-from functools import lru_cache
 from itertools import chain
 from typing import Any, Dict, List, Optional, Tuple, Union
 
@@ -68,28 +67,6 @@ MAX_NUM_PAGES_PER_VLM_BATCH = 8
 def _is_uniform_image(image):
     """Only discard truly uniform pages; preserve even one-level contrast."""
     return bool(image.size and np.all(image == image[0, 0]))
-
-
-@lru_cache(maxsize=1)
-def _load_mineru_block_content_to_html():
-    """Resolve MinerU2.5's table converter lazily.
-    ``mineru_utils`` is an optional module: it is not always present in the
-    tree, and importing it at module scope breaks ``import paddlex`` outright
-    (``pipelines/__init__.py`` eagerly imports this package). Returning ``None``
-    when it is missing lets MinerU2.5 fall back to the shared OTSL converter
-    instead of taking the whole library down.
-    """
-    try:
-        from .mineru_utils import block_content_to_html
-    except ImportError:
-        logging.warning(
-            "MinerU2.5 table post-processing is unavailable: "
-            "paddlex.inference.pipelines.paddleocr_vl.mineru_utils could not be "
-            "imported. Falling back to the OTSL-to-HTML converter, which may "
-            "produce different table markup for this model."
-        )
-        return None
-    return block_content_to_html
 
 
 @benchmark.time_methods
@@ -785,15 +762,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         if not result_str.startswith(" $$"):
                             result_str = " $$ " + result_str + " $$ "
                     if block_label == "table":
-                        html_str = ""
-                        mineru_to_html = (
-                            _load_mineru_block_content_to_html()
-                            if self.vl_rec_model.model_name == "MinerU2.5"
-                            else None
-                        )
-                        if mineru_to_html is not None:
-                            html_str = mineru_to_html(result_str)
-                        elif self.vl_rec_model.model_name in [
+                        if self.vl_rec_model.model_name in [
                             "Dolphinv2",
                             "MonkeyOCR-pro-3B",
                         ]:
