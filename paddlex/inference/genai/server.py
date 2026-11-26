@@ -17,7 +17,11 @@ import sys
 
 from ...utils import logging
 from ...utils.deps import is_genai_engine_plugin_available
-from .configs.utils import load_backend_config, update_backend_config
+from .configs.utils import (
+    load_backend_config,
+    merge_vllm_backend_config,
+    update_backend_config,
+)
 from .constants import DEFAULT_BACKEND, SUPPORTED_BACKENDS
 from .models import get_chat_template_path, get_default_config, get_model_dir
 
@@ -88,11 +92,11 @@ def run_genai_server(args):
             f"Failed to get default configuration for the model", exc_info=True
         )
         sys.exit(1)
-    update_backend_config(
-        default_config,
-        backend_config,
-    )
-    backend_config = default_config
+    if args.backend == "vllm":
+        backend_config = merge_vllm_backend_config(default_config, backend_config)
+    else:
+        update_backend_config(default_config, backend_config)
+        backend_config = default_config
 
     with get_chat_template_path(
         args.model_name, args.backend, model_dir

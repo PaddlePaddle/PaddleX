@@ -23,6 +23,21 @@ This  document  mainly introduces how to set up a high stability serving environ
 
 To learn how to start the server and invoke services using the built images and packaged SDK, please refer to the [PaddleX Serving Guide](https://paddlepaddle.github.io/PaddleX/latest/en/pipeline_deploy/serving.html) for detailed instructions.
 
+## Using vLLM 0.33.0 with PaddleOCR-VL 1.8 HPS
+
+If you deploy vLLM 0.33.0 separately as the VLM backend for HPS, put these settings in the YAML file passed to **the VLM server** through `paddlex_genai_server --backend_config`, not in the HPS `pipeline_config.yaml`:
+
+```yaml
+# HPS compatibility setting for trusted internal clients only.
+trust-request-mm-kwargs: true
+# Optional performance tuning. The default is 1 when omitted.
+prefill-schedule-interval: 8
+```
+
+- **`trust-request-mm-kwargs`**: HPS sends per-request image preprocessing options as `mm_processor_kwargs`. vLLM 0.33.0 rejects this field by default, which can surface as HTTP 400 from the VLM and HTTP 500 from HPS. Enable this only when the VLM port is accessible exclusively to trusted internal clients. Do not expose the VLM port directly to untrusted clients with this setting enabled.
+- **`prefill-schedule-interval`**: Controls how often the VLM engine schedules prefill. HPS does not require it to work. `8` is an optional example for high-throughput workloads on A100; measure throughput and tail latency for your workload. Upstream first exposed this flag in [vLLM 0.24.0](https://github.com/vllm-project/vllm/blob/v0.24.0/vllm/config/scheduler.py), but it takes effect for a single engine (`data-parallel-size=1`) only from [0.33.0](https://github.com/vllm-project/vllm/blob/v0.33.0/vllm/v1/core/sched/scheduler.py).
+
+This example does not change the default vLLM version. Omit both settings when using the default vLLM 0.19.0 backend.
 
 ## 1. Image Building
 
@@ -112,6 +127,10 @@ Build image script supports the following configuration options:
 <tr>
 <td><code>-p</code></td>
 <td>Python package index URL. If not specified, defaults to <code>https://pypi.org/simple</code>.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>PaddleX package version inside the image. Defaults to the Git tag on the current commit, and can be specified for candidate builds.</td>
 </tr>
 </tbody>
 </table>

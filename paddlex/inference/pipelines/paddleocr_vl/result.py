@@ -72,6 +72,7 @@ class PaddleOCRVLBlock(object):
         content="",
         group_id=None,
         polygon_points=None,
+        quad=None,
         global_block_id=None,
         global_group_id=None,
     ) -> None:
@@ -88,6 +89,7 @@ class PaddleOCRVLBlock(object):
         self.content = content
         self.image = None
         self.polygon_points = polygon_points
+        self.quad = quad
         self.group_id = group_id
         self.global_block_id = global_block_id
         self.global_group_id = global_group_id
@@ -231,6 +233,11 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordM
                 table_region_id = table_res["table_region_id"]
                 key = f"table_{table_region_id}"
                 res_html_dict[key] = table_res.html["pred"]
+        else:
+            # VL pipelines keep recognized tables in parsing_res_list.
+            for index, block in enumerate(self.get("parsing_res_list", [])):
+                if block.label == "table" and block.content:
+                    res_html_dict[f"table_{index}"] = block.content
         return res_html_dict
 
     def _to_xlsx(self) -> dict[str, str]:
@@ -247,6 +254,8 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordM
                 table_region_id = table_res["table_region_id"]
                 key = f"table_{table_region_id}"
                 res_xlsx_dict[key] = table_res.xlsx["pred"]
+        else:
+            res_xlsx_dict = self._to_html()
         return res_xlsx_dict
 
     def _to_str(self, *args, **kwargs) -> dict[str, str]:
@@ -411,6 +420,8 @@ class PaddleOCRVLResult(BaseCVResult, HtmlMixin, XlsxMixin, MarkdownMixin, WordM
                 res_dict["global_group_id"] = parsing_res.global_group_id
             if parsing_res.polygon_points is not None:
                 res_dict["block_polygon_points"] = parsing_res.polygon_points
+            if parsing_res.quad is not None:
+                res_dict["block_quad"] = parsing_res.quad
 
             if _keep_img and parsing_res.image is not None:
                 res_dict["image"] = parsing_res.image

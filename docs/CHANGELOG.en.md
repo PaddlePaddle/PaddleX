@@ -6,6 +6,19 @@ comments: true
 
 ## Latest Version Information
 
+### PaddleX v3.8.0
+
+#### Compatibility and upgrades
+
+- PaddleX now requires Python 3.9 or later. Upgrade Python 3.8 environments before installing this release.
+- The NVIDIA vLLM serving dependencies (`genai-vllm-server`) move from vLLM 0.10.2 and PyTorch 2.8.0 to vLLM 0.19.0 and PyTorch 2.10.0. Use the updated image or update these dependencies when upgrading a self-hosted service.
+- `deploy/genai_vllm_server_docker/build.sh` removes `--sm120`. A build requires exactly one of `--pdx-version VERSION` and `--pdx-wheel PATH` to select a PaddleX package version or a local wheel, respectively. Set `VLLM_BASE_IMAGE` to use a custom vLLM base image.
+- The PaddleOCR-VL helper module `paddlex.inference.pipelines.paddleocr_vl.uilts` is named `paddlex.inference.pipelines.paddleocr_vl.utils` in this release. Update direct imports such as `from paddlex.inference.pipelines.paddleocr_vl.utils import convert_otsl_to_html`.
+
+#### PaddleOCR-VL 1.8 deployment defaults
+
+On NVIDIA CUDA, the vLLM server for `PaddleOCR-VL-1.8-0.9B` defaults to a fixed 4 GiB KV cache per GPU and two HTTP frontends that share the inference engine. Model weights and runtime allocations use additional GPU memory, so startup can run out of memory on 8 GB GPUs or GPUs shared with other workloads. GPUs with more memory also default to a 4 GiB KV cache. Use `--backend_config` to change the budget. On memory-constrained GPUs, lower `kv-cache-memory-bytes` or specify `gpu-memory-utilization` alone to size the cache by GPU memory utilization. Set `api-server-count` to `1` to use a single frontend. [Deployment configuration](./pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.en.md#312-starting-through-paddlex-cli)
+
 ### PaddleX v3.3.0 (October 16, 2025)
 
 - **Added support for inference and deployment of PaddleOCR-VL and PP-OCRv5 multilingual models.**

@@ -280,6 +280,12 @@ def is_genai_engine_plugin_available(backend="any"):
             from .env import is_cuda_available
 
             if is_cuda_available():
+                # Integrated vLLM models use vLLM's own attention backends.
+                # Keep the external attention dependencies for legacy adapters.
+                if backend == "vllm-server" and Version(
+                    get_dep_version("vllm")
+                ) >= Version("0.11.1"):
+                    return True
                 return is_dep_available("xformers") and is_dep_available("flash-attn")
             return True
         return False

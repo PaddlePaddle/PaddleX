@@ -8,7 +8,7 @@ comments: true
 
 版面分析任务在版面区域检测的基础上，进一步引入了**实例分割**与**阅读顺序预测**能力。通过对输入的文档图像进行分析，不仅能识别各类版面元素（如文字、图表、图像、公式、段落标题、摘要、参考文献等）并输出其边界框，还能同时输出每个区域的**精确轮廓掩码**和**阅读顺序编号**，为文档理解与信息抽取流程提供更完整的结构化信息。
 
-版面分析模块目前支持模型 PP-DocLayoutV3，基于 DETR 架构并以 PPHGNetV2-L 为骨干网络，在实例分割任务之上增加了**阅读顺序预测**分支，可端到端学习文档元素的阅读顺序关系。
+版面分析模块支持 PP-DocLayoutV3 和 PP-DocLayoutV4。PP-DocLayoutV3 基于 DETR 架构并以 PPHGNetV2-L 为骨干网络，在实例分割任务之上增加了**阅读顺序预测**分支，可端到端学习文档元素的阅读顺序关系。
 
 ![版面分析效果](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_analysis/layout_analysis.png)
 
@@ -35,6 +35,13 @@ comments: true
 <td>126</td>
 <td>基于DETR在包含中英文论文、多栏杂志、报纸、PPT、合同、书本、试卷、研报等场景的自建数据集上训练的版面分析模型，支持25类版面元素的实例分割及阅读顺序预测</td>
 </tr>
+<tr>
+<td>PP-DocLayoutV4</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayoutV4_infer.tar">推理模型</a></td>
+<td>–</td>
+<td>–</td>
+<td>输出四点框和阅读顺序。带形变头的权重还会输出页面形变参数。</td>
+</tr>
 </tbody>
 </table>
 
@@ -59,6 +66,19 @@ for res in output:
     res.save_to_json(save_path="./output/res.json")
 ```
 
+对 PP-DocLayoutV4，可在 `create_model()` 或 `predict()` 时传入 `layout_split_formula=True`（PaddleOCR-VL 产线还支持在产线 YAML、CLI `--layout_split_formula` 与 Serving `layoutSplitFormula` 中配置，其他产线暂未接入；该参数仅支持 PP-DocLayoutV4，其他版面模型会忽略它并打印警告，因此在 PaddleOCR-VL 产线中仅当版面模型为 PP-DocLayoutV4（如 PaddleOCR-VL-1.8 默认配置）时生效），启用基于 OpenCV 的保守公式拆行：
+
+```python
+model = create_model(model_name="PP-DocLayoutV4")
+output = model.predict("document.png", layout_split_formula=True)
+```
+
+该参数默认为 `False`，不改变现有输出。开启后，对 `display_formula` 区域先校正四边形透视与局部光照，并对框内残余倾斜及轻中度页面弯曲做基线拉平估计，再结合连通域噪点过滤、独立及粘连分数线保护寻找行间留白，生成按阅读顺序排列的子框并同步更新四边形与外接矩形；若右侧存在逐行对应的 `formula_number`，还会按行重排其阅读顺序。PaddleOCR-VL 产线的 `predict()`、CLI 与服务化接口也支持此参数，拆分发生在公式识别之前。如果后续的重叠过滤会删掉拆出的某一行，产线会保留原公式框。开启此开关后，会优先尝试恢复包含过滤前的单行候选：候选分数须至少为 0.5、比父框高 0.05，并通过逐行对应、结构保护和至少 98% 的二值墨迹覆盖检查；不满足条件时继续使用图像拆行。恢复的候选保留自身检测分数，OpenCV 生成的子框继承父框分数；这些分数均不代表拆分置信度。
+
+此方法不依赖 OCR 或额外模型，适合行间留白明显的连续推导及含倾斜或轻中度弯曲的公式；密集公式、极端弯曲及跨行括号可能保留整体框。它不能保证识别所有矩阵或分式结构，也不会修复原检测框已经裁掉的内容。建议先检查目标文档上的拆分结果，再评估端到端识别效果。
+
+在 PaddleOCR-VL 中，`layout_shape_mode="rect"` 使用轴对齐矩形裁图。公式行倾斜时，裁图可能带入相邻行的笔画。处理倾斜文档时可使用 `auto`，由产线在有四边形时按四边形裁图。
+
 <b>注：</b>PaddleX 支持多个模型托管平台，官方模型默认优先从 HuggingFace 下载。PaddleX 也支持通过环境变量 `PADDLE_PDX_MODEL_SOURCE` 设置优先使用的托管平台，目前支持 `huggingface`、`aistudio`、`bos`、`modelscope`，如优先使用 `bos`：`PADDLE_PDX_MODEL_SOURCE="bos"`；
 
 <details><summary>👉 <b>运行后，得到的结果为：（点击展开）</b></summary>
@@ -76,7 +96,9 @@ for res in output:
   - `score`：目标框置信度，一个浮点数
   - `coordinate`：目标框坐标，一个浮点数列表，格式为<code>[xmin, ymin, xmax, ymax]</code>
   - `polygon_points`：实例分割轮廓点列表，格式为<code>[[x1, y1], [x2, y2], ...]</code>
+  - `quad`：仅 PP-DocLayoutV4 输出，模型预测的四边形顶点，格式为<code>[[x1, y1], [x2, y2], [x3, y3], [x4, y4]]</code>，依次为左上、右上、右下、左下；此时 `coordinate` 为该四边形的外接矩形
   - `order`：阅读顺序编号，一个整数，表示该区域在文档中的阅读顺序（从0开始）
+- `warp_params`：仅预测页面形变的 PP-DocLayoutV4 模型输出，整页的形变参数 <code>[roll_deg, quadrant_conf, shear_deg, kx, ky]</code>
 </details>
 
 运行后，`save_to_img()` 保存的可视化结果如下，图中标注了各区域的类别、置信度、实例分割掩码及阅读顺序编号：
@@ -206,6 +228,18 @@ for res in output:
 </td>
 <td>None</td>
 </tr>
+<tr>
+<td><code>layout_split_formula</code></td>
+<td>是否启用基于图像的保守 <code>display_formula</code> 拆行，仅支持 PP-DocLayoutV4；如果不指定，默认为 <code>False</code></td>
+<td><code>bool/None</code></td>
+<td>
+<ul>
+<li><b>bool</b>，True/False，开启或关闭展示公式拆行</li>
+<li><b>None</b>，不指定，将默认使用模型配置（默认为 <code>False</code>）</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
 </table>
 
 * 其中，`model_name` 必须指定，指定 `model_name` 后，默认使用 PaddleX 内置的模型参数，在此基础上，指定 `model_dir` 时，使用用户自定义的模型。
@@ -253,6 +287,18 @@ for res in output:
 <li><b>float</b>，如 0.5，表示过滤掉所有置信度小于0.5的目标框</li>
 <li><b>字典</b>，字典的key为<b>int</b>类型，代表<code>cls_id</code>，val为<b>float</b>类型阈值</li>
 <li><b>None</b>，不指定，将默认使用 <code>create_model</code> 指定的 <code>threshold</code> 参数，如果 <code>create_model</code> 也没有指定，则默认使用PaddleX官方模型配置</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>layout_split_formula</code></td>
+<td>是否启用保守 <code>display_formula</code> 公式拆行，仅支持 PP-DocLayoutV4</td>
+<td><code>bool/None</code></td>
+<td>
+<ul>
+<li><b>bool</b>，True/False，开启或关闭展示公式拆行</li>
+<li><b>None</b>，不指定，将默认使用 <code>create_model</code> 指定的 <code>layout_split_formula</code> 参数（默认为 <code>False</code>）</li>
 </ul>
 </td>
 <td>None</td>

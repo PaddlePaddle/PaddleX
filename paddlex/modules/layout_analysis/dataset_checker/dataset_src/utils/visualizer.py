@@ -233,7 +233,7 @@ def draw_mask(image, coco_info: "COCO", img_id):
     h, w = img_array.shape[:2]
     annotations = coco_info.loadAnns(coco_info.getAnnIds(imgIds=img_id))
     for ann in annotations:
-        segm = ann["segmentation"]
+        segm = ann.get("segmentation")
         if not segm:
             continue
         import pycocotools.mask as mask_util

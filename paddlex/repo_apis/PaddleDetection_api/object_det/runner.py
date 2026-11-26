@@ -77,7 +77,13 @@ class DetRunner(BaseRunner):
         """
         args, env = self.distributed(device, ips)
         cli_args = self._gather_opts_args(cli_args)
-        cmd = [*args, "tools/eval.py", "--config", config_path, *cli_args]
+        cmd = [
+            *args,
+            "tools/eval.py",
+            "--config",
+            config_path,
+            *cli_args,
+        ]
         cp = self.run_cmd(
             cmd, env=env, switch_wdir=True, echo=True, silent=False, capture_output=True
         )
@@ -101,7 +107,13 @@ class DetRunner(BaseRunner):
         """
         # `device` unused
         cli_args = self._gather_opts_args(cli_args)
-        cmd = [self.python, "tools/infer.py", "-c", config_path, *cli_args]
+        cmd = [
+            self.python,
+            "tools/infer.py",
+            "-c",
+            config_path,
+            *cli_args,
+        ]
         return self.run_cmd(cmd, switch_wdir=True, echo=True, silent=False)
 
     def export(self, config_path: str, cli_args: list, device: str) -> CompletedProcess:

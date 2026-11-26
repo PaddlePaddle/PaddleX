@@ -759,6 +759,35 @@ _DOCLAYOUTV3_CONFIG = {
     "x4_feat_dim": 128,
 }
 
+# PP-DocLayoutV4 shares PP-DocLayoutV3's label set and 800x800 preprocessing but
+# swaps the mask branch for a 4-point quad regression (``num_coords: 10``) and
+# adds the S2R reading-order module, so it drops the mask-specific keys and adds
+# the quad/S2R ones. Backbone ``return_idx`` is [1, 2, 3] (no stride-4 feature,
+# which only the mask branch needed).
+_DOCLAYOUTV4_CONFIG = {
+    **{
+        k: v
+        for k, v in _DOCLAYOUTV3_CONFIG.items()
+        if k not in ("mask_feature_channels", "x4_feat_dim")
+    },
+    "architectures": ["PPDocLayoutV4ForObjectDetection"],
+    "model_type": "pp_doclayout_v4",
+    "backbone_config": {
+        **_DOCLAYOUTV3_CONFIG["backbone_config"],
+        "return_idx": [1, 2, 3],
+        "out_features": ["stage2", "stage3", "stage4"],
+    },
+    # 4-point quad box parameterization: [cx, cy, dx1, dy1, ..., dx4, dy4].
+    "num_coords": 10,
+    # S2R (Successor -> Relation) reading-order fusion.
+    "use_s2r": True,
+    "s2r_steps": 3,
+    "s2r_damping": 0.5,
+    "s2r_a_init": 0.0,
+    "s2r_b_init": 1.0,
+    "s2r_learnable_b": False,
+}
+
 # UVDoc config
 _UVDOC_CONFIG = {
     "model_type": "uvdoc",
@@ -1023,6 +1052,7 @@ MODEL_CONFIGS = {
     },
     "PP-DocLayoutV2": _DOCLAYOUTV2_CONFIG,
     "PP-DocLayoutV3": _DOCLAYOUTV3_CONFIG,
+    "PP-DocLayoutV4": _DOCLAYOUTV4_CONFIG,
     "RT-DETR-L_wired_table_cell_det": _rtdetr_config(
         _TABLE_CELL_LABELS,
         _TABLE_CELL_LABEL2ID,

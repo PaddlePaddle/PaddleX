@@ -54,7 +54,13 @@ def draw_box(img: Image.Image, boxes: List[dict]) -> Image.Image:
         color = tuple(label2color[label])
         font_color = tuple(catid2fontcolor[label])
 
-        if len(bbox) == 4:
+        if "quad" in dt and dt["quad"] is not None:
+            # Draw quad polygon
+            quad_pts = dt["quad"]  # [[x1,y1],[x2,y2],[x3,y3],[x4,y4]]
+            rectangle = [(float(p[0]), float(p[1])) for p in quad_pts]
+            rectangle.append(rectangle[0])  # close polygon
+            xmin, ymin, xmax, ymax = bbox  # AABB for label positioning
+        elif len(bbox) == 4:
             # draw bbox of normal object detection
             xmin, ymin, xmax, ymax = bbox
             rectangle = [

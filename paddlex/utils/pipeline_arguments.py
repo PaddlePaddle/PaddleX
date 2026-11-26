@@ -595,6 +595,31 @@ PIPELINE_ARGUMENTS = {
     ],
     "PaddleOCR-VL": [
         {
+            "name": "--use_layout_deform",
+            "type": bool,
+            "help": "Rectify recognition crops using the layout model's page deformation predictions",
+        },
+        {
+            "name": "--layout_deform_conf_thresh",
+            "type": float,
+            "help": "Minimum quadrant confidence for layout deformation correction",
+        },
+        {
+            "name": "--layout_deform_min_roll",
+            "type": float,
+            "help": "Minimum residual roll in degrees for full layout deformation correction",
+        },
+        {
+            "name": "--layout_deform_min_shear",
+            "type": float,
+            "help": "Minimum shear in degrees for full layout deformation correction",
+        },
+        {
+            "name": "--layout_deform_min_keystone",
+            "type": float,
+            "help": "Minimum keystone angle in degrees for full layout deformation correction",
+        },
+        {
             "name": "--use_doc_orientation_classify",
             "type": bool,
             "help": "Determines whether to use document orientation classification",
@@ -635,6 +660,11 @@ PIPELINE_ARGUMENTS = {
             "name": "--layout_merge_bboxes_mode",
             "type": custom_type(Optional[Union[str, Dict[int, str]]]),
             "help": "Determines merge mode for layout detection bboxes, 'union', 'large' or 'small'",
+        },
+        {
+            "name": "--layout_split_formula",
+            "type": bool,
+            "help": "Determines whether to split display-formula rows before recognition (PP-DocLayoutV4 only)",
         },
         {
             "name": "--use_queues",
@@ -810,3 +840,4 @@ PIPELINE_ARGUMENTS = {
 
 PIPELINE_ARGUMENTS["PaddleOCR-VL-1.5"] = PIPELINE_ARGUMENTS["PaddleOCR-VL"]
 PIPELINE_ARGUMENTS["PaddleOCR-VL-1.6"] = PIPELINE_ARGUMENTS["PaddleOCR-VL"]
+PIPELINE_ARGUMENTS["PaddleOCR-VL-1.8"] = PIPELINE_ARGUMENTS["PaddleOCR-VL"]

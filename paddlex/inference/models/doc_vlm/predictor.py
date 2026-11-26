@@ -559,6 +559,19 @@ class DocVLMGenAIClientPredictor(GenAIClientPredictor):
                         f"{repr(client.backend)} does not support `max_pixels`."
                     )
 
+            if (
+                client.backend == "vllm-server"
+                and self.model_name == "PaddleOCR-VL-1.8-0.9B"
+                and (min_pixels is not None or max_pixels is not None)
+            ):
+                # vLLM uses the top-level limits to count image tokens, while
+                # the 1.8 HF processor reads resize limits from `size`.
+                # Keep both in sync to avoid mismatched image embeddings.
+                request_kwargs["extra_body"]["mm_processor_kwargs"]["size"] = {
+                    "min_pixels": 112896 if min_pixels is None else min_pixels,
+                    "max_pixels": 1003520 if max_pixels is None else max_pixels,
+                }
+
             messages = [
                 {
                     "role": "user",
@@ -594,19 +607,21 @@ class DocVLMGenAIClientPredictor(GenAIClientPredictor):
         futures = []
         image_format = "PNG" if client.backend == "llama-cpp-server" else "JPEG"
         try:
-            specs = self._doc_vlm_genai_build_request_specs(
-                client,
-                data,
-                image_format,
-                max_new_tokens,
-                skip_special_tokens,
-                repetition_penalty,
-                temperature,
-                top_p,
-                min_pixels,
-                max_pixels,
-            )
-            for messages, request_kwargs in specs:
+            # Encode and send one block at a time, so that the server starts on
+            # the first blocks while the rest are still being encoded.
+            for item in data:
+                ((messages, request_kwargs),) = self._doc_vlm_genai_build_request_specs(
+                    client,
+                    [item],
+                    image_format,
+                    max_new_tokens,
+                    skip_special_tokens,
+                    repetition_penalty,
+                    temperature,
+                    top_p,
+                    min_pixels,
+                    max_pixels,
+                )
                 future = client.create_chat_completion(
                     messages,
                     return_future=True,

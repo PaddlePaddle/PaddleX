@@ -174,6 +174,7 @@ _REC_IMAGE_SHAPE = [3, 48, 320]
 
 # Hpi (TensorRT dynamic shape) templates
 
+
 def _hpi_simple(input_name, shapes):
     """Build Hpi section with a single input (cls/det/rec/uvdoc)."""
     tds = {input_name: shapes}
@@ -220,6 +221,38 @@ def _hpi_doclayoutv3(image_size):
     """Build Hpi for PP-DocLayoutV3 (image + scale_factor, no im_shape)."""
     b = 8
     tds = {
+        "image": [
+            [1, 3, image_size, image_size],
+            [1, 3, image_size, image_size],
+            [b, 3, image_size, image_size],
+        ],
+        "scale_factor": [[1, 2], [1, 2], [b, 2]],
+    }
+    sf_data = {
+        "scale_factor": [[2, 2], [1, 1], [0.67] * (2 * b)],
+    }
+    return {
+        "backend_configs": {
+            "paddle_infer": {
+                "trt_dynamic_shapes": tds,
+                "trt_dynamic_shape_input_data": sf_data,
+            },
+            "tensorrt": {"dynamic_shapes": tds},
+        }
+    }
+
+
+def _hpi_doclayoutv4(image_size):
+    """Build Hpi for PP-DocLayoutV4 (im_shape + image + scale_factor).
+
+    Unlike :func:`_hpi_doclayoutv3` this declares ``im_shape`` as well. The
+    exported program really does take three inputs -- ``paddle.inference``
+    reports ``['im_shape', 'image', 'scale_factor']`` -- so omitting it leaves
+    TensorRT without a shape range for one of the feeds.
+    """
+    b = 8
+    tds = {
+        "im_shape": [[1, 2], [1, 2], [b, 2]],
         "image": [
             [1, 3, image_size, image_size],
             [1, 3, image_size, image_size],
@@ -300,6 +333,18 @@ def _meta_doclayoutv3():
         "Preprocess": _RTDETR_PREPROCESS_800,
         "label_list": _LABEL_DOC_LAYOUT_V2V3,
         "Hpi": _hpi_doclayoutv3(800),
+    }
+
+
+def _meta_doclayoutv4():
+    # Same 25 labels and same 800x800 preprocessing as V2/V3; only the Hpi
+    # input set differs (see _hpi_doclayoutv4).
+    return {
+        **_RTDETR_EXTRA_KEYS,
+        "draw_threshold": 0.5,
+        "Preprocess": _RTDETR_PREPROCESS_800,
+        "label_list": _LABEL_DOC_LAYOUT_V2V3,
+        "Hpi": _hpi_doclayoutv4(800),
     }
 
 
@@ -583,6 +628,7 @@ _INFERENCE_META_REGISTRY = {
     "SLANeXt_wireless": lambda: _meta_slanext("SLANeXt_wireless"),
     "PP-DocLayoutV2": _meta_doclayoutv3,
     "PP-DocLayoutV3": _meta_doclayoutv3,
+    "PP-DocLayoutV4": _meta_doclayoutv4,
     "RT-DETR-L_wired_table_cell_det": lambda: _meta_det_rtdetr(
         _LABEL_TABLE_CELL_DET, _RTDETR_PREPROCESS_640, 640
     ),
@@ -792,6 +838,7 @@ PREPROCESSOR_CONFIGS = {
         "do_pad": True,
     },
     "PP-DocLayoutV3": _rtdetr_preproc("PPDocLayoutV3ImageProcessor", 800, 800),
+    "PP-DocLayoutV4": _rtdetr_preproc("PPDocLayoutV4ImageProcessor", 800, 800),
     "RT-DETR-L_wired_table_cell_det": _rtdetr_preproc("RTDetrImageProcessor", 640, 640),
     "RT-DETR-L_wireless_table_cell_det": _rtdetr_preproc(
         "RTDetrImageProcessor", 640, 640

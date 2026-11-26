@@ -85,4 +85,4 @@ MODELS = [
     "PP-DocBlockLayout",
 ]
 
-LAYOUTANALYSIS_MODELS = ["PP-DocLayoutV2", "PP-DocLayoutV3"]
+LAYOUTANALYSIS_MODELS = ["PP-DocLayoutV2", "PP-DocLayoutV3", "PP-DocLayoutV4"]

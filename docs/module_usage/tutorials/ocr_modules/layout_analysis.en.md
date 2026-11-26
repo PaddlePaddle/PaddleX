@@ -7,7 +7,7 @@ comments: true
 ## I. Overview
 The layout analysis task builds upon layout area detection by further introducing **instance segmentation** and **reading order prediction** capabilities. By analyzing input document images, it not only identifies various layout elements (such as text, charts, images, formulas, paragraph titles, abstracts, references, etc.) and outputs their bounding boxes, but also simultaneously outputs the **precise contour mask** and **reading order index** for each region, providing more complete structural information for document understanding and information extraction workflows.
 
-The layout analysis module currently supports the PP-DocLayoutV3 model, which is based on the DETR architecture with PPHGNetV2-L as the backbone network. It adds a **reading order prediction** branch on top of the instance segmentation task, enabling end-to-end learning of reading order relationships among document elements.
+The layout analysis module supports PP-DocLayoutV3 and PP-DocLayoutV4. PP-DocLayoutV3 is based on the DETR architecture with PPHGNetV2-L as the backbone network. It adds a **reading order prediction** branch on top of the instance segmentation task, enabling end-to-end learning of reading order relationships among document elements.
 
 ![layout analysis](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_analysis/layout_analysis.png)
 
@@ -34,6 +34,13 @@ The layout analysis module currently supports the PP-DocLayoutV3 model, which is
 <td>126</td>
 <td>A layout analysis model trained on a self-built dataset containing Chinese and English papers, multi-column magazines, newspapers, PPT, contracts, books, exams, and research reports using DETR. It supports instance segmentation and reading order prediction for 25 layout element categories.</td>
 </tr>
+<tr>
+<td>PP-DocLayoutV4</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayoutV4_infer.tar">Inference Model</a></td>
+<td>–</td>
+<td>–</td>
+<td>Predicts quadrilaterals and reading order. Checkpoints with a deformation head also return page deformation parameters.</td>
+</tr>
 </tbody>
 </table>
 
@@ -57,6 +64,19 @@ for res in output:
     res.save_to_json(save_path="./output/res.json")
 ```
 
+For PP-DocLayoutV4, you can pass `layout_split_formula=True` to `create_model()` or `predict()` (the PaddleOCR-VL pipeline also accepts it in its pipeline YAML config, CLI `--layout_split_formula`, and Serving `layoutSplitFormula`; other pipelines do not expose it yet. Only PP-DocLayoutV4 supports this option: other layout models ignore it with a warning, so in PaddleOCR-VL it takes effect only when the layout model is PP-DocLayoutV4, as in the default PaddleOCR-VL-1.8 config) to enable conservative, OpenCV-based formula line splitting:
+
+```python
+model = create_model(model_name="PP-DocLayoutV4")
+output = model.predict("document.png", layout_split_formula=True)
+```
+
+This option defaults to `False` and does not change existing output. When enabled, `display_formula` regions undergo quadrilateral perspective rectification, illumination normalization, and residual tilt/curvature baseline estimation, followed by connected-component noise filtering and isolated/touching fraction-bar protection to locate inter-row gaps. Child boxes are emitted in reading order with synchronized quads and bounding rectangles, and row-aligned `formula_number` boxes are interleaved right after their corresponding split rows. The `PaddleOCR-VL` pipeline (`predict()`, CLI, and Serving) also supports this option before formula recognition. If deferred overlap filtering would discard a split row, the pipeline keeps the original formula box. The splitter first attempts to restore single-line detector candidates suppressed by containment filtering (requiring candidate score `>= 0.5`, at least `0.05` above the parent score, row-by-row structural agreement, and at least 98% binary ink coverage) before falling back to image-only splitting. Restored candidates retain their detector scores and image-derived children inherit the parent score; neither represents split confidence.
+
+This method does not depend on OCR or extra models and works best for multi-line derivations with clear inter-row whitespace (including tilted or moderately curved pages). Dense equations, extreme curvature, and shared multi-row delimiters are conservatively kept intact. Always inspect split results on your target documents before evaluating end-to-end recognition.
+
+In PaddleOCR-VL, `layout_shape_mode="rect"` uses axis-aligned crops. When formula rows are tilted, a crop can include strokes from an adjacent row. Use `auto` to let the pipeline crop along quadrilaterals when available.
+
 <b>Note: </b>The official models would be downloaded from HuggingFace by default. PaddleX also supports specifying the preferred source by setting the environment variable `PADDLE_PDX_MODEL_SOURCE`. The supported values are `huggingface`, `aistudio`, `bos`, and `modelscope`. For example, to prioritize using `bos`, set: `PADDLE_PDX_MODEL_SOURCE="bos"`.
 
 <details><summary>👉 <b>After running, the result is: (Click to expand)</b></summary>
@@ -74,7 +94,9 @@ The meanings of the parameters are as follows:
   - `score`: Confidence score of the bounding box, a float.
   - `coordinate`: Coordinates of the bounding box, a list of floats in the format <code>[xmin, ymin, xmax, ymax]</code>.
   - `polygon_points`: List of instance segmentation contour points, in the format <code>[[x1, y1], [x2, y2], ...]</code>.
+  - `quad`: Output by PP-DocLayoutV4 only. The predicted quadrilateral, in the format <code>[[x1, y1], [x2, y2], [x3, y3], [x4, y4]]</code> (top-left, top-right, bottom-right, bottom-left). In this case `coordinate` is the bounding rectangle of the quadrilateral.
   - `order`: Reading order index, an integer indicating the reading order of the region in the document (starting from 0).
+- `warp_params`: Output by PP-DocLayoutV4 models that predict page deformation only. The page-level deformation parameters <code>[roll_deg, quadrant_conf, shear_deg, kx, ky]</code>.
 </details>
 
 After running, the visualization result saved by `save_to_img()` is shown below, with each region annotated with its category, confidence score, instance segmentation mask, and reading order index:
@@ -203,6 +225,18 @@ Relevant methods, parameters, and explanations are as follows:
 </td>
 <td>None</td>
 </tr>
+<tr>
+<td><code>layout_split_formula</code></td>
+<td>Whether to enable conservative image-based splitting of <code>display_formula</code> regions (PP-DocLayoutV4 only); defaults to <code>False</code> when not specified</td>
+<td><code>bool/None</code></td>
+<td>
+<ul>
+<li><b>bool</b>, True/False, enables or disables display-formula line splitting</li>
+<li><b>None</b>, not specified, uses the model configuration default (<code>False</code>)</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
 </table>
 
 * Note that `model_name` must be specified. After specifying `model_name`, the default PaddleX built-in model parameters will be used. If `model_dir` is specified, the user-defined model will be used.
@@ -250,6 +284,18 @@ Relevant methods, parameters, and explanations are as follows:
 <li><b>float</b>, e.g., 0.5, means filtering out all bounding boxes with a confidence score less than 0.5</li>
 <li><b>Dictionary</b>, with keys as <b>int</b> representing <code>cls_id</code> and values as <b>float</b> thresholds</li>
 <li><b>None</b>, not specified, will use the <code>threshold</code> parameter specified in <code>create_model</code>. If not specified in <code>create_model</code>, the default PaddleX official model configuration will be used</li>
+</ul>
+</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>layout_split_formula</code></td>
+<td>Whether to enable conservative <code>display_formula</code> line splitting (PP-DocLayoutV4 only)</td>
+<td><code>bool/None</code></td>
+<td>
+<ul>
+<li><b>bool</b>, True/False, enables or disables display-formula line splitting</li>
+<li><b>None</b>, not specified, uses the <code>layout_split_formula</code> value from <code>create_model</code> (defaults to <code>False</code>)</li>
 </ul>
 </td>
 <td>None</td>
