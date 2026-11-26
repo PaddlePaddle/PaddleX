@@ -131,6 +131,11 @@ paddlex --pipeline PaddleOCR-VL-1.6 --input https://paddle-model-ecology.bj.bceb
 <td><code>str|dict</code></td>
 </tr>
 <tr>
+<td><code>layout_split_formula</code></td>
+<td>使用 <code>--layout_split_formula True</code> 在识别前拆分行间留白明显的多行公式。仅在版面模型为 PP-DocLayoutV4 时生效。</td>
+<td><code>bool</code></td>
+</tr>
+<tr>
 <td><code>use_queues</code></td>
 <td>是否启用内部队列。启用后，PDF 页面渲染、版面分析和 VLM 推理可分别在独立线程中异步执行。</td>
 <td><code>bool</code></td>
@@ -373,6 +378,12 @@ for res in output:
 <td><code>layout_merge_bboxes_mode</code></td>
 <td>参数含义与实例化参数基本相同。设置为<code>None</code>表示使用实例化参数，否则该参数优先级更高。</td>
 <td><code>str|dict|None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_split_formula</code></td>
+<td>在识别前尝试把 <code>display_formula</code> 区域拆成单行框。仅在版面模型为 PP-DocLayoutV4 时生效。优先级依次为调用参数、产线 YAML 顶层 <code>layout_split_formula</code>、<code>SubModules.LayoutDetection.layout_split_formula</code>、模型配置，均未设置时关闭。显式传入 <code>False</code> 可覆盖配置中的 <code>True</code>。<br/>对倾斜公式，<code>rect</code> 模式的矩形裁图可能包含相邻行的笔画。使用 <code>auto</code> 时，产线在有四边形的情况下按四边形裁图。</td>
+<td><code>bool|None</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -1133,6 +1144,12 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td><code>layoutShapeMode</code></td>
 <td><code>string</code></td>
 <td>请参阅产线 <code>predict</code> 方法的 <code>layout_shape_mode</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>layoutSplitFormula</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>请参阅产线 <code>predict</code> 方法的 <code>layout_split_formula</code> 参数。省略或传入 <code>null</code> 时使用配置。</td>
 <td>否</td>
 </tr>
 <tr>

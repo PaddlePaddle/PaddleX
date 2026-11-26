@@ -81,6 +81,7 @@ def create_pipeline_app(pipeline: Any, app_config: AppConfig) -> "FastAPI":
             layout_unclip_ratio=request.layoutUnclipRatio,
             layout_merge_bboxes_mode=request.layoutMergeBboxesMode,
             layout_shape_mode=request.layoutShapeMode,
+            layout_split_formula=request.layoutSplitFormula,
             prompt_label=request.promptLabel,
             format_block_content=request.formatBlockContent,
             repetition_penalty=request.repetitionPenalty,
