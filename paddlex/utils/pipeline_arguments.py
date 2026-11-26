@@ -664,7 +664,7 @@ PIPELINE_ARGUMENTS = {
         {
             "name": "--layout_split_formula",
             "type": bool,
-            "help": "Determines whether to split clearly separated display-formula rows before recognition",
+            "help": "Determines whether to split display-formula rows before recognition (PP-DocLayoutV4 only)",
         },
         {
             "name": "--use_queues",

@@ -1014,7 +1014,9 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 If it's a tuple of two numbers, then they are used separately for width and height respectively.
                 If it's None, then no unclipping will be performed.
             layout_merge_bboxes_mode (Optional[str], optional): The mode for merging bounding boxes. Defaults to `None`.
-            layout_split_formula (bool): Split clearly separated display-formula rows before recognition. Defaults to False.
+            layout_split_formula (Optional[bool]): Split clearly separated display-formula rows before recognition.
+                Only takes effect when the layout model is PP-DocLayoutV4. Defaults to None,
+                which uses the pipeline/layout model config (False if unset).
             layout_shape_mode (Optional[str], optional): The mode for layout shape. Defaults to "auto", [ "rect", "quad","poly", "auto"] are supported.
             use_layout_deform (Optional[bool]): Whether to rectify each crop handed
                 to the recognition model with the page deformation the layout

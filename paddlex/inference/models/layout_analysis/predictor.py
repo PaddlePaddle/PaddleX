@@ -17,6 +17,7 @@ from typing import Any, List, Optional, Sequence, Tuple, Union
 import numpy as np
 from PIL import Image
 
+from ....utils import logging
 from ..object_detection.predictor import DetRunnerPredictor, DetTransformersPredictor
 from ..object_detection.processors import Resize, ToBatch
 from .processors import LayoutAnalysisProcess
@@ -28,6 +29,23 @@ LAYOUT_ANALYSIS_TRANSFORMERS_MODELS = [
     "PP-DocLayoutV3",
     "PP-DocLayoutV4",
 ]
+
+SPLIT_FORMULA_MODELS = ["PP-DocLayoutV4"]
+
+
+def _resolve_layout_split_formula(predictor, layout_split_formula):
+    """Return whether to split formulas; only PP-DocLayoutV4 supports it."""
+    if not layout_split_formula:
+        return False
+    if predictor.model_name in SPLIT_FORMULA_MODELS:
+        return True
+    if not getattr(predictor, "_split_formula_warned", False):
+        logging.warning(
+            f"`layout_split_formula` is only supported by {SPLIT_FORMULA_MODELS} "
+            f"and is ignored for {predictor.model_name}."
+        )
+        predictor._split_formula_warned = True
+    return False
 
 
 def _split_quad(bbox_pred):
@@ -71,7 +89,8 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
                 If it's None, then no unclipping will be performed.
             layout_merge_bboxes_mode (Optional[Union[str, dict]], optional): The mode for merging bounding boxes. Defaults to None.
             layout_split_formula (Optional[bool], optional): Whether to conservatively split clearly separated
-                display-formula rows. Defaults to None.
+                display-formula rows. Only PP-DocLayoutV4 supports it; other models ignore it with a
+                warning. Defaults to None.
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         if img_size is not None:
@@ -195,7 +214,9 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
             layout_shape_mode (Optional[str], optional): The mode for layout shape. Defaults to "auto", [ "rect", "quad","poly", "auto"]. are supported.
             filter_overlap_boxes (Optional[bool], optional): Whether to filter out overlap boxes. Defaults to True.
             skip_order_labels (Optional[List[str]], optional): The labels to skip order. Defaults to None.
-            layout_split_formula (Optional[bool]): Split clearly separated display-formula rows. Defaults to None (falls back to init/config, False).
+            layout_split_formula (Optional[bool]): Split clearly separated display-formula rows.
+                Only PP-DocLayoutV4 supports it; other models ignore it with a warning.
+                Defaults to None (falls back to init/config, False).
 
         Returns:
             dict: A dictionary containing the input path, raw image, class IDs, scores, and label names
@@ -226,10 +247,13 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
             layout_shape_mode=layout_shape_mode,
             filter_overlap_boxes=filter_overlap_boxes,
             skip_order_labels=skip_order_labels,
-            layout_split_formula=(
-                self.layout_split_formula
-                if layout_split_formula is None
-                else layout_split_formula
+            layout_split_formula=_resolve_layout_split_formula(
+                self,
+                (
+                    self.layout_split_formula
+                    if layout_split_formula is None
+                    else layout_split_formula
+                ),
             ),
         )
 
@@ -416,10 +440,13 @@ class LayoutAnalysisTransformersPredictor(DetTransformersPredictor):
             layout_shape_mode=layout_shape_mode,
             filter_overlap_boxes=filter_overlap_boxes,
             skip_order_labels=skip_order_labels,
-            layout_split_formula=(
-                self.layout_split_formula
-                if layout_split_formula is None
-                else layout_split_formula
+            layout_split_formula=_resolve_layout_split_formula(
+                self,
+                (
+                    self.layout_split_formula
+                    if layout_split_formula is None
+                    else layout_split_formula
+                ),
             ),
         )
 

@@ -59,16 +59,16 @@ for res in output:
     res.save_to_json(save_path="./output/res.json")
 ```
 
-对 PP-DocLayoutV4，可在 `create_model()` 或 `predict()` 时传入 `layout_split_formula=True`（也支持在产线 YAML、CLI `--layout_split_formula` 与 Serving `layoutSplitFormula` 中配置），启用基于 OpenCV 的保守公式拆行：
+对 PP-DocLayoutV4，可在 `create_model()` 或 `predict()` 时传入 `layout_split_formula=True`（PaddleOCR-VL 产线还支持在产线 YAML、CLI `--layout_split_formula` 与 Serving `layoutSplitFormula` 中配置，其他产线暂未接入；该参数仅支持 PP-DocLayoutV4，其他版面模型会忽略它并打印警告，因此在 PaddleOCR-VL 产线中仅当版面模型为 PP-DocLayoutV4（如 PaddleOCR-VL-1.8 默认配置）时生效），启用基于 OpenCV 的保守公式拆行：
 
 ```python
 model = create_model(model_name="PP-DocLayoutV4")
 output = model.predict("document.png", layout_split_formula=True)
 ```
 
-该参数默认为 `False`，不改变现有输出。开启后，对 `display_formula` 区域先校正四边形透视与局部光照，并对框内残余倾斜及轻中度页面弯曲做基线拉平估计，再结合连通域噪点过滤、独立及粘连分数线保护寻找行间留白，生成按阅读顺序排列的子框并同步更新四边形与外接矩形；若右侧存在逐行对应的 `formula_number`，还会按行重排其阅读顺序。PaddleOCR-VL 产线的 `predict()`、CLI 与服务化接口也支持此参数，拆分发生在公式识别之前，并保持与重叠框过滤一致的优先级。开启此开关后，非掩码检测器会优先尝试恢复包含过滤前的单行候选：候选分数须至少为 0.5、比父框高 0.05，并通过逐行对应、结构保护和至少 98% 的二值墨迹覆盖检查；不满足条件时继续使用图像拆行。恢复的候选保留自身检测分数，OpenCV 生成的子框继承父框分数；这些分数均不代表拆分置信度。
+该参数默认为 `False`，不改变现有输出。开启后，对 `display_formula` 区域先校正四边形透视与局部光照，并对框内残余倾斜及轻中度页面弯曲做基线拉平估计，再结合连通域噪点过滤、独立及粘连分数线保护寻找行间留白，生成按阅读顺序排列的子框并同步更新四边形与外接矩形；若右侧存在逐行对应的 `formula_number`，还会按行重排其阅读顺序。PaddleOCR-VL 产线的 `predict()`、CLI 与服务化接口也支持此参数，拆分发生在公式识别之前，并保持与重叠框过滤一致的优先级。开启此开关后，会优先尝试恢复包含过滤前的单行候选：候选分数须至少为 0.5、比父框高 0.05，并通过逐行对应、结构保护和至少 98% 的二值墨迹覆盖检查；不满足条件时继续使用图像拆行。恢复的候选保留自身检测分数，OpenCV 生成的子框继承父框分数；这些分数均不代表拆分置信度。
 
-此方法不依赖 OCR 或额外模型，适合行间留白明显的连续推导及含倾斜或轻中度弯曲的公式；密集公式、极端弯曲、跨行括号及凹形不规则多边形可能保留整体框。它不能保证识别所有矩阵或分式结构，也不会修复原检测框已经裁掉的内容。建议先检查目标文档上的拆分结果，再评估端到端识别效果。
+此方法不依赖 OCR 或额外模型，适合行间留白明显的连续推导及含倾斜或轻中度弯曲的公式；密集公式、极端弯曲及跨行括号可能保留整体框。它不能保证识别所有矩阵或分式结构，也不会修复原检测框已经裁掉的内容。建议先检查目标文档上的拆分结果，再评估端到端识别效果。
 
 <b>注：</b>PaddleX 支持多个模型托管平台，官方模型默认优先从 HuggingFace 下载。PaddleX 也支持通过环境变量 `PADDLE_PDX_MODEL_SOURCE` 设置优先使用的托管平台，目前支持 `huggingface`、`aistudio`、`bos`、`modelscope`，如优先使用 `bos`：`PADDLE_PDX_MODEL_SOURCE="bos"`；
 
@@ -221,7 +221,7 @@ output = model.predict("document.png", layout_split_formula=True)
 </tr>
 <tr>
 <td><code>layout_split_formula</code></td>
-<td>是否启用基于图像的保守 <code>display_formula</code> 拆行；如果不指定，默认为 <code>False</code></td>
+<td>是否启用基于图像的保守 <code>display_formula</code> 拆行，仅支持 PP-DocLayoutV4；如果不指定，默认为 <code>False</code></td>
 <td><code>bool/None</code></td>
 <td>
 <ul>
@@ -284,7 +284,7 @@ output = model.predict("document.png", layout_split_formula=True)
 </tr>
 <tr>
 <td><code>layout_split_formula</code></td>
-<td>是否启用保守 <code>display_formula</code> 公式拆行</td>
+<td>是否启用保守 <code>display_formula</code> 公式拆行，仅支持 PP-DocLayoutV4</td>
 <td><code>bool/None</code></td>
 <td>
 <ul>

@@ -27,8 +27,6 @@ from ....utils.deps import function_requires_deps, is_dep_available
 if is_dep_available("opencv-contrib-python"):
     import cv2
 
-_MAX_POLY_TILT_TAN = float(np.tan(np.deg2rad(40.0)))
-
 
 def _formula_ink(gray):
     # Estimate the paper illumination before Otsu: a global threshold alone
@@ -61,21 +59,13 @@ def _estimate_char_height(stats):
     return float(np.median(ch_h))
 
 
-def _analyze_ink(gray, polygon_mask=None):
+def _analyze_ink(gray):
     """Compute binarized ink, connected components, and character height once."""
     if min(gray.shape) < 8 or np.ptp(gray) < 20:
         return None
-    if polygon_mask is not None:
-        gray = gray.copy()
-        gray[~polygon_mask] = 255
-        if np.ptp(gray) < 20:
-            return None
     ink = _formula_ink(gray)
-    if polygon_mask is not None:
-        ink[~polygon_mask] = 0
     # Dark backgrounds and densely filled regions are outside this heuristic.
-    active_pixels = int(np.count_nonzero(polygon_mask)) if polygon_mask is not None else ink.size
-    if active_pixels == 0 or np.count_nonzero(ink) > 0.45 * active_pixels:
+    if np.count_nonzero(ink) > 0.45 * ink.size:
         return None
     _, components, stats, _ = cv2.connectedComponentsWithStats(ink, 8)
     stats = stats[1:]
@@ -131,9 +121,7 @@ def _protected_fraction_intervals(ink, components, stats, char_height):
     max_bar_h = max(3, 0.35 * char_height)
     min_bar_w = max(4, int(round(0.8 * char_height)))
     bars = stats[
-        (widths >= 0.8 * char_height)
-        & (heights <= max_bar_h)
-        & (widths >= 2 * heights)
+        (widths >= 0.8 * char_height) & (heights <= max_bar_h) & (widths >= 2 * heights)
     ]
     # Horizontal morphological opening also recovers fraction bars that touch a
     # numerator descender or denominator ascender after scanning/resampling.
@@ -143,9 +131,7 @@ def _protected_fraction_intervals(ink, components, stats, char_height):
     if len(opened_stats):
         ow, oh = opened_stats[:, 2], opened_stats[:, 3]
         opened_bars = opened_stats[
-            (ow >= 0.8 * char_height)
-            & (oh <= max(3, int(round(0.35 * char_height))))
-            & (ow >= 2 * oh)
+            (ow >= 0.8 * char_height) & (oh <= max_bar_h) & (ow >= 2 * oh)
         ]
         if len(opened_bars):
             bars = np.vstack([bars, opened_bars]) if len(bars) else opened_bars
@@ -222,9 +208,7 @@ def _find_row_boundaries(ink, components, stats, char_height, min_gap_ratio=0.6)
         return None
     protected = _protected_fraction_intervals(ink, components, stats, char_height)
     kept_cuts = [
-        (c, gap)
-        for c, gap in raw_cuts
-        if not any(a < c < b for a, b in protected)
+        (c, gap) for c, gap in raw_cuts if not any(a < c < b for a, b in protected)
     ]
     if not kept_cuts:
         return None
@@ -256,11 +240,23 @@ def _find_row_boundaries(ink, components, stats, char_height, min_gap_ratio=0.6)
             ymin_i, ymax_i, xmin_i, xmax_i, _ = regions[i]
             gap_up = ymin_i - regions[i - 1][1]
             gap_down = regions[i + 1][0] - ymax_i
-            ov_up = max(0, min(xmax_i, regions[i - 1][3]) - max(xmin_i, regions[i - 1][2]))
-            ov_down = max(0, min(xmax_i, regions[i + 1][3]) - max(xmin_i, regions[i + 1][2]))
-            if ov_up > 0 and ov_down == 0 and gap_up <= 2.5 * max(gap_down, 1) + char_height:
+            ov_up = max(
+                0, min(xmax_i, regions[i - 1][3]) - max(xmin_i, regions[i - 1][2])
+            )
+            ov_down = max(
+                0, min(xmax_i, regions[i + 1][3]) - max(xmin_i, regions[i + 1][2])
+            )
+            if (
+                ov_up > 0
+                and ov_down == 0
+                and gap_up <= 2.5 * max(gap_down, 1) + char_height
+            ):
                 remove = i
-            elif ov_down > 0 and ov_up == 0 and gap_down <= 2.5 * max(gap_up, 1) + char_height:
+            elif (
+                ov_down > 0
+                and ov_up == 0
+                and gap_down <= 2.5 * max(gap_up, 1) + char_height
+            ):
                 remove = i + 1
             else:
                 remove = i if gap_up <= gap_down else i + 1
@@ -293,10 +289,14 @@ def _estimate_baseline_delta(ink, char_height):
 
     Tracks horizontally closed single-row ribbons across vertical column slices
     and fits a regularized cubic polynomial over the ink horizontal span.
-    Returns ``None`` when the region is too small or lacks reliable ribbons.
+    Returns ``None`` when the region is too small, lacks reliable ribbons, the
+    fitted slope exceeds ~37 degrees, or the drift is too small to need
+    unwarping (peak-to-peak below ``max(4, 0.35 * char_height)``).
     """
     height, width = ink.shape
-    if width < max(24, int(3 * char_height)) or height < max(16, int(1.5 * char_height)):
+    if width < max(24, int(3 * char_height)) or height < max(
+        16, int(1.5 * char_height)
+    ):
         return None
     col_any = np.any(ink > 0, axis=0)
     nz_cols = np.flatnonzero(col_any)
@@ -427,7 +427,9 @@ def _rows_have_horizontal_overlap(rects):
     return True
 
 
-def _build_unwarped_row_geometries(ink, char_height, boundaries, delta, shifts, pad_top):
+def _build_unwarped_row_geometries(
+    ink, char_height, boundaries, delta, shifts, pad_top
+):
     """Map unwarped row boundaries back to oriented quads and curved polygons."""
     height, width = ink.shape
     pad = max(1, int(round(char_height * 0.12)))
@@ -481,12 +483,25 @@ def _build_unwarped_row_geometries(ink, char_height, boundaries, delta, shifts, 
             top_pts = np.column_stack([sample_x, sample_d + c_min])
             bot_pts = np.column_stack([sample_x[::-1], sample_d[::-1] + c_max])
             local_poly = np.vstack([top_pts, bot_pts]).astype(np.float32)
-        geometries.append((local_quad, local_poly, float(ys.min()), float(ys.max()) + 1.0))
+        geometries.append(
+            (local_quad, local_poly, float(ys.min()), float(ys.max()) + 1.0)
+        )
     return geometries
 
 
-def _line_rectangles(gray, min_gap_ratio=0.6, analysis=None, allow_unwarp=False):
-    """Return crop-local line rectangles, or None when no safe split is found."""
+def _line_rectangles(
+    gray, min_gap_ratio=0.6, analysis=None, allow_unwarp=False, unwarp_cache=None
+):
+    """Return crop-local line rectangles, or None when no safe split is found.
+
+    With ``allow_unwarp=False`` the result is a list of ``(left, top, right,
+    bottom)`` rectangles. With ``allow_unwarp=True`` it is a 2-tuple: either
+    ``(rects, None)`` for a flat split, or ``(None, geoms)`` for a curved split
+    where each geom is ``(local_quad, local_poly, top, bottom)`` as built by
+    ``_build_unwarped_row_geometries`` (``local_poly`` may be None). Passing
+    the same ``unwarp_cache`` dict for one ``analysis`` reuses the baseline fit
+    and unwarped ink across calls.
+    """
     if analysis is None:
         analysis = _analyze_ink(gray)
     if analysis is None:
@@ -495,14 +510,21 @@ def _line_rectangles(gray, min_gap_ratio=0.6, analysis=None, allow_unwarp=False)
     flat = _find_row_boundaries(ink, components, stats, char_height, min_gap_ratio)
     if not allow_unwarp:
         return flat[1] if flat is not None else None
-    delta = _estimate_baseline_delta(ink, char_height)
+    if unwarp_cache is not None and "delta" in unwarp_cache:
+        delta, unwarped_parts = unwarp_cache["delta"], unwarp_cache["unwarped"]
+    else:
+        delta = _estimate_baseline_delta(ink, char_height)
+        unwarped_parts = None
+        if delta is not None:
+            unwarped, shifts, pad_top = _unwarp_ink_by_delta(ink, delta)
+            _, u_comp, u_stats, _ = cv2.connectedComponentsWithStats(unwarped, 8)
+            unwarped_parts = (unwarped, shifts, pad_top, u_comp, u_stats[1:])
+        if unwarp_cache is not None:
+            unwarp_cache["delta"] = delta
+            unwarp_cache["unwarped"] = unwarped_parts
     if delta is None:
-        return (
-            (flat[1], None) if flat is not None else None
-        )
-    unwarped, shifts, pad_top = _unwarp_ink_by_delta(ink, delta)
-    _, u_comp, u_stats, _ = cv2.connectedComponentsWithStats(unwarped, 8)
-    u_stats = u_stats[1:]
+        return (flat[1], None) if flat is not None else None
+    unwarped, shifts, pad_top, u_comp, u_stats = unwarped_parts
     curved = (
         _find_row_boundaries(unwarped, u_comp, u_stats, char_height, min_gap_ratio)
         if len(u_stats) >= 4
@@ -512,7 +534,9 @@ def _line_rectangles(gray, min_gap_ratio=0.6, analysis=None, allow_unwarp=False)
     if curved is not None and _rows_have_horizontal_overlap(curved[1]):
         if flat is None or len(curved[0]) > len(flat[0]):
             use_curved = True
-        elif curved[2] >= flat[2] + max(3.0, 0.25 * char_height):
+        elif len(curved[0]) == len(flat[0]) and curved[2] >= flat[2] + max(
+            3.0, 0.25 * char_height
+        ):
             use_curved = True
     if use_curved:
         geoms = _build_unwarped_row_geometries(
@@ -523,7 +547,9 @@ def _line_rectangles(gray, min_gap_ratio=0.6, analysis=None, allow_unwarp=False)
     return (flat[1], None) if flat is not None else None
 
 
-def _candidate_lines(gray, transform, parent, candidates, analysis=None):
+def _candidate_lines(
+    gray, transform, parent, candidates, analysis=None, unwarp_cache=None
+):
     """Use a complete, stronger detector row set, with image validation."""
     if not candidates:
         return None
@@ -567,9 +593,17 @@ def _candidate_lines(gray, transform, parent, candidates, analysis=None):
     row_masks = None
     if rows is None or len(rows) != len(selected):
         split_out = _line_rectangles(
-            gray, min_gap_ratio=0.25, analysis=analysis, allow_unwarp=True
+            gray,
+            min_gap_ratio=0.25,
+            analysis=analysis,
+            allow_unwarp=True,
+            unwarp_cache=unwarp_cache,
         )
-        if split_out is None or split_out[1] is None or len(split_out[1]) != len(selected):
+        if (
+            split_out is None
+            or split_out[1] is None
+            or len(split_out[1]) != len(selected)
+        ):
             return None
         curved_geoms = split_out[1]
         rows = []
@@ -624,84 +658,65 @@ def _candidate_lines(gray, transform, parent, candidates, analysis=None):
     return children, row_spans
 
 
-def _orient_polygon_quad(quad):
-    """Order a convex 4-point polygon clockwise from TL if within +/-40 deg tilt."""
-    pts = np.asarray(quad, dtype=np.float32)
-    # Signed area in image coordinates (y downwards): positive means clockwise.
-    x, y = pts[:, 0], pts[:, 1]
-    signed_area = 0.5 * float(np.sum(x * np.roll(y, -1) - np.roll(x, -1) * y))
-    if signed_area < 0:
-        pts = pts[::-1].copy()
-    best = None
-    best_score = float("inf")
-    for shift in range(4):
-        cand = np.roll(pts, -shift, axis=0)
-        top_vec = cand[1] - cand[0]
-        bot_vec = cand[2] - cand[3]
-        left_vec = cand[3] - cand[0]
-        right_vec = cand[2] - cand[1]
-        if top_vec[0] <= 0 or bot_vec[0] <= 0 or left_vec[1] <= 0 or right_vec[1] <= 0:
-            continue
-        top_slope = abs(float(top_vec[1]) / float(top_vec[0]))
-        bot_slope = abs(float(bot_vec[1]) / float(bot_vec[0]))
-        if top_slope > _MAX_POLY_TILT_TAN or bot_slope > _MAX_POLY_TILT_TAN:
-            continue
-        score = top_slope + bot_slope
-        if score < best_score:
-            best_score = score
-            best = cand
-    return best
+def _coord4(box):
+    """Return ``box["coordinate"]`` as a 4-tuple, or None if missing or malformed."""
+    coord = box.get("coordinate")
+    if coord is None or len(coord) != 4:
+        return None
+    return tuple(coord)
+
+
+def _local_to_page(local_pts, inverse, page_w, page_h):
+    """Map crop-local points onto the page, clipped to its bounds.
+
+    Returns ``(points, coord)``; ``coord`` is the integer AABB, or None when it
+    is degenerate.
+    """
+    points = cv2.perspectiveTransform(np.float32(local_pts)[None], inverse)[0]
+    points[:, 0] = np.clip(points[:, 0], 0, page_w)
+    points[:, 1] = np.clip(points[:, 1], 0, page_h)
+    coord = [
+        *np.floor(points.min(axis=0)).astype(int).tolist(),
+        *np.ceil(points.max(axis=0)).astype(int).tolist(),
+    ]
+    if coord[2] <= coord[0] or coord[3] <= coord[1]:
+        return points, None
+    return points, coord
 
 
 def _extract_region_quad(box):
-    """Resolve crop quad and optional interior polygon for a display_formula box."""
-    x1, y1, x2, y2 = box["coordinate"]
+    """Resolve the crop quad of a display_formula box, or None to keep it whole.
+
+    Splitting targets PP-DocLayoutV4 quads and axis-aligned boxes. Segmentation
+    polygons do not encode text orientation, so any polygon other than the box
+    rectangle itself leaves the box intact.
+    """
+    coord = _coord4(box)
+    if coord is None:
+        return None
+    x1, y1, x2, y2 = coord
     rect = np.float32([[x1, y1], [x2, y1], [x2, y2], [x1, y2]])
     if "quad" in box and box["quad"] is not None:
         quad = np.asarray(box["quad"], dtype=np.float32)
         if quad.shape != (4, 2) or not np.isfinite(quad).all():
-            return None, None
+            return None
         # V4 quads already carry ordered TL, TR, BR, BL vertices. Reordering by
         # min(x+y) can rotate a wide, perspective-skewed formula by 90 degrees
         # and cause cuts between symbols instead of between formula rows.
         if not cv2.isContourConvex(quad) or cv2.contourArea(quad) < 64:
-            return None, None
-        return quad, None
+            return None
+        return quad
+    if not np.isfinite(rect).all() or cv2.contourArea(rect) < 64:
+        return None
     shape = box.get("polygon_points")
-    if shape is None:
-        if not np.isfinite(rect).all() or cv2.contourArea(rect) < 64:
-            return None, None
-        return rect, None
-    poly = np.asarray(shape, dtype=np.float32)
-    if poly.ndim != 2 or poly.shape[1] != 2 or len(poly) < 4 or not np.isfinite(poly).all():
-        return None, None
-    if len(poly) == 4:
+    if shape is not None:
+        poly = np.asarray(shape, dtype=np.float32)
+        if poly.shape != (4, 2) or not np.isfinite(poly).all():
+            return None
         distances = np.linalg.norm(poly[:, None] - rect[None], axis=2)
-        if np.all(distances.min(axis=0) <= 2):
-            quad = rect
-        elif cv2.isContourConvex(poly):
-            quad = _orient_polygon_quad(poly)
-            if quad is None:
-                return None, None
-        else:
-            return None, None
-        if not cv2.isContourConvex(quad) or cv2.contourArea(quad) < 64:
-            return None, None
-        return quad, None
-    # Multi-point polygons may come from curved segmentation masks or irregular
-    # cutouts. Allow high-solidity regions (curved strips), leave irregular L/U
-    # shapes intact so internal cutouts are never exposed.
-    area = abs(float(cv2.contourArea(poly)))
-    hull = cv2.convexHull(poly)
-    hull_area = abs(float(cv2.contourArea(hull)))
-    if area < 64 or hull_area <= 0 or area / hull_area < 0.85:
-        return None, None
-    min_rect = cv2.boxPoints(cv2.minAreaRect(poly)).astype(np.float32)
-    oriented = _orient_polygon_quad(min_rect)
-    quad = oriented if oriented is not None else rect
-    if not cv2.isContourConvex(quad) or cv2.contourArea(quad) < 64:
-        return None, None
-    return quad, poly
+        if not np.all(distances.min(axis=0) <= 2):
+            return None
+    return rect
 
 
 def _box_center(box):
@@ -710,7 +725,10 @@ def _box_center(box):
         pts = np.asarray(shape, dtype=np.float32)
         if pts.ndim == 2 and pts.shape[1] == 2 and len(pts) >= 3:
             return pts.mean(axis=0)
-    x1, y1, x2, y2 = box["coordinate"]
+    coord = _coord4(box)
+    if coord is None:
+        return None
+    x1, y1, x2, y2 = coord
     return np.float32([(x1 + x2) * 0.5, (y1 + y2) * 0.5])
 
 
@@ -722,17 +740,18 @@ def _interleave_formula_numbers(entries, split_records, all_boxes):
     order and Markdown ``show_formula_number`` pairing.
     """
     fn_entries = [
-        (orig_idx, box)
-        for orig_idx, box in entries
-        if box["label"] == "formula_number"
+        (orig_idx, box) for orig_idx, box in entries if box["label"] == "formula_number"
     ]
     assignments = {}
     if split_records and fn_entries:
         for fn_idx, fn_box in fn_entries:
             fn_center = _box_center(fn_box)
-            fn_x1, fn_y1, fn_x2, fn_y2 = fn_box["coordinate"]
+            fn_coord = _coord4(fn_box)
+            if fn_center is None or fn_coord is None:
+                continue
+            fn_x1, fn_y1, fn_x2, fn_y2 = fn_coord
             best_match = None
-            best_dist = float("inf")
+            best_key = (float("inf"), float("inf"))
             for parent_idx, rec in split_records.items():
                 local_pt = cv2.perspectiveTransform(
                     fn_center.reshape(1, 1, 2), rec["transform"]
@@ -752,9 +771,17 @@ def _interleave_formula_numbers(entries, split_records, all_boxes):
                 # Reject if another non-formula-number block sits strictly
                 # between this formula parent and the formula_number on the
                 # same band.
-                p_x1, p_y1, p_x2, p_y2 = rec["parent_box"]["coordinate"]
-                gap_x1 = min(p_x2, fn_x2) if p_x2 <= fn_x1 else min(fn_x2, p_x2)
-                gap_x2 = max(p_x2, fn_x1) if p_x2 <= fn_x1 else max(fn_x2, p_x1)
+                p_coord = _coord4(rec["parent_box"])
+                if p_coord is None:
+                    continue
+                p_x1, p_y1, p_x2, p_y2 = p_coord
+                if p_x2 <= fn_x1:
+                    gap_x1, gap_x2 = p_x2, fn_x1
+                elif fn_x2 <= p_x1:
+                    gap_x1, gap_x2 = fn_x2, p_x1
+                else:
+                    # Overlapping boxes leave no room for a block in between.
+                    gap_x1 = gap_x2 = 0
                 blocked = False
                 if gap_x2 > gap_x1 + 2:
                     for other_idx, other in enumerate(all_boxes):
@@ -763,7 +790,10 @@ def _interleave_formula_numbers(entries, split_records, all_boxes):
                             or other["label"] == "formula_number"
                         ):
                             continue
-                        ox1, oy1, ox2, oy2 = other["coordinate"]
+                        o_coord = _coord4(other)
+                        if o_coord is None:
+                            continue
+                        ox1, oy1, ox2, oy2 = o_coord
                         if (
                             ox1 < gap_x2
                             and ox2 > gap_x1
@@ -774,6 +804,29 @@ def _interleave_formula_numbers(entries, split_records, all_boxes):
                             blocked = True
                             break
                 if blocked:
+                    continue
+                # A nearer unsplit display_formula on the same band owns this
+                # number (e.g. its own formula in the other column).
+                own_gap = max(0, p_x1 - fn_x2, fn_x1 - p_x2)
+                rival = False
+                for other_idx, other in enumerate(all_boxes):
+                    if (
+                        other_idx in split_records
+                        or other_idx == fn_idx
+                        or other["label"] != "display_formula"
+                    ):
+                        continue
+                    o_coord = _coord4(other)
+                    if o_coord is None:
+                        continue
+                    ox1, oy1, ox2, oy2 = o_coord
+                    if (
+                        min(oy2, fn_y2) > max(oy1, fn_y1)
+                        and max(0, ox1 - fn_x2, fn_x1 - ox2) < own_gap
+                    ):
+                        rival = True
+                        break
+                if rival:
                     continue
                 # Match to the vertically closest split child row.
                 best_row = None
@@ -786,9 +839,13 @@ def _interleave_formula_numbers(entries, split_records, all_boxes):
                         if dy < best_row_dy:
                             best_row_dy = dy
                             best_row = row_i
-                if best_row is not None and horiz_dist < best_dist:
-                    best_dist = horiz_dist
-                    best_match = (parent_idx, best_row)
+                # Prefer the horizontally closest formula; on a tie (e.g.
+                # stacked formulas sharing a right edge) the vertically closer row.
+                if best_row is not None:
+                    key = (horiz_dist, best_row_dy / avg_h)
+                    if key < best_key:
+                        best_key = key
+                        best_match = (parent_idx, best_row)
             if best_match is not None:
                 assignments[fn_idx] = best_match
 
@@ -813,16 +870,32 @@ def _interleave_formula_numbers(entries, split_records, all_boxes):
 
 
 @function_requires_deps("opencv-contrib-python")
-def split_formula_boxes(image, boxes, candidates=None):
+def split_formula_boxes(image, boxes, candidates=None, keep_whole=None):
     """Replace separable display formulas with line boxes in reading order.
 
     ``image`` is the original uint8 page (BGR or grayscale). The original list
-    and dictionaries are not mutated. Call after overlap/containment filtering
-    and before assigning final order indices. Image-derived child scores retain
-    the parent detection scores; they are not confidence estimates for the split.
+    and dictionaries are not mutated. Call before assigning final order indices,
+    normally after overlap/containment filtering; callers that defer filtering
+    (e.g. PaddleOCR-VL) go through ``_split_formula_boxes_with_overlap_guard``
+    in processors.py. Image-derived child scores retain the parent detection
+    scores; they are not confidence estimates for the split.
     Optional ``candidates`` are display-formula detections after threshold/NMS
     but before containment filtering; accepted detector children keep their own
-    scores. Neither input list is mutated.
+    scores. When a formula is split and the page has ``formula_number`` boxes,
+    each number aligned with a split row is moved right after that row. Neither
+    input list is mutated.
+
+    Args:
+        image (np.ndarray): Original uint8 page, BGR or grayscale.
+        boxes (List[dict]): Layout boxes in reading order.
+        candidates (Optional[List[dict]]): Display-formula detections suppressed
+            by containment filtering, used as row hints. Defaults to None.
+        keep_whole (Optional[Set[int]]): Indices into ``boxes`` of display
+            formulas to leave intact. Defaults to None.
+
+    Returns:
+        List[dict]: Boxes in reading order, with each separable display_formula
+            replaced by its row boxes.
     """
     page_h, page_w = image.shape[:2]
     if candidates:
@@ -838,10 +911,10 @@ def split_formula_boxes(image, boxes, candidates=None):
     entries = []
     split_records = {}
     for orig_idx, box in enumerate(boxes):
-        if box["label"] != "display_formula":
+        if box["label"] != "display_formula" or orig_idx in (keep_whole or ()):
             entries.append((orig_idx, box))
             continue
-        quad, interior_poly = _extract_region_quad(box)
+        quad = _extract_region_quad(box)
         if quad is None:
             entries.append((orig_idx, box))
             continue
@@ -870,19 +943,21 @@ def split_formula_boxes(image, boxes, candidates=None):
             image, transform, (width, height), borderValue=(255, 255, 255)
         )
         gray = crop if crop.ndim == 2 else cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-        poly_mask = None
-        if interior_poly is not None:
-            local_poly = cv2.perspectiveTransform(interior_poly[None], transform)[0]
-            mask = np.zeros((height, width), dtype=np.uint8)
-            cv2.fillPoly(mask, [np.round(local_poly).astype(np.int32)], 1)
-            poly_mask = mask > 0
 
-        analysis = _analyze_ink(gray, polygon_mask=poly_mask)
+        analysis = _analyze_ink(gray)
         if analysis is None:
             entries.append((orig_idx, box))
             continue
 
-        detected = _candidate_lines(gray, transform, box, candidates or [], analysis=analysis)
+        unwarp_cache = {}
+        detected = _candidate_lines(
+            gray,
+            transform,
+            box,
+            candidates or [],
+            analysis=analysis,
+            unwarp_cache=unwarp_cache,
+        )
         if detected is not None:
             children, row_spans = detected
             split_records[orig_idx] = dict(
@@ -896,7 +971,9 @@ def split_formula_boxes(image, boxes, candidates=None):
             entries.append((orig_idx, box))
             continue
 
-        split_out = _line_rectangles(gray, analysis=analysis, allow_unwarp=True)
+        split_out = _line_rectangles(
+            gray, analysis=analysis, allow_unwarp=True, unwarp_cache=unwarp_cache
+        )
         if split_out is None:
             entries.append((orig_idx, box))
             continue
@@ -906,24 +983,18 @@ def split_formula_boxes(image, boxes, candidates=None):
         row_spans = []
         if rects is not None:
             for left, top, right, bottom in rects:
-                local = np.float32(
+                points, coord = _local_to_page(
                     [
-                        [
-                            [left, top],
-                            [right - 1, top],
-                            [right - 1, bottom - 1],
-                            [left, bottom - 1],
-                        ]
-                    ]
+                        [left, top],
+                        [right - 1, top],
+                        [right - 1, bottom - 1],
+                        [left, bottom - 1],
+                    ],
+                    inverse,
+                    page_w,
+                    page_h,
                 )
-                points = cv2.perspectiveTransform(local, inverse)[0]
-                points[:, 0] = np.clip(points[:, 0], 0, page_w)
-                points[:, 1] = np.clip(points[:, 1], 0, page_h)
-                coord = [
-                    *np.floor(points.min(axis=0)).astype(int).tolist(),
-                    *np.ceil(points.max(axis=0)).astype(int).tolist(),
-                ]
-                if coord[2] <= coord[0] or coord[3] <= coord[1]:
+                if coord is None:
                     children = []
                     break
                 child = box.copy()
@@ -935,15 +1006,9 @@ def split_formula_boxes(image, boxes, candidates=None):
                 children.append(child)
                 row_spans.append((float(top), float(bottom)))
         else:
-            for local_quad, local_poly, r_top, r_bot in curved_geoms:
-                points = cv2.perspectiveTransform(local_quad[None], inverse)[0]
-                points[:, 0] = np.clip(points[:, 0], 0, page_w)
-                points[:, 1] = np.clip(points[:, 1], 0, page_h)
-                coord = [
-                    *np.floor(points.min(axis=0)).astype(int).tolist(),
-                    *np.ceil(points.max(axis=0)).astype(int).tolist(),
-                ]
-                if coord[2] <= coord[0] or coord[3] <= coord[1]:
+            for local_quad, _, r_top, r_bot in curved_geoms:
+                points, coord = _local_to_page(local_quad, inverse, page_w, page_h)
+                if coord is None:
                     children = []
                     break
                 child = box.copy()
@@ -951,13 +1016,7 @@ def split_formula_boxes(image, boxes, candidates=None):
                 if "quad" in child:
                     child["quad"] = points.tolist()
                 if "polygon_points" in child:
-                    if local_poly is not None and "quad" not in child:
-                        poly_pts = cv2.perspectiveTransform(local_poly[None], inverse)[0]
-                        poly_pts[:, 0] = np.clip(poly_pts[:, 0], 0, page_w)
-                        poly_pts[:, 1] = np.clip(poly_pts[:, 1], 0, page_h)
-                        child["polygon_points"] = poly_pts.tolist()
-                    else:
-                        child["polygon_points"] = points.tolist()
+                    child["polygon_points"] = points.tolist()
                 children.append(child)
                 row_spans.append((r_top, r_bot))
 
