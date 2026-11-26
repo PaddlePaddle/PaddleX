@@ -138,6 +138,11 @@ paddlex --pipeline PaddleOCR-VL-1.8 --input https://paddle-model-ecology.bj.bceb
 <td><code>str|dict</code></td>
 </tr>
 <tr>
+<td><code>use_layout_deform</code></td>
+<td>使用 <code>--use_layout_deform True</code>，根据版面模型输出的 <code>warp_params</code> 矫正送入识别模块的裁图。默认关闭。</td>
+<td><code>bool</code></td>
+</tr>
+<tr>
 <td><code>layout_split_formula</code></td>
 <td>使用 <code>--layout_split_formula True</code> 在识别前拆分行间留白明显的多行公式。仅在版面模型为 PP-DocLayoutV4 时生效。</td>
 <td><code>bool</code></td>
@@ -385,6 +390,12 @@ for res in output:
 <td><code>layout_merge_bboxes_mode</code></td>
 <td>参数含义与实例化参数基本相同。设置为<code>None</code>表示使用实例化参数，否则该参数优先级更高。</td>
 <td><code>str|dict|None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>use_layout_deform</code></td>
+<td>是否根据版面模型输出的 <code>warp_params</code> 矫正送入识别模块的裁图。<code>None</code> 使用产线 YAML 的配置，默认关闭。版面模型未输出 <code>warp_params</code> 时沿用原裁图。</td>
+<td><code>bool|None</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -1156,6 +1167,12 @@ INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 <td><code>layoutShapeMode</code></td>
 <td><code>string</code></td>
 <td>请参阅产线 <code>predict</code> 方法的 <code>layout_shape_mode</code> 参数相关说明。</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>useLayoutDeform</code></td>
+<td><code>boolean</code> | <code>null</code></td>
+<td>对应 <code>predict</code> 的 <code>use_layout_deform</code>。省略或传入 <code>null</code> 时使用产线配置。</td>
 <td>否</td>
 </tr>
 <tr>

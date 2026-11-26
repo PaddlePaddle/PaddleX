@@ -6,6 +6,19 @@ comments: true
 
 ## 最新版本信息
 
+### PaddleX v3.8.0
+
+#### 兼容性与升级
+
+- PaddleX 要求 Python 3.9 或更高版本。使用 Python 3.8 的环境需要升级后再安装。
+- NVIDIA vLLM 服务依赖（`genai-vllm-server`）从 vLLM 0.10.2、PyTorch 2.8.0 升级到 vLLM 0.19.0、PyTorch 2.10.0。升级自建服务时，请使用新版镜像或在环境中更新这组依赖。
+- `deploy/genai_vllm_server_docker/build.sh` 移除了 `--sm120`。构建时必须在 `--pdx-version VERSION` 和 `--pdx-wheel PATH` 中任选一项，分别指定 PaddleX 包版本或本地 wheel。需要自定义 vLLM 基础镜像时，设置 `VLLM_BASE_IMAGE`。
+- PaddleOCR-VL 的 `paddlex.inference.pipelines.paddleocr_vl.uilts` 改名为 `paddlex.inference.pipelines.paddleocr_vl.utils`。直接导入其中工具函数的代码需要更新路径，例如 `from paddlex.inference.pipelines.paddleocr_vl.utils import convert_otsl_to_html`。
+
+#### PaddleOCR-VL 1.8 部署默认值
+
+在 NVIDIA CUDA 上通过 vLLM 启动 `PaddleOCR-VL-1.8-0.9B` 时，默认每 GPU 固定分配 4 GiB KV cache，并启动两个共享推理引擎的 HTTP 前端。权重和运行时开销另占显存，8 GB GPU 或同卡共部署可能在启动时显存不足。大显存 GPU 也默认使用 4 GiB KV cache，可通过 `--backend_config` 调整。显存紧张时可调低 `kv-cache-memory-bytes`，或只配置 `gpu-memory-utilization` 以按比例确定 KV 预算。可独立将 `api-server-count` 设为 `1`。[部署配置说明](./pipeline_usage/tutorials/ocr_pipelines/PaddleOCR-VL.md#312-通过-paddlex-cli-启动)
+
 ### PaddleX v3.3.0(10.16/2025)
 
 - **支持PaddleOCR-VL、PP-OCRv5多语种模型的推理部署能力。**

@@ -140,6 +140,11 @@ The following table lists the PaddleOCR-VL series pipeline prediction parameters
 <td><code>str|dict</code></td>
 </tr>
 <tr>
+<td><code>use_layout_deform</code></td>
+<td>Set <code>--use_layout_deform True</code> to rectify crops before recognition using the layout model's <code>warp_params</code>. Off by default.</td>
+<td><code>bool</code></td>
+</tr>
+<tr>
 <td><code>layout_split_formula</code></td>
 <td>Use <code>--layout_split_formula True</code> to split multi-line formulas with clear gaps between rows before recognition. Requires PP-DocLayoutV4 as the layout model.</td>
 <td><code>bool</code></td>
@@ -386,6 +391,12 @@ In PaddleX, use `create_pipeline()` to create a PaddleOCR-VL series pipeline obj
 <td><code>layout_merge_bboxes_mode</code></td>
 <td>The parameter meaning is basically the same as the instantiation parameter. Setting it to <code>None</code> means using the instantiation parameter; otherwise, this parameter takes precedence.</td>
 <td><code>str|dict|None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>use_layout_deform</code></td>
+<td>Rectify crops before recognition using the layout model's <code>warp_params</code>. <code>None</code> uses the pipeline YAML setting, which defaults to off. If the layout model does not return <code>warp_params</code>, the original crops are used.</td>
+<td><code>bool|None</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -1173,6 +1184,12 @@ By default, there is no page limit. To set a page limit on the server, set <code
 <td><code>layoutShapeMode</code></td>
 <td><code>string</code></td>
 <td>Please refer to the description of the <code>layout_shape_mode</code> parameter in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>useLayoutDeform</code></td>
+<td><code>boolean</code>|<code>null</code></td>
+<td>Corresponds to <code>use_layout_deform</code> in <code>predict</code>. Omit the field or pass <code>null</code> to use the pipeline configuration.</td>
 <td>No</td>
 </tr>
 <tr>
