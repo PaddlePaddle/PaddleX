@@ -7,7 +7,7 @@ comments: true
 ## I. Overview
 The layout analysis task builds upon layout area detection by further introducing **instance segmentation** and **reading order prediction** capabilities. By analyzing input document images, it not only identifies various layout elements (such as text, charts, images, formulas, paragraph titles, abstracts, references, etc.) and outputs their bounding boxes, but also simultaneously outputs the **precise contour mask** and **reading order index** for each region, providing more complete structural information for document understanding and information extraction workflows.
 
-The layout analysis module currently supports the PP-DocLayoutV3 model, which is based on the DETR architecture with PPHGNetV2-L as the backbone network. It adds a **reading order prediction** branch on top of the instance segmentation task, enabling end-to-end learning of reading order relationships among document elements.
+The layout analysis module supports PP-DocLayoutV3 and PP-DocLayoutV4. PP-DocLayoutV3 is based on the DETR architecture with PPHGNetV2-L as the backbone network. It adds a **reading order prediction** branch on top of the instance segmentation task, enabling end-to-end learning of reading order relationships among document elements.
 
 ![layout analysis](https://raw.githubusercontent.com/cuicheng01/PaddleX_doc_images/refs/heads/main/images/modules/layout_analysis/layout_analysis.png)
 
@@ -33,6 +33,13 @@ The layout analysis module currently supports the PP-DocLayoutV3 model, which is
 <td>23.77</td>
 <td>126</td>
 <td>A layout analysis model trained on a self-built dataset containing Chinese and English papers, multi-column magazines, newspapers, PPT, contracts, books, exams, and research reports using DETR. It supports instance segmentation and reading order prediction for 25 layout element categories.</td>
+</tr>
+<tr>
+<td>PP-DocLayoutV4</td>
+<td><a href="https://paddle-model-ecology.bj.bcebos.com/paddlex/official_inference_model/paddle3.0.0/PP-DocLayoutV4_infer.tar">Inference Model</a></td>
+<td>–</td>
+<td>–</td>
+<td>Predicts quadrilaterals and reading order. Checkpoints with a deformation head also return page deformation parameters.</td>
 </tr>
 </tbody>
 </table>

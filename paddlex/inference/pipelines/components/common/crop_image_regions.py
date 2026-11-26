@@ -19,7 +19,11 @@ from typing import List, Optional, Tuple
 import numpy as np
 from numpy.linalg import norm
 
-from .....utils.deps import class_requires_deps, function_requires_deps, is_dep_available
+from .....utils.deps import (
+    class_requires_deps,
+    function_requires_deps,
+    is_dep_available,
+)
 from .base_operator import BaseOperator
 from .seal_det_warp import AutoRectifier
 
@@ -80,12 +84,17 @@ def rectify_shape_crop(img, points, homography, min_size=2, max_scale=4.0):
     if width < min_size or height < min_size:
         return None
 
-    matrix = np.array(
-        [[scale, 0.0, -float(top_left[0])],
-         [0.0, scale, -float(top_left[1])],
-         [0.0, 0.0, 1.0]],
-        dtype=np.float64,
-    ) @ homography
+    matrix = (
+        np.array(
+            [
+                [scale, 0.0, -float(top_left[0])],
+                [0.0, scale, -float(top_left[1])],
+                [0.0, 0.0, 1.0],
+            ],
+            dtype=np.float64,
+        )
+        @ homography
+    )
 
     crop = cv2.warpPerspective(
         img,
@@ -170,14 +179,19 @@ class CropByBoxes(BaseOperator):
             if page_homography is not None:
                 rectified = rectify_shape_crop(
                     img,
-                    self._region_shape(box_info, layout_shape_mode,
-                                       (xmin, ymin, xmax, ymax)),
+                    self._region_shape(
+                        box_info, layout_shape_mode, (xmin, ymin, xmax, ymax)
+                    ),
                     page_homography,
                 )
                 if rectified is not None:
                     crop, crop_matrix = rectified
-                    out_info = {"img": crop, "box": box, "label": label,
-                                "crop_matrix": crop_matrix}
+                    out_info = {
+                        "img": crop,
+                        "box": box,
+                        "label": label,
+                        "crop_matrix": crop_matrix,
+                    }
                     if "quad" in box_info:
                         out_info["quad"] = box_info["quad"]
                     if "polygon_points" in box_info:
@@ -212,7 +226,9 @@ class CropByBoxes(BaseOperator):
                 out_info["crop_matrix"] = _rot90_matrix(rot90_k, w_c, h_c) @ np.array(
                     [[1.0, 0.0, -xmin], [0.0, 1.0, -ymin], [0.0, 0.0, 1.0]]
                 )
-                out_info["img"] = np.ascontiguousarray(np.rot90(out_info["img"], rot90_k))
+                out_info["img"] = np.ascontiguousarray(
+                    np.rot90(out_info["img"], rot90_k)
+                )
             output_list.append(out_info)
         return output_list
 

@@ -1139,8 +1139,9 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
             image_grid_hws = list()
             cu_seqlens = [0]
 
-            for idx, thw in enumerate(image_grid_thw):
-                thw_tuple = tuple(thw.detach().cpu().numpy().tolist())
+            # Move all grid sizes to the host at once instead of syncing per image.
+            for thw in image_grid_thw.tolist():
+                thw_tuple = tuple(thw)
                 numel = np.prod(thw_tuple)
                 image_grid_hws.append(thw_tuple)
                 image_position_ids = torch.arange(numel) % np.prod(thw_tuple[1:])
@@ -1169,13 +1170,23 @@ if all(map(is_dep_available, ("einops", "torch", "transformers", "vllm"))):
             pixel_values = kwargs["pixel_values"]
             image_grid_thw = kwargs["image_grid_thw"]
 
-            multimodal_embeddings = []
+            # Encode all images of this step in a single call. encode_image already
+            # handles multiple images (separated by cu_seqlens), so this gives the
+            # same embeddings as encoding them one by one, with far fewer kernel
+            # launches and host-device syncs when there are many small images.
+            pvs = []
+            igs = []
             for pv, ig in zip(pixel_values, image_grid_thw):
                 if pv is not None:
-                    image_embeds = self.encode_image(pv, ig)
-                    multimodal_embeddings += image_embeds
+                    pvs.append(pv.reshape(-1, *pv.shape[-3:]))
+                    igs.append(ig.reshape(-1, 3))
+            if not pvs:
+                return []
 
-            return multimodal_embeddings
+            image_embeds = self.encode_image(
+                torch.cat(pvs, dim=0), torch.cat(igs, dim=0)
+            )
+            return list(image_embeds)
 
         def get_input_embeddings(
             self,

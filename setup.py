@@ -48,13 +48,7 @@ BASE_DEP_SPECS = {
     "lxml": "",
     "latex2mathml": "",
     "matplotlib": "",
-    "modelscope": [
-        # modelscope 1.29.2+ unconditionally imports `zoneinfo`, which is
-        # Python 3.9+ stdlib. Cap at < 1.29.2 to keep Py3.8 working; 1.29.0
-        # and 1.29.1 import cleanly.
-        '>= 1.28.0, < 1.29.2; python_version == "3.8"',
-        '>= 1.28.0; python_version >= "3.9"',
-    ],
+    "modelscope": ">= 1.28.0",
     "numpy": ">= 1.24, < 2.4",
     "openai": ">= 1.63",
     "OpenCC": "",
@@ -80,7 +74,8 @@ BASE_DEP_SPECS = {
     "scikit-image": "",
     "scikit-learn": "",
     "scipy": "",
-    "sentencepiece": "",
+    # 0.2.3 generates protobuf code that requires a 7.x runtime.
+    "sentencepiece": "< 0.2.3",
     "shapely": "",
     "soundfile": "",
     "tiktoken": "",
@@ -238,13 +233,13 @@ EXTRAS = {
         ],
         "genai-vllm-server": [
             "einops",
-            "torch == 2.8.0",
-            "transformers < 5.0.0",
+            "torch == 2.10.0",
+            "transformers >= 4.56.0, < 5.0.0",
             "uvloop",
-            "vllm == 0.10.2",
+            "vllm == 0.19.0",
         ],
         "paddle2onnx": [
-            "paddle2onnx == 2.1.0",
+            "paddle2onnx == 2.0.2rc3",
         ],
         "serving": [
             "aiohttp >= 3.9",
@@ -375,7 +370,7 @@ if __name__ == "__main__":
         long_description_content_type="text/markdown",
         author="PaddlePaddle Authors",
         author_email="",
-        python_requires=">=3.8",
+        python_requires=">=3.9",
         install_requires=dependencies(),
         extras_require=extras(),
         packages=pkgs,
@@ -395,7 +390,6 @@ if __name__ == "__main__":
             "Intended Audience :: Developers",
             "Intended Audience :: Education",
             "Intended Audience :: Science/Research",
-            "Programming Language :: Python :: 3.8",
             "Programming Language :: Python :: 3.9",
             "Programming Language :: Python :: 3.10",
             "Programming Language :: Python :: 3.11",

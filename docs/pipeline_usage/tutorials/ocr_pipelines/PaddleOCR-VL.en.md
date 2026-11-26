@@ -36,6 +36,11 @@ This document applies to the PaddleOCR-VL series pipelines in PaddleX. PaddleX r
 <td><code>PP-DocLayoutV3</code></td>
 <td><code>PaddleOCR-VL-1.6-0.9B</code></td>
 </tr>
+<tr>
+<td><code>PaddleOCR-VL-1.8</code></td>
+<td><code>PP-DocLayoutV4</code></td>
+<td><code>PaddleOCR-VL-1.8-0.9B</code></td>
+</tr>
 </tbody>
 </table>
 
@@ -52,21 +57,23 @@ python -m pip install "paddlex[ocr]"
 
 ## 2. Quick Start
 
-The PaddleOCR-VL series pipelines support two usage methods: CLI command line and Python API. The CLI method is simpler and suitable for quickly verifying functionality, while the Python API method is more flexible and suitable for integration into existing projects. The following examples use `PaddleOCR-VL-1.6` as the primary pipeline.
+The PaddleOCR-VL series pipelines support two usage methods: CLI command line and Python API. The CLI method is simpler and suitable for quickly verifying functionality, while the Python API method is more flexible and suitable for integration into existing projects. The following examples use `PaddleOCR-VL-1.8` as the primary pipeline.
+
+PaddleOCR-VL-1.8 uses PP-DocLayoutV4. Set `use_layout_deform=True` (or `useLayoutDeform` over HTTP) to correct recognition crops when the layout model returns `warp_params`. It defaults to `False`.
 
 ### 2.1 Command Line Usage
 
 ```bash
-paddlex --pipeline PaddleOCR-VL-1.6 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png
+paddlex --pipeline PaddleOCR-VL-1.8 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png
 
 # Use --use_doc_orientation_classify to enable document orientation classification
-paddlex --pipeline PaddleOCR-VL-1.6 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_doc_orientation_classify True
+paddlex --pipeline PaddleOCR-VL-1.8 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_doc_orientation_classify True
 
 # Use --use_doc_unwarping to enable document unwarping module
-paddlex --pipeline PaddleOCR-VL-1.6 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_doc_unwarping True
+paddlex --pipeline PaddleOCR-VL-1.8 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_doc_unwarping True
 
 # Use --use_layout_detection to enable layout detection
-paddlex --pipeline PaddleOCR-VL-1.6 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_layout_detection False
+paddlex --pipeline PaddleOCR-VL-1.8 --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png --use_layout_detection False
 ```
 
 <details><summary><b>Command line supports more parameters. Click to expand for detailed parameter descriptions</b></summary>
@@ -183,7 +190,7 @@ The following table lists the PaddleOCR-VL series pipeline prediction parameters
 </details>
 <br/>
 
-The inference result will be printed in the terminal. The default output of the PaddleOCR-VL pipeline is as follows:
+The inference result will be printed in the terminal. The following example shows output from PaddleOCR-VL-1.6.
 
 <details><summary> 👉Click to expand</summary>
 <pre>
@@ -202,7 +209,7 @@ The command line method is for quick testing and visualization. In actual projec
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="PaddleOCR-VL-1.6")
+pipeline = create_pipeline(pipeline="PaddleOCR-VL-1.8")
 
 output = pipeline.predict(input="https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png")
 
@@ -218,7 +225,7 @@ For PDF files, each page will be processed individually, and a separate Markdown
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline(pipeline="PaddleOCR-VL-1.6")
+pipeline = create_pipeline(pipeline="PaddleOCR-VL-1.8")
 
 output = pipeline.predict(input="./your_pdf_file.pdf")
 
@@ -254,7 +261,7 @@ In PaddleX, use `create_pipeline()` to create a PaddleOCR-VL series pipeline obj
 <tbody>
 <tr>
 <td><code>pipeline</code></td>
-<td>PaddleX pipeline name or path to a pipeline config file. Supported names include <code>PaddleOCR-VL</code>, <code>PaddleOCR-VL-1.5</code>, and <code>PaddleOCR-VL-1.6</code>. A custom YAML file path can also be used.</td>
+<td>PaddleX pipeline name or path to a pipeline config file. Supported names include <code>PaddleOCR-VL</code>, <code>PaddleOCR-VL-1.5</code>, <code>PaddleOCR-VL-1.6</code>, and <code>PaddleOCR-VL-1.8</code>. A custom YAML file path can also be used.</td>
 <td><code>str|None</code></td>
 <td><code>None</code></td>
 </tr>
@@ -773,33 +780,36 @@ The VLM inference service only handles the VLM recognition stage of the complete
 
 #### 3.1.1 Using Docker Images
 
-PaddleX provides a vLLM Docker image to quickly start a VLM inference service. For common NVIDIA GPUs, use `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest`. For NVIDIA 50 series GPUs (SM120 / Compute Capability 12.x), use `ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest-sm120`.
+PaddleX provides one Linux x86_64 vLLM Docker image for supported NVIDIA GPUs. The image uses vLLM 0.19.0 and CUDA 12.9. vLLM selects the attention backend for the GPU and falls back to FP16 when BF16 is unavailable on supported GPUs with a compute capability below 8.0.
 
-Using a common NVIDIA GPU and `PaddleOCR-VL-1.6-0.9B` as an example:
+No separate setting is needed for PaddleOCR-VL multi-image encoding when using `paddlex_genai_server`. Models that already batch images keep their existing implementation. For compatible vLLM built-in models that encode images one at a time, PaddleX batches images automatically with FP16/BF16, unquantized weights, TP=1, and vision FlashAttention or Torch SDPA. Single images, incompatible inputs, and explicit model architecture overrides keep the original path. This does not change the installed vLLM version or enable fused RoPE.
 
-```bash
-docker run \
-    --rm \
-    --gpus all \
-    --network host \
-    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest \
-    paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --host 0.0.0.0 --port 8118 --backend vllm
-```
-
-For NVIDIA 50 series GPUs, replace the image above with the SM120-specific image:
+Using `PaddleOCR-VL-1.8-0.9B` as an example:
 
 ```bash
 docker run \
     --rm \
     --gpus all \
     --network host \
-    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:latest-sm120 \
-    paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --host 0.0.0.0 --port 8118 --backend vllm
+    ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddlex-genai-vllm-server:paddlex3.8-vllm0.19.0 \
+    paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --host 0.0.0.0 --port 8118 --backend vllm
 ```
 
 #### 3.1.2 Starting Through PaddleX CLI
 
-VLM server dependencies may differ from the local pipeline client environment, so it is recommended to create a separate virtual environment for the VLM inference service:
+For `PaddleOCR-VL-1.8-0.9B` on NVIDIA CUDA, PaddleX defaults to a 4 GiB KV cache, `max-num-batched-tokens: 32768`, and two vLLM HTTP frontends. The frontends share the inference engine; they do not load separate copies of the model. Use `--backend_config` to override these settings, for example `api-server-count: 1` for a single frontend. The cache budget is not a limit on total VLM GPU memory. To let vLLM size the cache by GPU memory utilization instead, specify `gpu-memory-utilization` without `kv-cache-memory-bytes` in the YAML file.
+
+The default layout detection setting for PaddleOCR-VL 1.8 is `SubModules.LayoutDetection.batch_size: 4`. The HPS SDK's `client/batch_client.py` sends one image per request to `/layout-parsing`, with up to 160 concurrent requests by default. Use `--concurrency` to override this client setting; it is not a gateway limit.
+
+If you deploy vLLM 0.33.0 separately for HPS, see the [HPS deployment README](https://github.com/PaddlePaddle/PaddleX/blob/{{PADDLEX_GITHUB_REF}}/deploy/hps/README_en.md#using-vllm-0330-with-paddleocr-vl-18-hps) for the setting required when trusted internal clients send `mm_processor_kwargs`, and for optional `prefill-schedule-interval` tuning. Neither setting applies to the default vLLM 0.19.0 backend.
+
+For unquantized `PaddleOCR-VL-1.8-0.9B`, set `paddlex-vision-performance: true` in `--backend_config` to opt into fused vision RoPE. The option is off by default and supports these single-GPU configurations.
+
+- A100 (SM80) with BF16, vision FlashAttention, and vLLM `0.19.0` or `0.33.0`.
+- L20 (SM89) with BF16, vision FlashAttention, and vLLM `0.33.0`.
+- V100 (SM70) with FP16, vision Torch SDPA, and vLLM `0.19.0`.
+
+VLM server dependencies may differ from those of the local pipeline client. Create a separate virtual environment for the VLM service. The following vLLM installation command uses CUDA 12.9 on NVIDIA and requires Python 3.10–3.13.
 
 ```bash
 # Create a virtual environment
@@ -807,9 +817,9 @@ python -m venv .venv
 # Activate the environment
 source .venv/bin/activate
 # Install PaddleX
-python -m pip install "paddlex[ocr]"
+python -m pip install paddlex
 # Install the vLLM server plugin
-paddlex --install genai-vllm-server
+PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu129 paddlex --install genai-vllm-server
 # Or install the SGLang server plugin
 # paddlex --install genai-sglang-server
 # Or install the FastDeploy server plugin
@@ -819,13 +829,13 @@ paddlex --install genai-vllm-server
 After installation, start the service with `paddlex_genai_server`:
 
 ```bash
-paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --backend vllm --port 8118
+paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --backend vllm --port 8118
 
 # For the SGLang backend
-# paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --backend sglang --port 8118
+# paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --backend sglang --port 8118
 
 # For the FastDeploy backend
-# paddlex_genai_server --model_name PaddleOCR-VL-1.6-0.9B --backend fastdeploy --port 8118
+# paddlex_genai_server --model_name PaddleOCR-VL-1.8-0.9B --backend fastdeploy --port 8118
 ```
 
 The command supports the following parameters:
@@ -876,10 +886,10 @@ paddlex --install genai-client
 Next, obtain the pipeline configuration file:
 
 ```bash
-paddlex --get_pipeline_config PaddleOCR-VL-1.6
+paddlex --get_pipeline_config PaddleOCR-VL-1.8
 ```
 
-The default save path is `PaddleOCR-VL-1.6.yaml`. Modify `SubModules.VLRecognition.genai_config.backend` and `SubModules.VLRecognition.genai_config.server_url` in the config file to match the service, for example:
+The default save path is `PaddleOCR-VL-1.8.yaml`. Modify `SubModules.VLRecognition.genai_config.backend` and `SubModules.VLRecognition.genai_config.server_url` in the config file to match the service, for example:
 
 ```yaml
 SubModules:
@@ -902,10 +912,12 @@ SubModules:
       max_concurrency: 200
 ```
 
+With either remote configuration, the pipeline submits each region as soon as it is encoded and handles groups with different pixel limits concurrently. With `use_queues` enabled, it also allows a bounded number of VLM batches in flight while returning results in input order. `max_concurrency` still limits concurrent requests per client. This remote scheduling does not apply to local VLMs.
+
 Then use the modified config file to run the pipeline. For CLI:
 
 ```bash
-paddlex --pipeline PaddleOCR-VL-1.6.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png
+paddlex --pipeline PaddleOCR-VL-1.8.yaml --input https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png
 ```
 
 Or through the Python API:
@@ -913,7 +925,7 @@ Or through the Python API:
 ```python
 from paddlex import create_pipeline
 
-pipeline = create_pipeline("PaddleOCR-VL-1.6.yaml")
+pipeline = create_pipeline("PaddleOCR-VL-1.8.yaml")
 
 for res in pipeline.predict("https://paddle-model-ecology.bj.bcebos.com/paddlex/imgs/demo_image/paddleocr_vl_demo.png"):
     res.print()
@@ -938,7 +950,7 @@ paddlex --install serving
 Run the server via PaddleX CLI:
 
 ```bash
-paddlex --serve --pipeline PaddleOCR-VL-1.6
+paddlex --serve --pipeline PaddleOCR-VL-1.8
 ```
 
 You should see information similar to the following:
@@ -950,7 +962,7 @@ INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 ```
 
-If you need to adjust the configuration, such as model paths, batch size, deployment device, or VLM server backend, specify a custom configuration file through `--pipeline`. `PaddleOCR-VL-1.5` and `PaddleOCR-VL-1.6` share the same serving application implementation route internally, but their pipeline configs remain distinct.
+If you need to adjust the configuration, such as model paths, batch size, deployment device, or VLM server backend, specify a custom configuration file through `--pipeline`. `PaddleOCR-VL-1.5`, `PaddleOCR-VL-1.6`, and `PaddleOCR-VL-1.8` share the same serving application implementation route internally, but their pipeline configs remain distinct.
 
 The command-line options related to serving are as follows:
 
@@ -1248,6 +1260,12 @@ By default, there is no page limit. To set a page limit on the server, set <code
 <td>No</td>
 </tr>
 <tr>
+<td><code>returnMarkdownImages</code></td>
+<td><code>boolean</code></td>
+<td>Whether to return the images referenced in the Markdown. Default <code>true</code>; when set to <code>false</code>, <code>markdown.images</code> is <code>null</code> or omitted and the server skips image encoding / URL upload.</td>
+<td>No</td>
+</tr>
+<tr>
 <td><code>restructurePages</code></td>
 <td><code>boolean</code></td>
 <td>Whether to restructure results across multiple pages. The default is <code>false</code>.</td>
@@ -1310,6 +1328,7 @@ By default, there is no page limit. To set a page limit on the server, set <code
 </tr>
 </tbody>
 </table>
+<p>Image and other binary file fields in the element schema below (e.g. <code>outputImages</code>, <code>inputImage</code>, <code>markdown.images</code>, <code>exports</code>) are returned inline as Base64 strings by default; when the server is configured to return URLs, those values become pre-signed URLs while the field types remain unchanged. See the "Returning Binary Content as URLs" section of the <a href="../../../pipeline_deploy/serving.en.md">Serving Deployment Guide</a> for configuration.</p>
 <p>Each element in<code>layoutParsingResults</code> is an <code>object</code> with the following attributes:</p>
 <table>
 <thead>
@@ -1333,17 +1352,17 @@ By default, there is no page limit. To set a page limit on the server, set <code
 <tr>
 <td><code>outputImages</code></td>
 <td><code>object</code>|<code>null</code></td>
-<td>Refer to the <code>img</code> property description of the prediction results. The image is in JPEG format and encoded using Base64.</td>
+<td>Refer to the <code>img</code> property description of the prediction results. The image is in JPEG format, encoded as Base64 by default; returned as a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 <tr>
 <td><code>inputImage</code></td>
 <td><code>string</code>|<code>null</code></td>
-<td>Input image. The image is in JPEG format and encoded using Base64.</td>
+<td>Input image. The image is in JPEG format, encoded as Base64 by default; returned as a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 <tr>
 <td><code>exports</code></td>
 <td><code>object</code>|<code>null</code></td>
-<td>Optional additional exports. Present only when <code>outputFormats</code> is set. Example: <code>{"docx": {"content": "..."}}</code>, where <code>content</code> is the Base64-encoded file content.</td>
+<td>Optional additional exports. Present only when <code>outputFormats</code> is set. Example: <code>{"docx": {"content": "..."}}</code>, where <code>content</code> is the Base64-encoded file content by default, or a pre-signed URL when URL-return mode is enabled.</td>
 </tr>
 </tbody>
 </table>
@@ -1364,8 +1383,8 @@ By default, there is no page limit. To set a page limit on the server, set <code
 </tr>
 <tr>
 <td><code>images</code></td>
-<td><code>object</code></td>
-<td>Key-value pairs of relative paths to Markdown images and Base64-encoded images.</td>
+<td><code>object</code> | <code>null</code></td>
+<td>Key-value pairs of relative Markdown image paths and their image data. Values are Base64-encoded by default; returned as pre-signed URLs when URL-return mode is enabled. The field is <code>null</code> or omitted when <code>returnMarkdownImages</code> is <code>false</code> in the request.</td>
 </tr>
 </tbody>
 </table>
@@ -1423,6 +1442,12 @@ By default, there is no page limit. To set a page limit on the server, set <code
     <td><code>showFormulaNumber</code></td>
     <td><code>boolean</code></td>
     <td>Whether to include formula numbers in the output Markdown text. The default is <code>false</code>.</td>
+    <td>No</td>
+    </tr>
+    <tr>
+    <td><code>returnMarkdownImages</code></td>
+    <td><code>boolean</code></td>
+    <td>Whether to return the images referenced in the Markdown (from <code>pages[].markdownImages</code> in the request). Default <code>true</code>; when set to <code>false</code>, <code>markdown.images</code> is <code>null</code> or omitted and the server does not back-fill it.</td>
     <td>No</td>
     </tr>
     <tr>

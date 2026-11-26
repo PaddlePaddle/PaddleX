@@ -42,7 +42,10 @@ REF = os.environ.get("LAYOUTMODEL_RECTIFY_REFERENCE")
 
 @pytest.mark.parametrize(
     "prepare_page",
-    ["_paddleocr_vl_prepare_page_core", "_paddleocr_vl_prepare_page_serial_benchmarked"],
+    [
+        "_paddleocr_vl_prepare_page_core",
+        "_paddleocr_vl_prepare_page_serial_benchmarked",
+    ],
 )
 @pytest.mark.parametrize("min_roll", [0.0, 2.0], ids=["homography", "quarter_turn"])
 def test_rotated_text_is_grouped_in_the_corrected_page_frame(prepare_page, min_roll):
@@ -89,7 +92,10 @@ def test_rotated_text_is_grouped_in_the_corrected_page_frame(prepare_page, min_r
 
 @pytest.mark.parametrize(
     "prepare_page",
-    ["_paddleocr_vl_prepare_page_core", "_paddleocr_vl_prepare_page_serial_benchmarked"],
+    [
+        "_paddleocr_vl_prepare_page_core",
+        "_paddleocr_vl_prepare_page_serial_benchmarked",
+    ],
 )
 @pytest.mark.parametrize(
     "layout_shape_mode, expected_groups", [("auto", [0, 0]), ("rect", [0, 1])]

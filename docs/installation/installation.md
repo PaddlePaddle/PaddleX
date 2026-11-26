@@ -3,7 +3,7 @@ comments: true
 ---
 
 # PaddleX本地安装教程
-> ❗安装 PaddleX 前请先确保您有基础的 <b>Python 运行环境</b>（注：当前支持Python 3.8 ～ Python 3.13下运行）。
+> ❗安装 PaddleX 前请先确保您有基础的 <b>Python 运行环境</b>（注：当前支持 Python 3.9 至 Python 3.13）。
 
 ## 1. 快速安装
 欢迎您使用飞桨低代码开发工具PaddleX，在我们正式开始本地安装之前，请首先明确您的开发需求，并根据您的需求选择合适的安装模式。

@@ -836,8 +836,14 @@ PPOCRV5_SERVER_REC_MAPPING = [
 # SLANet / SLANet_plus (PP-LCNet backbone + CSP-PAN neck + SLA head)
 SLANET_MAPPING = [
     # Backbone stem
-    (r"^backbone\.conv1\.conv\.", r"backbone.vision_backbone.encoder.convolution.convolution."),
-    (r"^backbone\.conv1\.bn\.", r"backbone.vision_backbone.encoder.convolution.normalization."),
+    (
+        r"^backbone\.conv1\.conv\.",
+        r"backbone.vision_backbone.encoder.convolution.convolution.",
+    ),
+    (
+        r"^backbone\.conv1\.bn\.",
+        r"backbone.vision_backbone.encoder.convolution.normalization.",
+    ),
     # Backbone stages (paddle: blocks2..blocks6 → HF: blocks.0..blocks.4)
     (
         r"^backbone\.blocks2\.(\d+)\.",
@@ -867,44 +873,140 @@ SLANET_MAPPING = [
     (r"\.se\.conv1\.", r".squeeze_excitation_module.convolutions.0."),
     (r"\.se\.conv2\.", r".squeeze_excitation_module.convolutions.2."),
     # Neck channel projector
-    (r"^neck\.conv_t\.convs\.(\d+)\.conv\.", r"backbone.post_csp_pan.channel_projector.\1.convolution."),
-    (r"^neck\.conv_t\.convs\.(\d+)\.bn\.", r"backbone.post_csp_pan.channel_projector.\1.normalization."),
+    (
+        r"^neck\.conv_t\.convs\.(\d+)\.conv\.",
+        r"backbone.post_csp_pan.channel_projector.\1.convolution.",
+    ),
+    (
+        r"^neck\.conv_t\.convs\.(\d+)\.bn\.",
+        r"backbone.post_csp_pan.channel_projector.\1.normalization.",
+    ),
     # Neck downsamples (depthwise separable convs)
-    (r"^neck\.downsamples\.(\d+)\.dwconv\.", r"backbone.post_csp_pan.downsamples.\1.depthwise_convolution.convolution."),
-    (r"^neck\.downsamples\.(\d+)\.pwconv\.", r"backbone.post_csp_pan.downsamples.\1.pointwise_convolution.convolution."),
-    (r"^neck\.downsamples\.(\d+)\.bn1\.", r"backbone.post_csp_pan.downsamples.\1.depthwise_convolution.normalization."),
-    (r"^neck\.downsamples\.(\d+)\.bn2\.", r"backbone.post_csp_pan.downsamples.\1.pointwise_convolution.normalization."),
+    (
+        r"^neck\.downsamples\.(\d+)\.dwconv\.",
+        r"backbone.post_csp_pan.downsamples.\1.depthwise_convolution.convolution.",
+    ),
+    (
+        r"^neck\.downsamples\.(\d+)\.pwconv\.",
+        r"backbone.post_csp_pan.downsamples.\1.pointwise_convolution.convolution.",
+    ),
+    (
+        r"^neck\.downsamples\.(\d+)\.bn1\.",
+        r"backbone.post_csp_pan.downsamples.\1.depthwise_convolution.normalization.",
+    ),
+    (
+        r"^neck\.downsamples\.(\d+)\.bn2\.",
+        r"backbone.post_csp_pan.downsamples.\1.pointwise_convolution.normalization.",
+    ),
     # Neck top-down blocks (CSP; main_conv→conv2, short_conv→conv1, final_conv→conv3)
-    (r"^neck\.top_down_blocks\.(\d+)\.main_conv\.conv\.", r"backbone.post_csp_pan.top_down_blocks.\1.conv2.convolution."),
-    (r"^neck\.top_down_blocks\.(\d+)\.main_conv\.bn\.", r"backbone.post_csp_pan.top_down_blocks.\1.conv2.normalization."),
-    (r"^neck\.top_down_blocks\.(\d+)\.short_conv\.conv\.", r"backbone.post_csp_pan.top_down_blocks.\1.conv1.convolution."),
-    (r"^neck\.top_down_blocks\.(\d+)\.short_conv\.bn\.", r"backbone.post_csp_pan.top_down_blocks.\1.conv1.normalization."),
-    (r"^neck\.top_down_blocks\.(\d+)\.final_conv\.conv\.", r"backbone.post_csp_pan.top_down_blocks.\1.conv3.convolution."),
-    (r"^neck\.top_down_blocks\.(\d+)\.final_conv\.bn\.", r"backbone.post_csp_pan.top_down_blocks.\1.conv3.normalization."),
-    (r"^neck\.top_down_blocks\.(\d+)\.blocks\.0\.conv1\.conv\.", r"backbone.post_csp_pan.top_down_blocks.\1.bottlenecks.0.conv1.convolution."),
-    (r"^neck\.top_down_blocks\.(\d+)\.blocks\.0\.conv1\.bn\.", r"backbone.post_csp_pan.top_down_blocks.\1.bottlenecks.0.conv1.normalization."),
-    (r"^neck\.top_down_blocks\.(\d+)\.blocks\.0\.conv2\.dwconv\.", r"backbone.post_csp_pan.top_down_blocks.\1.bottlenecks.0.conv2.depthwise_convolution.convolution."),
-    (r"^neck\.top_down_blocks\.(\d+)\.blocks\.0\.conv2\.pwconv\.", r"backbone.post_csp_pan.top_down_blocks.\1.bottlenecks.0.conv2.pointwise_convolution.convolution."),
-    (r"^neck\.top_down_blocks\.(\d+)\.blocks\.0\.conv2\.bn1\.", r"backbone.post_csp_pan.top_down_blocks.\1.bottlenecks.0.conv2.depthwise_convolution.normalization."),
-    (r"^neck\.top_down_blocks\.(\d+)\.blocks\.0\.conv2\.bn2\.", r"backbone.post_csp_pan.top_down_blocks.\1.bottlenecks.0.conv2.pointwise_convolution.normalization."),
+    (
+        r"^neck\.top_down_blocks\.(\d+)\.main_conv\.conv\.",
+        r"backbone.post_csp_pan.top_down_blocks.\1.conv2.convolution.",
+    ),
+    (
+        r"^neck\.top_down_blocks\.(\d+)\.main_conv\.bn\.",
+        r"backbone.post_csp_pan.top_down_blocks.\1.conv2.normalization.",
+    ),
+    (
+        r"^neck\.top_down_blocks\.(\d+)\.short_conv\.conv\.",
+        r"backbone.post_csp_pan.top_down_blocks.\1.conv1.convolution.",
+    ),
+    (
+        r"^neck\.top_down_blocks\.(\d+)\.short_conv\.bn\.",
+        r"backbone.post_csp_pan.top_down_blocks.\1.conv1.normalization.",
+    ),
+    (
+        r"^neck\.top_down_blocks\.(\d+)\.final_conv\.conv\.",
+        r"backbone.post_csp_pan.top_down_blocks.\1.conv3.convolution.",
+    ),
+    (
+        r"^neck\.top_down_blocks\.(\d+)\.final_conv\.bn\.",
+        r"backbone.post_csp_pan.top_down_blocks.\1.conv3.normalization.",
+    ),
+    (
+        r"^neck\.top_down_blocks\.(\d+)\.blocks\.0\.conv1\.conv\.",
+        r"backbone.post_csp_pan.top_down_blocks.\1.bottlenecks.0.conv1.convolution.",
+    ),
+    (
+        r"^neck\.top_down_blocks\.(\d+)\.blocks\.0\.conv1\.bn\.",
+        r"backbone.post_csp_pan.top_down_blocks.\1.bottlenecks.0.conv1.normalization.",
+    ),
+    (
+        r"^neck\.top_down_blocks\.(\d+)\.blocks\.0\.conv2\.dwconv\.",
+        r"backbone.post_csp_pan.top_down_blocks.\1.bottlenecks.0.conv2.depthwise_convolution.convolution.",
+    ),
+    (
+        r"^neck\.top_down_blocks\.(\d+)\.blocks\.0\.conv2\.pwconv\.",
+        r"backbone.post_csp_pan.top_down_blocks.\1.bottlenecks.0.conv2.pointwise_convolution.convolution.",
+    ),
+    (
+        r"^neck\.top_down_blocks\.(\d+)\.blocks\.0\.conv2\.bn1\.",
+        r"backbone.post_csp_pan.top_down_blocks.\1.bottlenecks.0.conv2.depthwise_convolution.normalization.",
+    ),
+    (
+        r"^neck\.top_down_blocks\.(\d+)\.blocks\.0\.conv2\.bn2\.",
+        r"backbone.post_csp_pan.top_down_blocks.\1.bottlenecks.0.conv2.pointwise_convolution.normalization.",
+    ),
     # Neck bottom-up blocks (CSP; symmetric to top-down)
-    (r"^neck\.bottom_up_blocks\.(\d+)\.main_conv\.conv\.", r"backbone.post_csp_pan.bottom_up_blocks.\1.conv2.convolution."),
-    (r"^neck\.bottom_up_blocks\.(\d+)\.main_conv\.bn\.", r"backbone.post_csp_pan.bottom_up_blocks.\1.conv2.normalization."),
-    (r"^neck\.bottom_up_blocks\.(\d+)\.short_conv\.conv\.", r"backbone.post_csp_pan.bottom_up_blocks.\1.conv1.convolution."),
-    (r"^neck\.bottom_up_blocks\.(\d+)\.short_conv\.bn\.", r"backbone.post_csp_pan.bottom_up_blocks.\1.conv1.normalization."),
-    (r"^neck\.bottom_up_blocks\.(\d+)\.final_conv\.conv\.", r"backbone.post_csp_pan.bottom_up_blocks.\1.conv3.convolution."),
-    (r"^neck\.bottom_up_blocks\.(\d+)\.final_conv\.bn\.", r"backbone.post_csp_pan.bottom_up_blocks.\1.conv3.normalization."),
-    (r"^neck\.bottom_up_blocks\.(\d+)\.blocks\.0\.conv1\.conv\.", r"backbone.post_csp_pan.bottom_up_blocks.\1.bottlenecks.0.conv1.convolution."),
-    (r"^neck\.bottom_up_blocks\.(\d+)\.blocks\.0\.conv1\.bn\.", r"backbone.post_csp_pan.bottom_up_blocks.\1.bottlenecks.0.conv1.normalization."),
-    (r"^neck\.bottom_up_blocks\.(\d+)\.blocks\.0\.conv2\.dwconv\.", r"backbone.post_csp_pan.bottom_up_blocks.\1.bottlenecks.0.conv2.depthwise_convolution.convolution."),
-    (r"^neck\.bottom_up_blocks\.(\d+)\.blocks\.0\.conv2\.pwconv\.", r"backbone.post_csp_pan.bottom_up_blocks.\1.bottlenecks.0.conv2.pointwise_convolution.convolution."),
-    (r"^neck\.bottom_up_blocks\.(\d+)\.blocks\.0\.conv2\.bn1\.", r"backbone.post_csp_pan.bottom_up_blocks.\1.bottlenecks.0.conv2.depthwise_convolution.normalization."),
-    (r"^neck\.bottom_up_blocks\.(\d+)\.blocks\.0\.conv2\.bn2\.", r"backbone.post_csp_pan.bottom_up_blocks.\1.bottlenecks.0.conv2.pointwise_convolution.normalization."),
+    (
+        r"^neck\.bottom_up_blocks\.(\d+)\.main_conv\.conv\.",
+        r"backbone.post_csp_pan.bottom_up_blocks.\1.conv2.convolution.",
+    ),
+    (
+        r"^neck\.bottom_up_blocks\.(\d+)\.main_conv\.bn\.",
+        r"backbone.post_csp_pan.bottom_up_blocks.\1.conv2.normalization.",
+    ),
+    (
+        r"^neck\.bottom_up_blocks\.(\d+)\.short_conv\.conv\.",
+        r"backbone.post_csp_pan.bottom_up_blocks.\1.conv1.convolution.",
+    ),
+    (
+        r"^neck\.bottom_up_blocks\.(\d+)\.short_conv\.bn\.",
+        r"backbone.post_csp_pan.bottom_up_blocks.\1.conv1.normalization.",
+    ),
+    (
+        r"^neck\.bottom_up_blocks\.(\d+)\.final_conv\.conv\.",
+        r"backbone.post_csp_pan.bottom_up_blocks.\1.conv3.convolution.",
+    ),
+    (
+        r"^neck\.bottom_up_blocks\.(\d+)\.final_conv\.bn\.",
+        r"backbone.post_csp_pan.bottom_up_blocks.\1.conv3.normalization.",
+    ),
+    (
+        r"^neck\.bottom_up_blocks\.(\d+)\.blocks\.0\.conv1\.conv\.",
+        r"backbone.post_csp_pan.bottom_up_blocks.\1.bottlenecks.0.conv1.convolution.",
+    ),
+    (
+        r"^neck\.bottom_up_blocks\.(\d+)\.blocks\.0\.conv1\.bn\.",
+        r"backbone.post_csp_pan.bottom_up_blocks.\1.bottlenecks.0.conv1.normalization.",
+    ),
+    (
+        r"^neck\.bottom_up_blocks\.(\d+)\.blocks\.0\.conv2\.dwconv\.",
+        r"backbone.post_csp_pan.bottom_up_blocks.\1.bottlenecks.0.conv2.depthwise_convolution.convolution.",
+    ),
+    (
+        r"^neck\.bottom_up_blocks\.(\d+)\.blocks\.0\.conv2\.pwconv\.",
+        r"backbone.post_csp_pan.bottom_up_blocks.\1.bottlenecks.0.conv2.pointwise_convolution.convolution.",
+    ),
+    (
+        r"^neck\.bottom_up_blocks\.(\d+)\.blocks\.0\.conv2\.bn1\.",
+        r"backbone.post_csp_pan.bottom_up_blocks.\1.bottlenecks.0.conv2.depthwise_convolution.normalization.",
+    ),
+    (
+        r"^neck\.bottom_up_blocks\.(\d+)\.blocks\.0\.conv2\.bn2\.",
+        r"backbone.post_csp_pan.bottom_up_blocks.\1.bottlenecks.0.conv2.pointwise_convolution.normalization.",
+    ),
     # SLA head
     (r"^head\.structure_generator\.0\.", r"head.structure_generator.fc1."),
     (r"^head\.structure_generator\.1\.", r"head.structure_generator.fc2."),
-    (r"^head\.structure_attention_cell\.i2h\.", r"head.structure_attention_cell.input_to_hidden."),
-    (r"^head\.structure_attention_cell\.h2h\.", r"head.structure_attention_cell.hidden_to_hidden."),
+    (
+        r"^head\.structure_attention_cell\.i2h\.",
+        r"head.structure_attention_cell.input_to_hidden.",
+    ),
+    (
+        r"^head\.structure_attention_cell\.h2h\.",
+        r"head.structure_attention_cell.hidden_to_hidden.",
+    ),
 ]
 
 
@@ -935,7 +1037,10 @@ PP_FORMULANET_MAPPING = [
     (r"^head\.decoder\.model\.decoder\.", r"model.decoder."),
     (r"^head\.decoder\.lm_head\.", r"lm_head."),
     # Multi-modal projector linears (live under model.encoder in HF layout)
-    (r"^backbone\.mm_projector_vary\.", r"model.encoder.multi_modal_projector.linear_1."),
+    (
+        r"^backbone\.mm_projector_vary\.",
+        r"model.encoder.multi_modal_projector.linear_1.",
+    ),
     (r"^head\.enc_to_dec_proj\.", r"model.encoder.multi_modal_projector.linear_2."),
     # Multi-modal projector convs (paddle: vision_tower_high.net_{2,3}; HF: multi_modal_projector.conv{1,2})
     (
@@ -1065,7 +1170,10 @@ PPOCRV6_SMALL_DET_MAPPING = [
         r"model.neck.insert_conv.\1.squeeze_excitation_block.conv2.",
     ),
     # Neck: input_conv pointwise/SE (depthwise comes from .fusion)
-    (r"^neck\.inp_conv_pw\.(\d+)\.", r"model.neck.input_conv.\1.pointwise_convolution."),
+    (
+        r"^neck\.inp_conv_pw\.(\d+)\.",
+        r"model.neck.input_conv.\1.pointwise_convolution.",
+    ),
     (
         r"^neck\.inp_conv_se\.(\d+)\.conv1\.",
         r"model.neck.input_conv.\1.squeeze_excitation_module.conv1.",

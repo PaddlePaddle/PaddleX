@@ -3,7 +3,7 @@ comments: true
 ---
 
 # PaddleX Local Installation Tutorial
-> ❗Before installing PaddleX, please ensure you have a basic <b>Python environment</b> (Note: Python 3.8 through 3.13 are currently supported).
+> ❗Before installing PaddleX, please ensure you have a basic <b>Python environment</b> (Note: Python 3.9 through 3.13 are currently supported).
 
 ## 1. Quick Installation
 Welcome to PaddleX, Baidu's low-code development tool for Paddle. Before we start local installation, please clarify your development needs and choose an appropriate installation mode.

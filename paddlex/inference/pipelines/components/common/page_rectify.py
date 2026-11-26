@@ -202,7 +202,7 @@ def plan_page_correction(
     """
     roll, conf, shear, kx, ky = _unpack(warp_params)
     if not all(math.isfinite(v) for v in (roll, conf, shear, kx, ky)):
-        return None   # a broken prediction: keep the plain crops
+        return None  # a broken prediction: keep the plain crops
     if conf < conf_thresh:
         return None
     q, residual = split_roll(roll)

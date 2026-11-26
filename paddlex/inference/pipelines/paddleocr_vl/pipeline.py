@@ -17,7 +17,7 @@ import queue
 import re
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
 from functools import lru_cache
 from itertools import chain
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -30,6 +30,7 @@ from ....utils.deps import pipeline_requires_extra
 from ...common.batch_sampler import ImageBatchSampler
 from ...common.reader import ReadImage
 from ...models import HPIConfig, PaddlePredictorOption
+from ...models.predictors import GenAIClientPredictor
 from ...utils.benchmark import benchmark
 from .._parallel import AutoParallelImageSimpleInferencePipeline
 from ..base import BasePipeline
@@ -45,7 +46,6 @@ from ..layout_parsing.merge_table import merge_tables_across_pages
 from ..layout_parsing.title_level import assign_levels_to_parsing_res
 from ..layout_parsing.utils import construct_img_path, gather_imgs
 from .result import BaseResult, PaddleOCRVLBlock, PaddleOCRVLResult
-
 from .utils import (
     convert_otsl_to_html,
     crop_margin,
@@ -60,6 +60,9 @@ from .utils import (
 )
 
 IMAGE_LABELS = ["image", "header_image", "footer_image"]
+
+MAX_NUM_VLM_BATCHES_IN_FLIGHT = 16
+MAX_NUM_PAGES_PER_VLM_BATCH = 8
 
 
 def _is_uniform_image(image):
@@ -197,6 +200,12 @@ class _PaddleOCRVLPipeline(BasePipeline):
             )
 
             self.vl_rec_model = self.create_model(vl_rec_config)
+            # A remote VLM server can take the requests of several block groups
+            # at once; a local model runs them one after another.
+            # Inspect the resolved predictor so both GenAI config styles work.
+            self._vl_rec_uses_server = isinstance(
+                self.vl_rec_model, GenAIClientPredictor
+            )
             self.format_block_content = config.get("format_block_content", False)
             self.use_ocr_for_image_block = config.get("use_ocr_for_image_block", False)
 
@@ -419,25 +428,27 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 figure_token_map = {}
                 text_prompt = "OCR:"
                 if self.vl_rec_model.model_name == "MinerU2.5":
-                        text_prompt = "\nText Recognition:"
+                    text_prompt = "\nText Recognition:"
                 if self.vl_rec_model.model_name == "Dolphinv2":
-                        text_prompt = "Read text in the image."
+                    text_prompt = "Read text in the image."
                 if self.vl_rec_model.model_name == "MonkeyOCR-pro-3B":
-                        text_prompt = "Please output the text content from the image."
+                    text_prompt = "Please output the text content from the image."
                 blk_min_pixels = layout_prep_cfg["ocr_min_pixels"]
                 blk_max_pixels = layout_prep_cfg["ocr_max_pixels"]
                 drop_figures = []
                 if block_label == "table":
                     text_prompt = "Table Recognition:"
                     if self.vl_rec_model.model_name == "MinerU2.5":
-                            text_prompt = "\nTable Recognition:"
+                        text_prompt = "\nTable Recognition:"
                     if self.vl_rec_model.model_name == "Dolphinv2":
-                            text_prompt = "Parse the table in the image."
+                        text_prompt = "Parse the table in the image."
                     if self.vl_rec_model.model_name == "MonkeyOCR-pro-3B":
-                            text_prompt = "This is the image of a table. Please output the table in html format."
+                        text_prompt = "This is the image of a table. Please output the table in html format."
                     block_img, figure_token_map, drop_figures = (
                         tokenize_figure_of_table(
-                            block_img, block["box"], imgs_in_doc_for_img,
+                            block_img,
+                            block["box"],
+                            imgs_in_doc_for_img,
                             crop_matrix=block.get("crop_matrix"),
                         )
                     )
@@ -452,11 +463,11 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 elif "formula" in block_label and block_label != "formula_number":
                     text_prompt = "Formula Recognition:"
                     if self.vl_rec_model.model_name == "MinerU2.5":
-                            text_prompt = "\nFormula Recognition:"
+                        text_prompt = "\nFormula Recognition:"
                     if self.vl_rec_model.model_name == "Dolphinv2":
-                            text_prompt = "Read formula in the image."
+                        text_prompt = "Read formula in the image."
                     if self.vl_rec_model.model_name == "MonkeyOCR-pro-3B":
-                            text_prompt = "Please write out the expression of the formula in the image using LaTeX format."
+                        text_prompt = "Please write out the expression of the formula in the image using LaTeX format."
                     crop_img = crop_margin(block_img)
                     w, h, _ = crop_img.shape
                     if w > 2 and h > 2:
@@ -668,7 +679,8 @@ class _PaddleOCRVLPipeline(BasePipeline):
         # size={shortest_edge, longest_edge} 冲突并触发 400 BadRequest，
         # 故对该模型不下发像素约束，交由服务端自身 size 处理。
         forward_pixels = self.vl_rec_model.model_name != "MonkeyOCR-pro-3B"
-        for pixel_key in batch_dict_by_pixel:
+
+        def _run_pixel_group(pixel_key):
             # 表格批的 pixel_key 是三元组 (min, max, "table")，需保留特殊 token
             is_table = len(pixel_key) == 3
             min_px, max_px = pixel_key[0], pixel_key[1]
@@ -696,6 +708,14 @@ class _PaddleOCRVLPipeline(BasePipeline):
             )
             del pv_images, queries
             batch_dict_by_pixel[pixel_key]["vlm_results"] = batch_results
+
+        if self._vl_rec_uses_server and len(batch_dict_by_pixel) > 1:
+            # Otherwise the table blocks wait until the slowest text block is done.
+            with ThreadPoolExecutor(max_workers=len(batch_dict_by_pixel)) as pool:
+                list(pool.map(_run_pixel_group, batch_dict_by_pixel))
+        else:
+            for pixel_key in batch_dict_by_pixel:
+                _run_pixel_group(pixel_key)
 
     @benchmark.timeit_with_options(name="paddleocr_vl_assemble_parsing_results")
     def _paddleocr_vl_assemble_parsing_results(
@@ -1296,6 +1316,15 @@ class _PaddleOCRVLPipeline(BasePipeline):
             event_cv_processing_done = threading.Event()
             event_vlm_processing_done = threading.Event()
 
+            def _put_until_shutdown(target, item):
+                while not event_shutdown.is_set():
+                    try:
+                        target.put(item, timeout=0.5)
+                        return True
+                    except queue.Full:
+                        pass
+                return False
+
             def _worker_input(input_):
                 all_batch_data = self.batch_sampler(input_)
                 while not event_shutdown.is_set():
@@ -1304,10 +1333,10 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     except StopIteration:
                         break
                     except Exception as e:
-                        queue_input.put((False, "input", e))
+                        _put_until_shutdown(queue_input, (False, "input", e))
                         break
                     else:
-                        queue_input.put((True, batch_data))
+                        _put_until_shutdown(queue_input, (True, batch_data))
                         del batch_data
                 event_data_loading_done.set()
 
@@ -1318,11 +1347,13 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     except queue.Empty:
                         if event_data_loading_done.is_set():
                             event_cv_processing_done.set()
-                            queue_cv.put(None)  # Sentinel to wake VLM worker
+                            _put_until_shutdown(
+                                queue_cv, None
+                            )  # Sentinel to wake VLM worker
                             break
                         continue
                     if not item[0]:
-                        queue_cv.put(item)
+                        _put_until_shutdown(queue_cv, item)
                         break
                     try:
                         for results_cv in _process_cv(
@@ -1333,12 +1364,56 @@ class _PaddleOCRVLPipeline(BasePipeline):
                                 else None
                             ),
                         ):
-                            queue_cv.put((True, results_cv))
+                            _put_until_shutdown(queue_cv, (True, results_cv))
                             del results_cv
                         del item
                     except Exception as e:
-                        queue_cv.put((False, "cv", e))
+                        _put_until_shutdown(queue_cv, (False, "cv", e))
                         break
+
+            # With a VLM server, up to this many batches of pages are recognized
+            # at the same time, so a new batch does not wait for the slowest
+            # block of the previous one. Their results are still yielded in
+            # input order.
+            max_num_vlm_batches_in_flight = (
+                MAX_NUM_VLM_BATCHES_IN_FLIGHT if self._vl_rec_uses_server else 1
+            )
+            vlm_pool = (
+                ThreadPoolExecutor(max_workers=max_num_vlm_batches_in_flight)
+                if max_num_vlm_batches_in_flight > 1
+                else None
+            )
+            vlm_slots = threading.BoundedSemaphore(max_num_vlm_batches_in_flight)
+            # A batch keeps its slot until its slowest block is done, so with
+            # several batches in flight they are kept small as well.
+            max_num_vlm_batch_pages = (
+                MAX_NUM_PAGES_PER_VLM_BATCH if vlm_pool is not None else None
+            )
+
+            def _put_vlm_results(merged_results_cv):
+                if vlm_pool is None:
+                    for result_vlm in _process_vlm(merged_results_cv):
+                        _put_until_shutdown(queue_vlm, (True, result_vlm))
+                        del result_vlm
+                    return
+                while not vlm_slots.acquire(timeout=0.5):
+                    if event_shutdown.is_set():
+                        return
+                if event_shutdown.is_set():
+                    vlm_slots.release()
+                    return
+                try:
+                    future = vlm_pool.submit(
+                        lambda: list(_process_vlm(merged_results_cv))
+                    )
+                except Exception:
+                    vlm_slots.release()
+                    raise
+                # Keep a slot until the ordered consumer observes the result,
+                # bounding both in-flight work and completed-but-buffered batches.
+                if not _put_until_shutdown(queue_vlm, (True, future)):
+                    future.cancel()
+                    vlm_slots.release()
 
             def _worker_vlm():
                 MAX_QUEUE_DELAY_SECS = 0.5
@@ -1365,7 +1440,7 @@ class _PaddleOCRVLPipeline(BasePipeline):
                             cv_done = True
                             break
                         if not item[0]:
-                            queue_vlm.put(item)
+                            _put_until_shutdown(queue_vlm, item)
                             should_break = True
                             break
                         results_cv_list.append(item[1])
@@ -1374,12 +1449,19 @@ class _PaddleOCRVLPipeline(BasePipeline):
                             num_boxes += len(res["boxes"])
                         if num_boxes >= MAX_NUM_BOXES:
                             break
+                        if max_num_vlm_batch_pages is not None and (
+                            sum(len(r[5]) for r in results_cv_list)
+                            >= max_num_vlm_batch_pages
+                        ):
+                            break
                     if should_break:
                         break
                     if not results_cv_list:
                         if cv_done or event_cv_processing_done.is_set():
                             event_vlm_processing_done.set()
-                            queue_vlm.put(None)  # Sentinel to wake consumer
+                            _put_until_shutdown(
+                                queue_vlm, None
+                            )  # Sentinel to wake consumer
                             break
                         continue
 
@@ -1390,37 +1472,16 @@ class _PaddleOCRVLPipeline(BasePipeline):
                     del results_cv_list
 
                     try:
-                        for result_vlm in _process_vlm(merged_results_cv):
-                            queue_vlm.put((True, result_vlm))
-                            del result_vlm
+                        _put_vlm_results(merged_results_cv)
                         del merged_results_cv
                     except Exception as e:
-                        queue_vlm.put((False, "vlm", e))
+                        _put_until_shutdown(queue_vlm, (False, "vlm", e))
                         break
 
-                    # After processing accumulated batch, check if CV is done
+                    # CV enqueues the sentinel after its final result.
                     if cv_done:
-                        # Drain any remaining items from queue_cv
-                        while True:
-                            try:
-                                item = queue_cv.get_nowait()
-                            except queue.Empty:
-                                break
-                            if item is None or not item[0]:
-                                break
-                            results_cv_list_final = [item[1]]
-                            merged = [
-                                list(chain.from_iterable(lists))
-                                for lists in zip(*results_cv_list_final)
-                            ]
-                            try:
-                                for result_vlm in _process_vlm(merged):
-                                    queue_vlm.put((True, result_vlm))
-                            except Exception as e:
-                                queue_vlm.put((False, "vlm", e))
-                                break
                         event_vlm_processing_done.set()
-                        queue_vlm.put(None)  # Sentinel to wake consumer
+                        _put_until_shutdown(queue_vlm, None)
                         break
 
             thread_input = threading.Thread(
@@ -1448,6 +1509,17 @@ class _PaddleOCRVLPipeline(BasePipeline):
                         raise RuntimeError(
                             f"Exception from the '{item[1]}' worker: {item[2]}"
                         )
+                    elif isinstance(item[1], Future):
+                        try:
+                            results_vlm = item[1].result()
+                        except Exception as e:
+                            raise RuntimeError(
+                                f"Exception from the 'vlm' worker: {e}"
+                            ) from e
+                        finally:
+                            vlm_slots.release()
+                        yield from results_vlm
+                        del results_vlm
                     else:
                         yield item[1]
             else:
@@ -1470,6 +1542,8 @@ class _PaddleOCRVLPipeline(BasePipeline):
                 thread_vlm.join(timeout=5)
                 if thread_vlm.is_alive():
                     logging.warning("VLM worker did not terminate in time")
+                if vlm_pool is not None:
+                    vlm_pool.shutdown(wait=False, cancel_futures=True)
 
     def concatenate_markdown_pages(self, markdown_list: list) -> tuple:
         """
@@ -1643,6 +1717,7 @@ class PaddleOCRVL15Pipeline(_BasePaddleOCRVLPipeline):
 @pipeline_requires_extra("ocr")
 class PaddleOCRVL16Pipeline(_BasePaddleOCRVLPipeline):
     entities = "PaddleOCR-VL-1.6"
+
 
 @pipeline_requires_extra("ocr")
 class PaddleOCRVL18Pipeline(_BasePaddleOCRVLPipeline):

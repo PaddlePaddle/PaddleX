@@ -12,7 +12,7 @@ hide:
 
 <p align="center">
     <a href=""><img src="https://img.shields.io/badge/License-Apache%202-red.svg"></a>
-    <a href=""><img src="https://img.shields.io/badge/Python-3.8~3.13-blue.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/Python-3.9~3.13-blue.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Windows%2C%20Mac-orange.svg"></a>
     <a href=""><img src="https://img.shields.io/badge/Hardware-CPU%2C%20GPU%2C%20XPU%2C%20NPU%2C%20MLU%2C%20DCU-yellow.svg"></a>
 </p>
@@ -63,7 +63,7 @@ PaddleX 3.0 是基于飞桨框架构建的低代码开发工具，它集成了�
 ## 🛠️ 安装
 
 !!! warning
-    在安装 PaddleX 之前，请确保您已具备基本的 <b>Python 运行环境</b>（注：目前支持 <b>Python 3.8 至 Python 3.13</b>）。PaddleX 3.0-rc1 版本依赖的 PaddlePaddle 版本为 <b>3.0.0以上版本</b>。
+    在安装 PaddleX 之前，请确保您已具备基本的 <b>Python 运行环境</b>（注：目前支持 <b>Python 3.9 至 Python 3.13</b>）。PaddleX 3.0-rc1 版本依赖的 PaddlePaddle 版本为 <b>3.0.0以上版本</b>。
 
 ### 安装 PaddlePaddle
 

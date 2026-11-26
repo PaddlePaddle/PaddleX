@@ -12,26 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+import sys
+
 from ....utils import logging
-from ....utils.deps import (
-    get_dep_version,
-    is_genai_engine_plugin_available,
-    require_genai_engine_plugin,
-)
+from ....utils.deps import is_genai_engine_plugin_available, require_genai_engine_plugin
 from ..configs.utils import (
     backend_config_to_args,
     set_config_defaults,
     update_backend_config,
 )
 from ..models import ALL_MODEL_INFO, get_model_components, is_integrated_model_available
+from ._vllm_ocr_batching import (
+    OCR_BATCHED_ARCH,
+    OCR_BATCHED_IMPL,
+    VISION_ROPE_MODELS,
+    configure_vllm_ocr_vision,
+)
 
 
 def register_models():
     from vllm import ModelRegistry
 
-    vllm_version = get_dep_version("vllm")
-
     if is_genai_engine_plugin_available("vllm-server"):
+        ModelRegistry.register_model(OCR_BATCHED_ARCH, OCR_BATCHED_IMPL)
+        for arch, impl in VISION_ROPE_MODELS.items():
+            ModelRegistry.register_model(arch, impl)
         for model_name in ALL_MODEL_INFO:
             if (
                 not is_integrated_model_available(model_name, "vllm")
@@ -44,19 +50,14 @@ def register_models():
 def run_vllm_server(host, port, model_name, model_dir, config, chat_template_path):
     require_genai_engine_plugin("vllm-server")
 
-    import uvloop
-    from vllm.entrypoints.openai.api_server import (
-        FlexibleArgumentParser,
-        cli_env_setup,
-        make_arg_parser,
-        run_server,
-        validate_parsed_serve_args,
+    config = config.copy()
+    configure_vllm_ocr_vision(
+        config,
+        model_name,
+        model_dir,
+        model_name in ALL_MODEL_INFO
+        and is_integrated_model_available(model_name, "vllm"),
     )
-
-    cli_env_setup()
-    parser = FlexibleArgumentParser()
-    parser = make_arg_parser(parser)
-
     set_config_defaults(config, {"served-model-name": model_name})
 
     if chat_template_path:
@@ -73,6 +74,31 @@ def run_vllm_server(host, port, model_name, model_dir, config, chat_template_pat
 
     import torch
 
+    if model_name == "PaddleOCR-VL-1.8-0.9B" and torch.version.cuda is not None:
+        # vLLM's serve subcommand owns the API worker processes. Calling
+        # run_server() directly only starts one frontend.
+        os.execv(
+            sys.executable,
+            [
+                sys.executable,
+                "-m",
+                "vllm.entrypoints.cli.main",
+                "serve",
+                config.pop("model"),
+                *backend_config_to_args(config),
+            ],
+        )
+        return
+
+    import uvloop
+    from vllm.entrypoints.openai.api_server import (
+        FlexibleArgumentParser,
+        cli_env_setup,
+        make_arg_parser,
+        run_server,
+        validate_parsed_serve_args,
+    )
+
     if torch.version.hip is not None and torch.version.cuda is None:
         # For DCU
         if "api-server-count" in config:
@@ -81,8 +107,9 @@ def run_vllm_server(host, port, model_name, model_dir, config, chat_template_pat
             )
             config.pop("api-server-count")
 
-    args = backend_config_to_args(config)
-    args = parser.parse_args(args)
+    cli_env_setup()
+    parser = make_arg_parser(FlexibleArgumentParser())
+    args = parser.parse_args(backend_config_to_args(config))
     validate_parsed_serve_args(args)
 
     uvloop.run(run_server(args))

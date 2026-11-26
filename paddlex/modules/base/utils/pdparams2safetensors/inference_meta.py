@@ -174,6 +174,7 @@ _REC_IMAGE_SHAPE = [3, 48, 320]
 
 # Hpi (TensorRT dynamic shape) templates
 
+
 def _hpi_simple(input_name, shapes):
     """Build Hpi section with a single input (cls/det/rec/uvdoc)."""
     tds = {input_name: shapes}
