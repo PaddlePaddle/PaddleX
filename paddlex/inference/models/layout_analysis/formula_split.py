@@ -42,21 +42,19 @@ def _formula_ink(gray):
 def _estimate_char_height(stats):
     widths, heights, areas = stats[:, 2], stats[:, 3], stats[:, 4]
     chars = (heights >= 3) & (widths <= 3 * heights) & (areas >= 4)
-    if np.count_nonzero(chars) < 4:
-        return None
     ch_h = heights[chars]
     ch_w = widths[chars]
     # Exclude thin horizontal strokes (e.g. '=' bars, '-') and tiny punctuation
-    # dots when enough body glyphs exist so they do not pull char_height down.
+    # dots. A tilted stroke can otherwise pull the character height down.
     main = (ch_h >= 5) & ~((ch_w >= 2 * ch_h) & (ch_h <= 6))
-    if np.count_nonzero(main) >= 4:
-        main_h = ch_h[main]
-        p75 = float(np.percentile(main_h, 75))
-        body = main_h[main_h >= 0.4 * p75]
-        if len(body) >= 4:
-            return float(np.median(body))
-        return float(np.median(main_h))
-    return float(np.median(ch_h))
+    main_h = ch_h[main]
+    if len(main_h) < 4:
+        return None
+    p75 = float(np.percentile(main_h, 75))
+    body = main_h[main_h >= 0.4 * p75]
+    if len(body) >= 4:
+        return float(np.median(body))
+    return float(np.median(main_h))
 
 
 def _analyze_ink(gray):

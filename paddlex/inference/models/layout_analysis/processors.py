@@ -853,9 +853,8 @@ def _split_formula_boxes_with_overlap_guard(
             box["coordinate"], parent["coordinate"], mode="small"
         )
 
-    # The caller runs filter_boxes on the result later. Formulas that call
-    # would drop, or whose split rows it would drop, are kept whole so the
-    # outcome matches filtering before splitting.
+    # Leave formulas rejected by the original overlap filter intact.
+    # If deferred filtering would drop a split row, fall back to its parent box.
     keep_whole = {
         idx
         for idx, b in enumerate(boxes)

@@ -77,6 +77,24 @@ def test_shared_matrix_bracket_prevents_splitting():
     assert split_formula_boxes(image, [box]) == [box]
 
 
+def test_tilted_single_line_formula_keeps_summation_limit():
+    # MathText render of \overset{\sim}{=} \overset{n}{\sum}, rotated 12°.
+    fixture = Path(__file__).parent / "assets" / "formula_tilted_single_line.png"
+    image = cv2.imread(str(fixture), cv2.IMREAD_GRAYSCALE)
+    assert image is not None
+    height, width = image.shape
+    right, bottom = width - 1, height - 1
+    box = dict(
+        label="display_formula",
+        cls_id=0,
+        score=0.9,
+        coordinate=[0, 0, right, bottom],
+        quad=[[0, 0], [right, 0], [right, bottom], [0, bottom]],
+    )
+
+    assert split_formula_boxes(image, [box]) == [box]
+
+
 def test_fraction_and_detached_limit_are_not_split():
     image = np.full((150, 320, 3), 255, np.uint8)
     cv2.putText(image, "x + 123", (60, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2)
@@ -979,6 +997,42 @@ def test_deferred_overlap_filter_does_not_drop_split_formula_rows():
     assert all(b["label"] == "display_formula" for b in after_pipeline_filter)
 
 
+def test_deferred_overlap_filter_keeps_parent_when_a_split_row_would_be_lost():
+    from paddlex.inference.models.layout_analysis.processors import filter_boxes
+
+    page, parent = _page()
+    image = cv2.copyMakeBorder(
+        page, 0, 120, 0, 0, cv2.BORDER_CONSTANT, value=(255, 255, 255)
+    )
+    # The text box survives alongside the parent, but would cover the last row.
+    raw = dict(
+        boxes=np.float32(
+            [[0, parent["score"], *parent["coordinate"]], [1, 0.8, 20, 130, 340, 320]]
+        ),
+        quad=np.float32(
+            [parent["quad"], [[20, 130], [340, 130], [340, 320], [20, 320]]]
+        ).reshape(-1, 8),
+    )
+    post = LayoutAnalysisProcess(
+        labels=["display_formula", "text"], scale_size=[800, 800]
+    )
+    h, w = image.shape[:2]
+    deferred = post(
+        [raw],
+        [dict(ori_img_size=(w, h), ori_img=image)],
+        threshold=0.3,
+        layout_shape_mode="auto",
+        filter_overlap_boxes=False,
+        layout_split_formula=True,
+    )[0]
+
+    kept = filter_boxes(deferred, "auto")
+    assert [(box["label"], box["coordinate"]) for box in kept] == [
+        ("display_formula", parent["coordinate"]),
+        ("text", [20, 130, 340, 320]),
+    ]
+
+
 def test_layout_split_formula_only_enabled_for_pp_doclayout_v4():
     from types import SimpleNamespace
 
@@ -1018,6 +1072,98 @@ def test_runner_predictor_layout_split_formula_falls_back_to_config():
     assert resolve(None, True) is True
     assert resolve(False, True) is False
     assert resolve(True, False) is True
+
+
+@pytest.mark.parametrize(
+    "init_value,model_config,expected",
+    [
+        (None, {}, False),
+        (None, {"layout_split_formula": True}, True),
+        (False, {"layout_split_formula": True}, False),
+        (True, {"layout_split_formula": False}, True),
+    ],
+)
+def test_transformers_predictor_layout_split_formula_falls_back_to_config(
+    monkeypatch, init_value, model_config, expected
+):
+    from paddlex.inference.models.layout_analysis.predictor import (
+        LayoutAnalysisTransformersPredictor,
+    )
+    from paddlex.inference.models.object_detection.predictor import (
+        DetTransformersPredictor,
+    )
+
+    def init_without_weights(predictor):
+        predictor._model_config = model_config
+        predictor.labels = ["display_formula"]
+
+    monkeypatch.setattr(DetTransformersPredictor, "__init__", init_without_weights)
+    predictor = LayoutAnalysisTransformersPredictor(layout_split_formula=init_value)
+
+    assert predictor.layout_split_formula is expected
+
+
+@pytest.mark.parametrize(
+    "call_value,pipeline_value,layout_value,expected_call",
+    [
+        (False, True, True, False),
+        (True, False, False, True),
+        (None, False, True, False),
+        (None, True, False, True),
+        (None, None, True, None),
+        (None, None, False, None),
+        (None, None, None, None),
+    ],
+)
+def test_pipeline_layout_split_formula_config_precedence(
+    monkeypatch, call_value, pipeline_value, layout_value, expected_call
+):
+    from paddlex.inference.pipelines.paddleocr_vl.pipeline import _PaddleOCRVLPipeline
+
+    layout_init_kwargs = []
+    layout_call_kwargs = []
+
+    def predict_layout(images, **kwargs):
+        layout_call_kwargs.append(kwargs)
+        return [{"boxes": []} for _ in images]
+
+    def create_model(self, config, **kwargs):
+        if config["model_name"] == "PP-DocLayoutV4":
+            layout_init_kwargs.append(kwargs)
+            return predict_layout
+        return None
+
+    monkeypatch.setattr(_PaddleOCRVLPipeline, "create_model", create_model)
+    monkeypatch.setattr(
+        _PaddleOCRVLPipeline,
+        "get_layout_parsing_results",
+        lambda self, **kwargs: ([[]], [[]], [None], [[]]),
+    )
+    config = {
+        "use_doc_preprocessor": False,
+        "layout_split_formula": pipeline_value,
+        "SubModules": {
+            "LayoutDetection": {
+                "model_name": "PP-DocLayoutV4",
+                "layout_split_formula": layout_value,
+            },
+            "VLRecognition": {"model_name": "PaddleOCR-VL-1.8"},
+        },
+    }
+    pipeline = _PaddleOCRVLPipeline(config)
+    image, _ = _page()
+    results = list(pipeline.predict(image, layout_split_formula=call_value))
+
+    assert len(results) == 1
+    assert len(layout_init_kwargs) == len(layout_call_kwargs) == 1
+    if layout_value is None:
+        assert "layout_split_formula" not in layout_init_kwargs[0]
+    else:
+        assert layout_init_kwargs[0]["layout_split_formula"] is layout_value
+    if expected_call is None:
+        assert "layout_split_formula" not in layout_call_kwargs[0]
+    else:
+        assert layout_call_kwargs[0]["layout_split_formula"] is expected_call
 
 
 def test_serving_schema_cli_and_predictor_expose_layout_split_formula():
