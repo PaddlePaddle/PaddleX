@@ -21,6 +21,7 @@ from ....utils import logging
 from ....utils.deps import function_requires_deps, is_dep_available
 from ...utils.benchmark import benchmark
 from ..object_detection.processors import check_containment, nms
+from .formula_split import split_formula_boxes
 from .utils import compute_reading_order
 
 if is_dep_available("opencv-contrib-python"):
@@ -45,6 +46,11 @@ SKIP_ORDER_LABELS = [
     "footnote",
     "aside_text",
 ]
+
+# Small-box overlap ratios above which filter_boxes drops a box. Shared with
+# _split_formula_boxes_with_overlap_guard so both apply the same policy.
+INLINE_FORMULA_OVERLAP_THRESH = 0.5
+BLOCK_OVERLAP_THRESH = 0.7
 
 
 def is_convex(p_prev, p_curr, p_next):
@@ -438,6 +444,25 @@ def restructured_boxes(
     return box_list
 
 
+def _normalize_unclip_ratio(layout_unclip_ratio):
+    """Validate ``layout_unclip_ratio`` and expand a float to a (w, h) tuple."""
+    if isinstance(layout_unclip_ratio, float):
+        return (layout_unclip_ratio, layout_unclip_ratio)
+    if isinstance(layout_unclip_ratio, (tuple, list)):
+        if len(layout_unclip_ratio) != 2:
+            raise ValueError(
+                "The length of `layout_unclip_ratio` should be 2, "
+                f"but got {len(layout_unclip_ratio)}."
+            )
+        return layout_unclip_ratio
+    if isinstance(layout_unclip_ratio, dict):
+        return layout_unclip_ratio
+    raise ValueError(
+        "The type of `layout_unclip_ratio` must be float, Tuple[float, float] or "
+        f"Dict[int, Tuple[float, float]], but got {type(layout_unclip_ratio)}."
+    )
+
+
 def unclip_boxes(boxes, unclip_ratio=None):
     """
     Expand bounding boxes from (x1, y1, x2, y2) format using an unclipping ratio.
@@ -758,13 +783,13 @@ def filter_boxes(
                 boxes[i]["label"] == "inline_formula"
                 or boxes[j]["label"] == "inline_formula"
             ):
-                if overlap_ratio > 0.5:
+                if overlap_ratio > INLINE_FORMULA_OVERLAP_THRESH:
                     if boxes[i]["label"] == "inline_formula":
                         dropped_indexes.add(i)
                     if boxes[j]["label"] == "inline_formula":
                         dropped_indexes.add(j)
                     continue
-            if overlap_ratio > 0.7:
+            if overlap_ratio > BLOCK_OVERLAP_THRESH:
                 if layout_shape_mode != "rect" and "polygon_points" in boxes[i]:
                     poly_overlap_ratio = calculate_polygon_overlap_ratio(
                         boxes[i]["polygon_points"], boxes[j]["polygon_points"], "small"
@@ -786,6 +811,94 @@ def filter_boxes(
                     dropped_indexes.add(i)
     out_boxes = [box for idx, box in enumerate(boxes) if idx not in dropped_indexes]
     return out_boxes
+
+
+def _split_formula_boxes_with_overlap_guard(
+    image,
+    boxes: List[dict],
+    formula_candidates: Optional[List[dict]],
+    layout_shape_mode: Optional[str],
+    already_filtered: bool,
+) -> List[dict]:
+    """Split display formulas while preserving overlap priority when callers
+    defer ``filter_boxes`` until later (e.g. PaddleOCR-VL).
+    """
+    if already_filtered or len(boxes) == 0:
+        return split_formula_boxes(image, boxes, formula_candidates)
+    if not any(box["label"] == "display_formula" for box in boxes):
+        return boxes
+
+    kept_ids = {id(b) for b in filter_boxes(boxes, layout_shape_mode)}
+    orig_ids = {id(b) for b in boxes}
+    preserved_labels = {
+        "reference",
+        "image",
+        "chart",
+        "seal",
+    }
+
+    def _overlap_ratio_small(box, parent):
+        if (
+            "quad" in box
+            and "quad" in parent
+            and quad_area(np.asarray(box["quad"])) > 0
+            and quad_area(np.asarray(parent["quad"])) > 0
+        ):
+            return calculate_polygon_overlap_ratio(
+                box["quad"], parent["quad"], mode="small"
+            )
+        if "coordinate" not in box or "coordinate" not in parent:
+            return 0.0
+        return calculate_overlap_ratio(
+            box["coordinate"], parent["coordinate"], mode="small"
+        )
+
+    # Leave formulas rejected by the original overlap filter intact.
+    # If deferred filtering would drop a split row, fall back to its parent box.
+    keep_whole = {
+        idx
+        for idx, b in enumerate(boxes)
+        if b["label"] == "display_formula" and id(b) not in kept_ids
+    }
+    while True:
+        split_result = split_formula_boxes(
+            image, boxes, formula_candidates, keep_whole=keep_whole
+        )
+        result_ids = {id(b) for b in split_result}
+        split_any = [
+            (idx, b)
+            for idx, b in enumerate(boxes)
+            if b["label"] == "display_formula" and id(b) not in result_ids
+        ]
+        if not split_any:
+            return split_result
+        split_parents = [b for _, b in split_any]
+
+        shadowed_ids = set()
+        for b in boxes:
+            if id(b) in kept_ids or b["label"] in preserved_labels:
+                continue
+            thresh = (
+                INLINE_FORMULA_OVERLAP_THRESH
+                if b["label"] == "inline_formula"
+                else BLOCK_OVERLAP_THRESH
+            )
+            for parent in split_parents:
+                if _overlap_ratio_small(b, parent) > thresh:
+                    shadowed_ids.add(id(b))
+                    break
+        result = [b for b in split_result if id(b) not in shadowed_ids]
+
+        survivors = {id(b) for b in filter_boxes(result, layout_shape_mode)}
+        lost_parents = {
+            max(split_any, key=lambda item: _overlap_ratio_small(b, item[1]))[0]
+            for b in result
+            if id(b) not in orig_ids and id(b) not in survivors
+        }
+        lost_parents -= keep_whole
+        if not lost_parents:
+            return result
+        keep_whole |= lost_parents
 
 
 def update_order_index(boxes: List[Dict], skip_order_labels: List[str]):
@@ -865,6 +978,7 @@ class LayoutAnalysisProcess:
         qi: Optional[ndarray] = None,
         rel_logits: Optional[ndarray] = None,
         roor_logits: Optional[ndarray] = None,
+        formula_candidates: Optional[List[dict]] = None,
     ) -> Boxes:
         """Apply post-processing to the detection boxes.
 
@@ -876,6 +990,8 @@ class LayoutAnalysisProcess:
             qi (ndarray, optional): The query index [N] of each box, for models
                 whose reading order is decoded here from the pairwise
                 ``rel_logits`` and ``roor_logits`` [Q, Q].
+            formula_candidates (list, optional): Output accumulator for formula
+                candidates after threshold/NMS and before containment filtering.
 
         Returns:
             Boxes: The post-processed detection boxes.
@@ -955,6 +1071,31 @@ class LayoutAnalysisProcess:
             if not is_large.all():
                 boxes, keep = boxes[~is_large], keep[~is_large]
 
+        # Save row candidates before a "large" policy suppresses them.
+        # Restrict this path to detectors without mask or polygon output; those
+        # need their own geometry extraction and keep using the image splitter.
+        if (
+            formula_candidates is not None
+            and masks is None
+            and polygon_points is None
+            and "display_formula" in self.labels
+        ):
+            formula_mask = boxes[:, 0] == self.labels.index("display_formula")
+            if np.any(formula_mask):
+                cand_boxes = boxes[formula_mask, :6]
+                if layout_unclip_ratio:
+                    cand_boxes = unclip_boxes(
+                        cand_boxes, _normalize_unclip_ratio(layout_unclip_ratio)
+                    )
+                formula_candidates.extend(
+                    restructured_boxes(
+                        cand_boxes,
+                        self.labels,
+                        img_size,
+                        quad=quad[keep[formula_mask]] if quad is not None else None,
+                    )
+                )
+
         if layout_merge_bboxes_mode:
             formula_index = (
                 self.labels.index("formula") if "formula" in self.labels else None
@@ -1021,18 +1162,7 @@ class LayoutAnalysisProcess:
             )
 
         if layout_unclip_ratio:
-            if isinstance(layout_unclip_ratio, float):
-                layout_unclip_ratio = (layout_unclip_ratio, layout_unclip_ratio)
-            elif isinstance(layout_unclip_ratio, (tuple, list)):
-                assert (
-                    len(layout_unclip_ratio) == 2
-                ), f"The length of `layout_unclip_ratio` should be 2."
-            elif isinstance(layout_unclip_ratio, dict):
-                pass
-            else:
-                raise ValueError(
-                    f"The type of `layout_unclip_ratio` must be float, Tuple[float, float] or Dict[int, Tuple[float, float]], but got {type(layout_unclip_ratio)}."
-                )
+            layout_unclip_ratio = _normalize_unclip_ratio(layout_unclip_ratio)
             boxes = unclip_boxes(boxes, layout_unclip_ratio)
 
         if boxes.shape[1] == 6:
@@ -1058,12 +1188,15 @@ class LayoutAnalysisProcess:
         layout_shape_mode: Optional[str] = None,
         filter_overlap_boxes: Optional[bool] = None,
         skip_order_labels: Optional[List[str]] = None,
+        layout_split_formula: bool = False,
     ) -> List[Boxes]:
         """Apply the post-processing to a batch of outputs.
 
         Args:
             batch_outputs (List[dict]): The list of detection outputs.
             datas (List[dict]): The list of input data.
+            layout_split_formula (bool): Conservatively split displayed formulas
+                into separated ink rows using the original image. Defaults to False.
 
         Returns:
             List[Boxes]: The list of post-processed detection boxes.
@@ -1089,6 +1222,7 @@ class LayoutAnalysisProcess:
                     )
                 masks = None
                 polygon_points = None
+            formula_candidates = [] if layout_split_formula else None
             boxes = self.apply(
                 output["boxes"],
                 data["ori_img_size"],
@@ -1103,9 +1237,18 @@ class LayoutAnalysisProcess:
                 qi=output.get("qi"),
                 rel_logits=output.get("rel_logits"),
                 roor_logits=output.get("roor_logits"),
+                formula_candidates=formula_candidates,
             )
             if filter_overlap_boxes:
                 boxes = filter_boxes(boxes, current_layout_shape_mode)
+            if layout_split_formula:
+                boxes = _split_formula_boxes_with_overlap_guard(
+                    data["ori_img"],
+                    boxes,
+                    formula_candidates,
+                    current_layout_shape_mode,
+                    already_filtered=bool(filter_overlap_boxes),
+                )
             skip_order_labels = (
                 skip_order_labels
                 if skip_order_labels is not None

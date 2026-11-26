@@ -140,6 +140,11 @@ The following table lists the PaddleOCR-VL series pipeline prediction parameters
 <td><code>str|dict</code></td>
 </tr>
 <tr>
+<td><code>layout_split_formula</code></td>
+<td>Use <code>--layout_split_formula True</code> to split multi-line formulas with clear gaps between rows before recognition. Requires PP-DocLayoutV4 as the layout model.</td>
+<td><code>bool</code></td>
+</tr>
+<tr>
 <td><code>use_queues</code></td>
 <td>Whether to enable internal queues. When enabled, PDF rendering, layout analysis, and VLM inference can run asynchronously in separate threads.</td>
 <td><code>bool</code></td>
@@ -381,6 +386,12 @@ In PaddleX, use `create_pipeline()` to create a PaddleOCR-VL series pipeline obj
 <td><code>layout_merge_bboxes_mode</code></td>
 <td>The parameter meaning is basically the same as the instantiation parameter. Setting it to <code>None</code> means using the instantiation parameter; otherwise, this parameter takes precedence.</td>
 <td><code>str|dict|None</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>layout_split_formula</code></td>
+<td>Try to split <code>display_formula</code> regions into single-line boxes before recognition. Requires PP-DocLayoutV4 as the layout model. The prediction argument takes precedence, followed by top-level <code>layout_split_formula</code> in the pipeline YAML, <code>SubModules.LayoutDetection.layout_split_formula</code>, and the model config. The option is off if none of these provides a value. An explicit <code>False</code> overrides <code>True</code> from the config.<br/>For tilted formulas, <code>rect</code> crops can include strokes from an adjacent row. Use <code>auto</code> to let the pipeline crop along quadrilaterals when available.</td>
+<td><code>bool|None</code></td>
 <td><code>None</code></td>
 </tr>
 <tr>
@@ -1162,6 +1173,12 @@ By default, there is no page limit. To set a page limit on the server, set <code
 <td><code>layoutShapeMode</code></td>
 <td><code>string</code></td>
 <td>Please refer to the description of the <code>layout_shape_mode</code> parameter in the pipeline <code>predict</code> method.</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>layoutSplitFormula</code></td>
+<td><code>boolean</code>|<code>null</code></td>
+<td>See <code>layout_split_formula</code> in the pipeline <code>predict</code> method. Omit the field or pass <code>null</code> to use the configured value.</td>
 <td>No</td>
 </tr>
 <tr>

@@ -17,6 +17,7 @@ from typing import Any, List, Optional, Sequence, Tuple, Union
 import numpy as np
 from PIL import Image
 
+from ....utils import logging
 from ..object_detection.predictor import DetRunnerPredictor, DetTransformersPredictor
 from ..object_detection.processors import Resize, ToBatch
 from .processors import LayoutAnalysisProcess
@@ -28,6 +29,23 @@ LAYOUT_ANALYSIS_TRANSFORMERS_MODELS = [
     "PP-DocLayoutV3",
     "PP-DocLayoutV4",
 ]
+
+SPLIT_FORMULA_MODELS = ["PP-DocLayoutV4"]
+
+
+def _resolve_layout_split_formula(predictor, layout_split_formula):
+    """Return whether to split formulas; only PP-DocLayoutV4 supports it."""
+    if not layout_split_formula:
+        return False
+    if predictor.model_name in SPLIT_FORMULA_MODELS:
+        return True
+    if not getattr(predictor, "_split_formula_warned", False):
+        logging.warning(
+            f"`layout_split_formula` is only supported by {SPLIT_FORMULA_MODELS} "
+            f"and is ignored for {predictor.model_name}."
+        )
+        predictor._split_formula_warned = True
+    return False
 
 
 def _split_quad(bbox_pred):
@@ -54,6 +72,7 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
         self,
         *args,
         img_size: Optional[Union[int, Tuple[int, int]]] = None,
+        layout_split_formula: Optional[bool] = None,
         **kwargs,
     ):
         """Initializes LayoutAnalysisPredictor.
@@ -69,6 +88,9 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
                 If it's a tuple of two numbers, then they are used separately for width and height respectively.
                 If it's None, then no unclipping will be performed.
             layout_merge_bboxes_mode (Optional[Union[str, dict]], optional): The mode for merging bounding boxes. Defaults to None.
+            layout_split_formula (Optional[bool], optional): Whether to conservatively split clearly separated
+                display-formula rows. Only PP-DocLayoutV4 supports it; other models ignore it with a
+                warning. Defaults to None.
             **kwargs: Arbitrary keyword arguments passed to the superclass.
         """
         if img_size is not None:
@@ -83,6 +105,7 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
                 raise ValueError(
                     f"The type of `img_size` must be int or Tuple[int, int], but got {type(img_size)}."
                 )
+        self.layout_split_formula = layout_split_formula
         super().__init__(*args, **kwargs)
 
     def _get_result_class(self):
@@ -177,6 +200,7 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
         layout_shape_mode: Optional[str] = "auto",
         filter_overlap_boxes: Optional[bool] = True,
         skip_order_labels: Optional[List[str]] = None,
+        layout_split_formula: Optional[bool] = None,
     ):
         """
         Process a batch of data through the preprocessing, inference, and postprocessing.
@@ -190,6 +214,9 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
             layout_shape_mode (Optional[str], optional): The mode for layout shape. Defaults to "auto", [ "rect", "quad","poly", "auto"]. are supported.
             filter_overlap_boxes (Optional[bool], optional): Whether to filter out overlap boxes. Defaults to True.
             skip_order_labels (Optional[List[str]], optional): The labels to skip order. Defaults to None.
+            layout_split_formula (Optional[bool]): Split clearly separated display-formula rows.
+                Only PP-DocLayoutV4 supports it; other models ignore it with a warning.
+                Defaults to None (falls back to init/config, False).
 
         Returns:
             dict: A dictionary containing the input path, raw image, class IDs, scores, and label names
@@ -220,6 +247,14 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
             layout_shape_mode=layout_shape_mode,
             filter_overlap_boxes=filter_overlap_boxes,
             skip_order_labels=skip_order_labels,
+            layout_split_formula=_resolve_layout_split_formula(
+                self,
+                (
+                    self.layout_split_formula
+                    if layout_split_formula is None
+                    else layout_split_formula
+                ),
+            ),
         )
 
         result = {
@@ -279,6 +314,8 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
             self.layout_merge_bboxes_mode = self.config.get(
                 "layout_merge_bboxes_mode", None
             )
+        if self.layout_split_formula is None:
+            self.layout_split_formula = self.config.get("layout_split_formula", False)
         scale_size = getattr(self, "target_size", [800, 800])
         return LayoutAnalysisProcess(
             labels=self.config["label_list"], scale_size=scale_size
@@ -288,8 +325,13 @@ class LayoutAnalysisRunnerPredictor(DetRunnerPredictor):
 class LayoutAnalysisTransformersPredictor(DetTransformersPredictor):
     """Layout analysis predictor backed by HuggingFace transformers."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, layout_split_formula: Optional[bool] = None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.layout_split_formula = (
+            self.model_config.get("layout_split_formula", False)
+            if layout_split_formula is None
+            else layout_split_formula
+        )
         self.layout_postprocess = LayoutAnalysisProcess(
             labels=self.labels,
             scale_size=self._resolve_scale_size(),
@@ -367,6 +409,7 @@ class LayoutAnalysisTransformersPredictor(DetTransformersPredictor):
         layout_shape_mode: Optional[str] = "auto",
         filter_overlap_boxes: Optional[bool] = True,
         skip_order_labels: Optional[List[str]] = None,
+        layout_split_formula: Optional[bool] = None,
     ):
         if not hasattr(self.image_processor, "post_process_object_detection"):
             raise RuntimeError(
@@ -397,6 +440,14 @@ class LayoutAnalysisTransformersPredictor(DetTransformersPredictor):
             layout_shape_mode=layout_shape_mode,
             filter_overlap_boxes=filter_overlap_boxes,
             skip_order_labels=skip_order_labels,
+            layout_split_formula=_resolve_layout_split_formula(
+                self,
+                (
+                    self.layout_split_formula
+                    if layout_split_formula is None
+                    else layout_split_formula
+                ),
+            ),
         )
 
         result = {

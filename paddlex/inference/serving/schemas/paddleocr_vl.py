@@ -55,6 +55,7 @@ class InferRequest(OutputFormatsMixin, ocr.BaseInferRequest):
     layoutUnclipRatio: Optional[Union[float, Tuple[float, float], dict]] = None
     layoutMergeBboxesMode: Optional[Union[str, dict]] = None
     layoutShapeMode: Literal["rect", "quad", "poly", "auto"] = "auto"
+    layoutSplitFormula: Optional[bool] = None
     promptLabel: Optional[str] = None
     formatBlockContent: Optional[bool] = None
     repetitionPenalty: Optional[float] = None
