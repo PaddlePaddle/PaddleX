@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import ast
 import math
 from typing import Union
 
@@ -25,6 +26,51 @@ if is_dep_available("opencv-contrib-python"):
     import cv2
 if is_dep_available("pyclipper"):
     import pyclipper
+
+
+def _parse_scale(scale: str) -> float:
+    """解析缩放因子的数值表达式，禁止执行任意 Python 代码。"""
+
+    try:
+        expression = ast.parse(scale, mode="eval").body
+    except SyntaxError as exc:
+        raise ValueError(
+            "`scale` must be a finite number or arithmetic expression"
+        ) from exc
+
+    def _evaluate(node):
+        if isinstance(node, ast.Constant) and type(node.value) in (int, float):
+            return node.value
+
+        if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.UAdd, ast.USub)):
+            value = _evaluate(node.operand)
+            return value if isinstance(node.op, ast.UAdd) else -value
+
+        if isinstance(node, ast.BinOp) and isinstance(
+            node.op, (ast.Add, ast.Sub, ast.Mult, ast.Div)
+        ):
+            left = _evaluate(node.left)
+            right = _evaluate(node.right)
+            if isinstance(node.op, ast.Add):
+                return left + right
+            if isinstance(node.op, ast.Sub):
+                return left - right
+            if isinstance(node.op, ast.Mult):
+                return left * right
+            return left / right
+
+        raise ValueError("`scale` must be a finite number or arithmetic expression")
+
+    try:
+        value = float(_evaluate(expression))
+    except (ArithmeticError, OverflowError, ValueError) as exc:
+        raise ValueError(
+            "`scale` must be a finite number or arithmetic expression"
+        ) from exc
+
+    if not math.isfinite(value):
+        raise ValueError("`scale` must be a finite number or arithmetic expression")
+    return value
 
 
 @benchmark.timeit
@@ -239,7 +285,7 @@ class NormalizeImage:
     def __init__(self, scale=None, mean=None, std=None, order="chw"):
         super().__init__()
         if isinstance(scale, str):
-            scale = eval(scale)
+            scale = _parse_scale(scale)
         self.order = order
 
         scale = scale if scale is not None else 1.0 / 255.0
