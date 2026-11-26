@@ -177,4 +177,3 @@ cython_debug/
 
 output/*
 outputs/*
-output_benchmark_ro/*
