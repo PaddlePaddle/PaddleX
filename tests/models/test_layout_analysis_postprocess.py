@@ -321,7 +321,25 @@ def test_paddle_masks_keep_precedence_over_decoded_polygons():
 
 @pytest.mark.parametrize("model_name", ["PP-DocLayoutV3", "PP-DocLayoutV4"])
 @pytest.mark.parametrize("threshold", [0.5, {0: 0.5}])
-def test_empty_transformers_geometry(model_name, threshold):
-    output = _adapt(model_name, np.empty((0, 4)), np.empty((0, 4, 2)), [])
+@pytest.mark.parametrize("box_count", [0, 1])
+def test_empty_transformers_geometry(model_name, threshold, box_count, monkeypatch):
+    def fail_nms(*args, **kwargs):
+        pytest.fail("NMS must be skipped when no boxes pass the score threshold")
+
+    monkeypatch.setattr(
+        "paddlex.inference.models.layout_analysis.processors.nms", fail_nms
+    )
+    monkeypatch.setattr(
+        "paddlex.inference.models.layout_analysis.processors.nms_quad", fail_nms
+    )
+    output = _adapt(
+        model_name,
+        np.tile([[10, 10, 30, 30]], (box_count, 1)),
+        np.tile([[[10, 10], [30, 10], [30, 30], [10, 30]]], (box_count, 1, 1)),
+        np.arange(box_count),
+    )
+    output["boxes"][:, 1] = 0.2
+
     result = _postprocess(output, threshold=threshold, layout_nms=True)
-    assert len(result) == 0
+
+    assert result == []

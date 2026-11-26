@@ -1027,6 +1027,8 @@ class LayoutAnalysisProcess:
                 if cat_id > -1
             ]
             keep = np.concatenate(keep) if keep else np.array([], dtype=np.int64)
+        if len(keep) == 0:
+            return []
         boxes = boxes[keep]
 
         quad_geometry = geometry_rows = None
