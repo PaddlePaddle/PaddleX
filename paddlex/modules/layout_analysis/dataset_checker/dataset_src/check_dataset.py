@@ -72,8 +72,7 @@ def check(dataset_dir, output, sample_num=10, require_segmentation=True):
 
     Args:
         require_segmentation (bool): reject annotations without a usable
-            `segmentation` field. True for mask models (PP-DocLayoutV3); False
-            for quad models (PP-DocLayoutV4), which carry no masks at all.
+            `segmentation` field. Enabled for PP-DocLayoutV3 instance masks.
     """
     from pycocotools.coco import COCO
 
@@ -118,8 +117,7 @@ def check(dataset_dir, output, sample_num=10, require_segmentation=True):
                 raise CheckFailedError(
                     f"{len(missing)} annotation(s) in {tag}.json have no usable "
                     f"`segmentation` field (first ids: {missing[:10]}). This model "
-                    f"predicts instance masks, so every annotation needs one. Use "
-                    f"a quad model such as PP-DocLayoutV4 for mask-free datasets."
+                    f"predicts instance masks, so every annotation needs one."
                 )
 
         valid_count = 0

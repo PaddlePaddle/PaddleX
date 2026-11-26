@@ -22,12 +22,7 @@ from .dataset_src import check, deep_analyse, split_dataset
 
 
 class LayoutAnalysisDatasetChecker(BaseDatasetChecker):
-    """Dataset Checker for Layout Analysis Models (PP-DocLayoutV3 / PP-DocLayoutV4)
-
-    Both models expect COCO annotations with an extra 'read_order' field.
-    PP-DocLayoutV3 additionally needs 'segmentation' (it predicts instance
-    masks); PP-DocLayoutV4 predicts quads and needs no 'segmentation'.
-    """
+    """Check PP-DocLayoutV3 COCO annotations for segmentation and reading order."""
 
     entities = MODELS
     sample_num = 10

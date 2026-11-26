@@ -13,7 +13,4 @@
 # limitations under the License.
 
 
-MODELS = [
-    "PP-DocLayoutV3",
-    "PP-DocLayoutV4",
-]
+MODELS = ["PP-DocLayoutV3"]

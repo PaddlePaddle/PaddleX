@@ -15,9 +15,7 @@
 """Per-model dataset wiring for the layout analysis module.
 
 PP-DocLayoutV3 predicts instance masks, so it trains on ``COCOInstSegDataset``
-and needs ``gt_poly``. PP-DocLayoutV4 predicts 4-point quads instead of masks,
-so it trains on ``COCODetDataset`` and needs ``gt_quad``. Both need
-``gt_read_order`` for the reading-order branch.
+and needs ``gt_poly`` and ``gt_read_order``.
 """
 
 DATASET_SPECS = {
@@ -29,21 +27,6 @@ DATASET_SPECS = {
             "gt_bbox",
             "gt_class",
             "gt_poly",
-            "is_crowd",
-            "gt_read_order",
-        ],
-    },
-    "PP-DocLayoutV4": {
-        "dataset_type": "COCODetDataset",
-        # V4 needs no `segmentation`: it regresses quads, and `gt_quad` is
-        # synthesized from the axis-aligned COCO `bbox` by COCODetDataset --
-        # non-rectangular quads only ever come from RandomPerspectiveQuad.
-        "requires_segmentation": False,
-        "data_fields": [
-            "image",
-            "gt_bbox",
-            "gt_quad",
-            "gt_class",
             "is_crowd",
             "gt_read_order",
         ],

@@ -1,7 +1,6 @@
 Global:
   model: PP-DocLayoutV4
   mode: predict # only support predict
-  dataset_dir: "./dataset/doclayoutv4_examples"
   device: gpu:0
   output: "output"
 
