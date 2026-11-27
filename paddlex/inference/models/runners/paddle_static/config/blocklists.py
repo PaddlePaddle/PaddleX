@@ -11,9 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Model blocklists for TRT, MKLDNN, New IR."""
-
 TRT_BLOCKLIST = [
     "TimesNet_cls",
     "TimesNet",
@@ -42,7 +40,6 @@ TRT_BLOCKLIST = [
     "CenterNet-DLA-34",
     "CenterNet-ResNet50",
 ]
-
 MKLDNN_BLOCKLIST = [
     "LaTeX_OCR_rec",
     "PP-FormulaNet-L",
@@ -89,8 +86,11 @@ MKLDNN_BLOCKLIST = [
     "PP-FormulaNet_plus-S",
     "PP-DocLayoutV2",
     "PP-DocLayoutV3",
+    "PP-DocLayout-L",
+    "PP-DocLayout-M",
+    "PP-DocLayout-S",
+    "PP-DocLayout_plus-L",
 ]
-
 NEWIR_BLOCKLIST = [
     "PP-YOLOE_seg-S",
     "PatchTST_ad",
