@@ -556,7 +556,7 @@ def _write_block(
                 for r in content.split("\n")
                 if r.strip()
             ]
-        if rows:
+        if any(rows):
             # Insert spacer paragraph for spacing before table
             if space_before_emu is not None and space_before_emu > 0:
                 spacer = doc.add_paragraph()
