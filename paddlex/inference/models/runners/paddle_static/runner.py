@@ -21,7 +21,6 @@ from typing import Any, Dict, List, Optional, Sequence, Union
 import numpy as np
 from pydantic import BaseModel, ConfigDict
 
-from paddlex.inference.models.runners.utils import sort_inputs
 from paddlex.inference.models.utils.model_paths import get_model_paths
 from paddlex.utils import logging
 from paddlex.utils.deps import class_requires_deps
@@ -245,9 +244,11 @@ def _convert_trt(
 class PaddleRunnerChainLegacy:
     """Legacy Paddle Inference chain wrapper."""
 
-    def __init__(self, predictor):
+    def __init__(self, predictor, *, sort_inputs_by_name=False):
         self.predictor = predictor
         input_names = self.predictor.get_input_names()
+        if sort_inputs_by_name:
+            input_names = sorted(input_names)
         self.input_handles = []
         self.output_handles = []
         for input_name in input_names:
@@ -258,13 +259,18 @@ class PaddleRunnerChainLegacy:
             output_handle = self.predictor.get_output_handle(output_name)
             self.output_handles.append(output_handle)
 
-    def __call__(self, x):
+    def copy_inputs(self, x):
         for input_, input_handle in zip(x, self.input_handles):
             input_handle.reshape(input_.shape)
             input_handle.copy_from_cpu(input_)
+
+    def copy_outputs(self):
+        return [o.copy_to_cpu() for o in self.output_handles]
+
+    def __call__(self, x):
+        self.copy_inputs(x)
         self.predictor.run()
-        outputs = [o.copy_to_cpu() for o in self.output_handles]
-        return outputs
+        return self.copy_outputs()
 
 
 @class_requires_deps("paddlepaddle")
@@ -283,25 +289,58 @@ class PaddleStaticRunner(InferenceRunner):
         self.model_dir = Path(model_dir)
         self.model_file_prefix = model_file_prefix
         self._config = resolve_paddle_static_engine_config(model_name, config)
-        self.predictor = self._create()
-        self.infer = PaddleRunnerChainLegacy(self.predictor)
+        requested_mode = self._config["run_mode"]
+        run_mode = self._resolve_run_mode(requested_mode)
+        self._config["run_mode"] = run_mode
+        self._allow_mkldnn_fallback = (
+            (config or {}).get("run_mode") is None
+            and self._config["device_type"] == "cpu"
+            and run_mode == requested_mode
+            and run_mode.startswith("mkldnn")
+        )
+        self.predictor = self._create(run_mode)
+        self.infer = PaddleRunnerChainLegacy(self.predictor, sort_inputs_by_name=True)
 
     def __call__(self, x: Sequence[np.ndarray]) -> List[np.ndarray]:
-        names = self.predictor.get_input_names()
-        if len(names) != len(x):
+        num_inputs = len(self.infer.input_handles)
+        if len(x) != num_inputs:
             raise ValueError(
-                f"The number of inputs does not match the model: {len(names)} vs {len(x)}"
+                f"The number of inputs does not match the model: {num_inputs} vs {len(x)}"
             )
-        x = sort_inputs(x, names)
         x = list(map(np.ascontiguousarray, x))
-        pred = self.infer(x)
-        return pred
+        self.infer.copy_inputs(x)
+        try:
+            self.predictor.run()
+        except NotImplementedError as exc:
+            if not self._allow_mkldnn_fallback:
+                raise
+            self._allow_mkldnn_fallback = False
+            if self._resolve_run_mode("paddle") != "paddle":
+                raise
+            return self._retry_in_paddle_mode(x, exc)
+        return self.infer.copy_outputs()
 
     def close(self) -> None:
         pass
 
-    def _check_run_mode(self):
-        run_mode = self._config.get("run_mode", "paddle")
+    def _retry_in_paddle_mode(self, x, exc):
+        """Retry an unsupported default oneDNN kernel (PaddlePaddle/Paddle#77340)."""
+        predictor = self._create("paddle")
+        infer = PaddleRunnerChainLegacy(predictor, sort_inputs_by_name=True)
+        outputs = infer(x)
+
+        # Adopt the new backend only after it has produced usable outputs.
+        self.predictor = predictor
+        self.infer = infer
+        self._config["run_mode"] = "paddle"
+        reason = (str(exc).strip().splitlines() or [repr(exc)])[0]
+        logging.warning(
+            f"The model({self._model_name}) failed to run in MKLDNN mode with the installed PaddlePaddle: {reason} "
+            "Using `paddle` instead, which may be slower!"
+        )
+        return outputs
+
+    def _resolve_run_mode(self, run_mode):
         device_type = self._config.get("device_type", "cpu")
         if (
             not DISABLE_TRT_MODEL_BL
@@ -312,9 +351,9 @@ class PaddleStaticRunner(InferenceRunner):
             logging.warning(
                 f"The model({self._model_name}) is not supported to run in trt mode! Using `paddle` instead!"
             )
-            self._config["run_mode"] = "paddle"
+            return "paddle"
 
-        elif (
+        if (
             not DISABLE_MKLDNN_MODEL_BL
             and run_mode.startswith("mkldnn")
             and self._model_name in MKLDNN_BLOCKLIST
@@ -323,7 +362,6 @@ class PaddleStaticRunner(InferenceRunner):
             logging.warning(
                 f"The model({self._model_name}) is not supported to run in MKLDNN mode! Using `paddle` instead!"
             )
-            self._config["run_mode"] = "paddle"
             return "paddle"
 
         if self._model_name == "LaTeX_OCR_rec" and device_type == "cpu":
@@ -336,9 +374,10 @@ class PaddleStaticRunner(InferenceRunner):
                 logging.warning(
                     "Now, the `LaTeX_OCR_rec` model only support `mkldnn` mode when running on Intel CPU devices. So using `mkldnn` instead."
                 )
-            self._config["run_mode"] = "mkldnn"
+            return "mkldnn"
+        return run_mode
 
-    def _create(self):
+    def _create(self, run_mode):
         paddle = import_paddle()
         paddle_inference = import_paddle_module("paddle.inference")
 
@@ -347,7 +386,6 @@ class PaddleStaticRunner(InferenceRunner):
             raise RuntimeError("No valid PaddlePaddle model found")
 
         check_supported_device_type(self._config["device_type"], self._model_name)
-        self._check_run_mode()
 
         model_file, params_file = model_paths["paddle"]
 
@@ -366,9 +404,9 @@ class PaddleStaticRunner(InferenceRunner):
             self._config["device_id"] = 0
             logging.debug("`device_id` has been set to 0")
 
-        if self._config.get("run_mode", "paddle").startswith("trt"):
+        if run_mode.startswith("trt"):
             assert self._config["device_type"].lower() == "gpu", (
-                f"`{self._config.get('run_mode')}` is only available on GPU devices, "
+                f"`{run_mode}` is only available on GPU devices, "
                 f"but got device_type='{self._config['device_type']}'."
             )
             cache_dir = self.model_dir / CACHE_DIR / "paddle"
@@ -387,7 +425,7 @@ class PaddleStaticRunner(InferenceRunner):
 
                 precision = (
                     PrecisionType.Half
-                    if self._config.get("run_mode") == "paddle_fp16"
+                    if run_mode == "paddle_fp16"
                     else PrecisionType.Float32
                 )
                 config.disable_mkldnn()
@@ -473,7 +511,6 @@ class PaddleStaticRunner(InferenceRunner):
             else:
                 assert self._config["device_type"] == "cpu"
                 config.disable_gpu()
-                run_mode = self._config.get("run_mode", "paddle")
                 if "mkldnn" in run_mode:
                     config.enable_mkldnn()
                     if "bf16" in run_mode:
