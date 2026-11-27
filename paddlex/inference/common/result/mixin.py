@@ -794,6 +794,24 @@ class MarkdownMixin:
         """
         return self._to_markdown()
 
+    def _get_markdown_image_path(self, image_path, source):
+        """Return a page-scoped image path for multi-page documents."""
+        page_count = self.get("page_count")
+        if page_count is None or page_count <= 1:
+            return image_path
+
+        page_index = self.get("page_index")
+        if page_index is None:
+            if isinstance(source, dict):
+                page_index = source.get("page_index")
+            else:
+                page_index = getattr(source, "page_index", None)
+        if page_index is None:
+            return image_path
+
+        image_path = Path(image_path)
+        return (image_path.parent / f"page_{page_index}_{image_path.name}").as_posix()
+
     def save_to_markdown(
         self, save_path, pretty=True, show_formula_number=False, *args, **kwargs
     ) -> None:

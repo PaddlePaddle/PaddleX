@@ -353,6 +353,7 @@ class LayoutParsingResultV2(
             use_seg_flag=True,
             get_seg_flag_func=get_seg_flag,
             imgs_in_doc=self["imgs_in_doc"],
+            image_path_transform=self._get_markdown_image_path,
         )
         result["page_index"] = self["page_index"]
         result["input_path"] = self["input_path"]
