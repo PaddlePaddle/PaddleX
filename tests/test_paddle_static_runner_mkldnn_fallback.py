@@ -70,7 +70,13 @@ class _FakePredictor:
 
 
 def _make_runner(
-    monkeypatch, *, run_mode, device_type="cpu", errors=(), requested=False
+    monkeypatch,
+    *,
+    run_mode,
+    device_type="cpu",
+    errors=(),
+    requested=False,
+    model_name="PP-OCRv5_mobile_det",
 ):
     """Build a runner whose `_create` returns fake predictors.
 
@@ -79,9 +85,9 @@ def _make_runner(
     """
     created = []
 
-    def fake_create(self):
+    def fake_create(self, run_mode):
         error = errors[len(created)] if len(created) < len(errors) else None
-        predictor = _FakePredictor(self._config["run_mode"], error)
+        predictor = _FakePredictor(run_mode, error)
         created.append(predictor)
         return predictor
 
@@ -94,7 +100,7 @@ def _make_runner(
     warnings = []
     monkeypatch.setattr(runner_module.logging, "warning", warnings.append)
     config = {"run_mode": run_mode} if requested else {"cpu_threads": 2}
-    runner = PaddleStaticRunner("PP-OCRv5_mobile_det", "unused", "inference", config)
+    runner = PaddleStaticRunner(model_name, "unused", "inference", config)
     return runner, created, warnings
 
 
@@ -188,49 +194,125 @@ def test_unimplemented_error_outside_mkldnn_mode_on_cpu_is_raised(
 
 
 def test_fallback_is_tried_only_once(monkeypatch):
-    error = NotImplementedError("(Unimplemented) some kernel is missing")
+    original_error = NotImplementedError(ONEDNN_ERROR)
+    retry_error = NotImplementedError("some kernel is missing")
     runner, created, warnings = _make_runner(
-        monkeypatch, run_mode="mkldnn", errors=[error, error]
+        monkeypatch, run_mode="mkldnn", errors=[original_error, retry_error]
     )
 
-    # The `paddle` predictor fails too: the error reaches the caller.
-    with pytest.raises(NotImplementedError, match="some kernel is missing"):
+    with pytest.raises(NotImplementedError, match="some kernel is missing") as caught:
         runner(X)
-    assert len(created) == 2
+    assert caught.value.__context__ is original_error
+    assert runner.predictor is created[0]
+    assert runner._config["run_mode"] == "mkldnn"
+    assert warnings == []
 
-    # No rebuild on every later call.
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(NotImplementedError, match="ConvertPirAttribute"):
         runner(X)
     assert len(created) == 2
-    assert len(warnings) == 1
+    created[0].error = None
+    np.testing.assert_array_equal(runner(X)[0], X[0] * 3)
+
+
+@pytest.mark.parametrize("stage", ["create", "get_output_handle", "copy_to_cpu"])
+def test_failed_replacement_keeps_original_runner(monkeypatch, stage):
+    runner, created, warnings = _make_runner(
+        monkeypatch, run_mode="mkldnn", errors=[NotImplementedError(ONEDNN_ERROR)]
+    )
+    original_chain = runner.infer
+    original_config = runner._config.copy()
+    attempts = []
+
+    def fail(*args):
+        attempts.append(stage)
+        raise RuntimeError("candidate failed")
+
+    if stage == "create":
+        monkeypatch.setattr(runner, "_create", fail)
+    elif stage == "get_output_handle":
+        monkeypatch.setattr(_FakePredictor, stage, fail)
+    else:
+        monkeypatch.setattr(_Handle, stage, fail)
+
+    with pytest.raises(RuntimeError, match="candidate failed"):
+        runner(X)
+    assert runner._config == original_config
+    assert runner.predictor is created[0]
+    assert runner.infer is original_chain
+    assert warnings == []
+    with pytest.raises(NotImplementedError, match="ConvertPirAttribute"):
+        runner(X)
+    assert attempts == [stage]
+
+
+@pytest.mark.parametrize("operation", ["copy_from_cpu", "copy_to_cpu"])
+def test_unsupported_transfer_does_not_trigger_backend_fallback(monkeypatch, operation):
+    runner, created, warnings = _make_runner(monkeypatch, run_mode="mkldnn")
+
+    def fail(*args):
+        raise NotImplementedError("unsupported tensor transfer")
+
+    with monkeypatch.context() as patch:
+        patch.setattr(_Handle, operation, fail)
+        with pytest.raises(NotImplementedError, match="unsupported tensor transfer"):
+            runner(X)
+
+    assert len(created) == 1
+    assert warnings == []
+    created[0].error = NotImplementedError(ONEDNN_ERROR)
+    np.testing.assert_array_equal(runner(X)[0], X[0] * 2)
 
 
 def test_no_fallback_when_the_run_mode_check_restores_mkldnn(monkeypatch):
-    """`_check_run_mode` forces MKLDNN mode for `LaTeX_OCR_rec` on CPU."""
-    error = NotImplementedError(ONEDNN_ERROR)
-    runner, created, warnings = _make_runner(
-        monkeypatch, run_mode="mkldnn", errors=[error, error]
+    import cpuinfo
+
+    monkeypatch.setattr(
+        cpuinfo, "get_cpu_info", lambda: {"vendor_id_raw": "AuthenticAMD"}
     )
-    fake_create = PaddleStaticRunner._create
-
-    def create_forcing_mkldnn(self):
-        self._config["run_mode"] = "mkldnn"
-        return fake_create(self)
-
-    monkeypatch.setattr(PaddleStaticRunner, "_create", create_forcing_mkldnn)
-
-    with pytest.raises(
-        NotImplementedError, match="ConvertPirAttribute2RuntimeAttribute"
-    ):
-        runner(X)
-    assert len(created) == 2
-    assert runner.predictor is created[0]
+    runner, created, warnings = _make_runner(
+        monkeypatch,
+        run_mode="paddle",
+        model_name="LaTeX_OCR_rec",
+        errors=[NotImplementedError(ONEDNN_ERROR)],
+    )
+    for _ in range(2):
+        with pytest.raises(NotImplementedError, match="ConvertPirAttribute"):
+            runner(X)
+    assert [p.run_mode for p in created] == ["mkldnn"]
     assert warnings == []
 
-    # The rebuild is not attempted again.
-    with pytest.raises(NotImplementedError):
+
+def test_multi_input_order_and_count(monkeypatch):
+    names = ["z", "a", "m"]
+    runner_calls = []
+
+    def input_names(predictor):
+        runner_calls.append(predictor.run_mode)
+        return names if predictor.run_mode == "mkldnn" else list(reversed(names))
+
+    def input_handle(predictor, name):
+        return _Handle(predictor._store.setdefault(name, {}))
+
+    monkeypatch.setattr(_FakePredictor, "get_input_names", input_names)
+    monkeypatch.setattr(_FakePredictor, "get_input_handle", input_handle)
+    runner, created, _ = _make_runner(
+        monkeypatch, run_mode="mkldnn", errors=[NotImplementedError(ONEDNN_ERROR)]
+    )
+    # The fake output handle normally echoes its single input.
+    monkeypatch.setattr(_Handle, "copy_to_cpu", lambda handle: np.array([1]))
+    with pytest.raises(ValueError, match="3 vs 1"):
         runner(X)
-    assert len(created) == 2
+    inputs = [(np.arange(6) + i)[::2] for i in (10, 20, 30)]
+    runner(inputs)
+    for name in names:
+        assert created[0]._store[name]["x"] is created[1]._store[name]["x"]
+    for predictor in created:
+        for name, array in zip(sorted(names), inputs):
+            received = predictor._store[name]["x"]
+            assert received.flags.c_contiguous
+            np.testing.assert_array_equal(received, array)
+    runner(inputs)
+    assert runner_calls == ["mkldnn", "paddle"]
 
 
 def test_exported_model_with_upsample_runs_in_default_cpu_mode(tmp_path):
