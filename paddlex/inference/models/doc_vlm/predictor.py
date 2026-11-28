@@ -137,6 +137,17 @@ class DocVLMLocalPredictor(LocalModelPredictor):
                         convert_from_hf=True,
                     )
                 else:
+                    if "paddle_dyn" in model_path:
+                        config, _ = PPChart2TableInference.config_class.get_config_dict(
+                            self.model_dir
+                        )
+                        if config.get("model_type") == "GOT":
+                            raise ValueError(
+                                "The original PP-Chart2Table .pdparams checkpoint "
+                                "uses an incompatible weight layout. Use "
+                                "PaddlePaddle/PP-Chart2Table_safetensors or convert "
+                                "the checkpoint to the supported safetensors format."
+                            )
                     model = PPChart2TableInference.from_pretrained(
                         self.model_dir,
                         dtype=self.dtype,
