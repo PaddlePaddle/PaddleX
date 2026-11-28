@@ -512,10 +512,14 @@ class WeightConverter:
 
     def _save_safetensors(self, numpy_sd):
         """Save numpy state dict as model.safetensors."""
+        import numpy as np
         from safetensors.numpy import save_file
 
         out_path = os.path.join(self.output_dir, "model.safetensors")
-        save_file(numpy_sd, out_path)
+        save_file(
+            {key: np.asarray(value, order="C") for key, value in numpy_sd.items()},
+            out_path,
+        )
         logging.info(f"Saved model.safetensors to: {out_path}")
 
     def _save_model_config(self):
